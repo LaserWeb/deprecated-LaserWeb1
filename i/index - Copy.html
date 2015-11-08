@@ -1,0 +1,304 @@
+<!--
+
+    RepRapWeb - A Web Based 3d Printer Controller
+    Copyright (C) 2015 Andrew Hodel
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>RepRapWeb - A fully featured Web UI for RepRap and other 3d printers</title>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script src="main.js"></script>
+
+<!-- modified jsc3d to support loading STL from BinaryString -->
+<script src="jsc3d/jsc3d.js"></script>
+<script src="jsc3d/jsc3d.touch.js"></script>
+<script src="jsc3d/jsc3d.webgl.js"></script>
+
+<link rel="stylesheet" href="bootstrap.min.css" />
+<link rel="stylesheet" href="bootstrap-theme.min.css" />
+<link rel="stylesheet" href="screen.css" />
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#">RepRapWeb - A fully featured Web UI for RepRap and other 3d printers</a>
+</div>
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div>
+</div>
+</div>
+
+<!-- END HEADER -->
+
+<div class="container-fluid" style="margin-top: 60px;">
+<div class="row">
+<div class="col-lg-3">
+
+<!-- LEFT COLUMN -->
+
+<select id="choosePort" class="form-control">
+<option val="no">Select a serial port</option>
+</select>
+
+<br style="clear: both;" />
+
+<span style="margin-right: 10px;" class="btn btn-info btn-file">
+Upload GCODE <input type="file" id="fileInputGcode" />
+</span>
+
+<span class="btn btn-info btn-file">
+Upload STL <input type="file" id="fileInputStl" />
+</span>
+
+<p style="margin-top: 4px;" id="fileStatus">File Loaded: </p>
+
+<hr style="clear: both;" />
+
+<div class="input-group" style="margin: 10px; margin-top: 0px; width: 80px; float: left;">
+<span class="input-group-btn">
+<button type="button" class="btn btn-default" id="useSlicr">Slic3r</button>
+<button type="button" class="btn btn-default disabled" id="useCura">Cura</button>
+</span>
+</div><!-- /input-group -->
+
+<button type="button" class="btn btn-success disabled" id="processStl" style="float: right">Process STL -> GCODE</button>
+
+<br style="clear: both;" />
+
+<img id="slActivity" style="display: none; float: right; margin-top: 8px;" src="activity.gif" />
+
+<p style="margin: 10px; font-size: 12px; color: #999;">Select a slicer to use above, set the options below then Process STL->GCODE.</p>
+
+<h4 id="slNameOpts">Cura Options</h4>
+
+<div id="slOpts">
+
+<div id="slOptsValues"></div>
+
+</div>
+
+<p style="margin: 10px; font-size: 12px; color: #999;">Save the current settings with the name you type in the field, an existing name will overwrite the old preset.</p>
+
+<div class="input-group">
+<input type="text" class="form-control" id="newPresetName">
+<span class="input-group-btn">
+<button id="newPreset" class="btn btn-default" type="button">Create New Preset</button>
+</span>
+</div><!-- /input-group -->
+
+<select class="form-control" id="selectPreset" style="margin-top: 10px; margin-bottom: 10px;">
+<option value="0">presets</option>
+</select>
+
+<div class="input-group">
+<span class="input-group-btn">
+<button id="updatePreset" class="btn btn-default disabled" type="button">Update Preset</button>
+<button id="deletePreset" class="btn btn-default disabled" type="button">Delete Preset</button>
+</span>
+</div><!-- /input-group -->
+
+<hr style="clear: both;" />
+
+<p style="color: #aaa; font-size: .8em; margin-top: 20px;">
+<a href="http://xyzbots.com">&copy; XYZBots 2015</a>
+</p>
+
+<!-- END LEFT COLUMN -->
+
+</div>
+<div class="col-lg-5">
+
+<!-- CENTER COLUMN -->
+
+<center>
+<canvas id="renderArea" width="500" height="500"></canvas>
+</center>
+
+<div style="margin: 10px; float:right; text-align: right;">
+<span class="input-group-btn">
+<button type="button" class="btn btn-default disabled" id="modelDimensions">Model Dimensions: X:0 Y:0 Z:0</button>
+<button type="button" class="btn btn-default" id="modelTop">Top</button>
+<button type="button" class="btn btn-default" id="modelFront">Front</button>
+<button type="button" class="btn btn-default" id="modelSide">Side</button>
+</span>
+</div><!-- /input-group -->
+
+<br style="clear: both;" />
+
+<div style="width:100px; height:25px; float: right; border-radius: 4px; margin-right: 25px;" id="qStatusHolder">
+<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:25px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
+</div>
+
+<br style="clear: both;" />
+
+<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToPrinter">Send to Printer</button>
+
+<span style="float: left; font-weight: bold; border: 2px solid orange; padding: 4px;" id="mainStatus">Status: Waiting for STL or GCODE upload...</span>
+
+<div style="display: none; margin-top: 10px; width: 330px; height: 250px; float: left; clear: both;" id="webcam">
+<img id="wcImg" width="320" height="240" />
+<br />
+<a id="wcLink" target="_blank" href="#">Webcam</a>
+</div>
+
+<!-- END CENTER COLUMN -->
+
+</div>
+<div class="col-lg-4">
+
+<!-- RIGHT COLUMN -->
+
+<h4>Position Control</h4>
+
+<div style="float: right; margin-left: 10px; margin-top: -15px; margin-bottom: 10px;">
+<button type="button" id="zPTen" class="btn btn-default btn-sm xyzButton">Z+10</button>
+<br />
+<button type="button" id="zP" class="btn btn-default btn-sm xyzButton">Z+1</button>
+<br />
+<button type="button" id="zM" class="btn btn-default btn-sm xyzButton">Z-1</button>
+<br />
+<button type="button" id="zMTen" class="btn btn-default btn-sm xyzButton">Z-10</button>
+</div>
+
+<div style="float: right; margin-right: 40px;">
+<div style="float: left;">
+<button type="button" id="xMTen" class="btn btn-default btn-sm xyzButton" style="float: left; margin-top: 65px;">X-10</button>
+<button type="button" id="xM" class="btn btn-default btn-sm xyzButton" style="float: left; margin-top: 65px;">X-1</button>
+
+<div style="position: relative; float: left; margin: 10px;">
+<button type="button" id="yPTen" class="btn btn-default btn-sm xyzButton" style="float: left;">Y+10</button>
+<br />
+<button type="button" id="yP" class="btn btn-default btn-sm xyzButton" style="float: left;">Y+1</button>
+
+<br />
+<br />
+
+<button type="button" id="yM" class="btn btn-default btn-sm xyzButton" style="float: left;">Y-1</button>
+<br />
+<button type="button" id="yMTen" class="btn btn-default btn-sm xyzButton" style="float: left;">Y-10</button>
+</div>
+
+<button type="button" id="xP" class="btn btn-default btn-sm xyzButton" style="float: left; margin-top: 65px;">X+1</button>
+<button type="button" id="xPTen" class="btn btn-default btn-sm xyzButton" style="float: left; margin-top: 65px;">X+10</button>
+</div>
+</div>
+
+<div style="clear: both; float: right; margin: 20px;">
+<button type="button" id="g28" class="btn btn-default btn-sm">Home</button>
+<button type="button" id="g29" class="btn btn-default btn-sm">Autolevel</button>
+<button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
+<button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
+</div>
+
+<hr style="clear: both;" />
+
+<h4>Extruder & Temp Control</h4>
+
+<div class="input-group" style="margin: 10px; width: 120px; float: right;">
+<input type="text" class="form-control" id="extrudeValue" value="5" />
+<span class="input-group-btn">
+<button type="button" class="btn btn-default" id="extrudeMM">Extrude</button>
+</span>
+</div><!-- /input-group -->
+
+<br style="clear: both;" />
+
+<div class="input-group" style="margin: 10px; margin-top: 0px; width: 220px; float: right;">
+<input type="text" class="form-control" id="extrudeTemp" value="180" />
+<span class="input-group-btn">
+<button type="button" class="btn btn-default" id="extrudeTempSet">Set E0</button>
+<button type="button" class="btn btn-default" id="extrudeTempOff">Off</button>
+</span>
+</div><!-- /input-group -->
+
+<div class="input-group" style="margin: 10px; margin-top: 0px; width: 80px; float: right;">
+<span class="input-group-btn">
+<button type="button" class="btn btn-default disabled" id="eTC" style="color: red;">0C</button>
+<button type="button" class="btn btn-default disabled" id="eTS" style="color: green;">0C</button>
+</span>
+</div><!-- /input-group -->
+
+<div class="input-group" style="margin: 10px; margin-top: 0px; width: 220px; float: right;">
+<input type="text" class="form-control" id="bedTemp" value="180" />
+<span class="input-group-btn">
+<button type="button" class="btn btn-default" id="bedTempSet">Set Bed</button>
+<button type="button" class="btn btn-default" id="bedTempOff">Off</button>
+</span>
+</div><!-- /input-group -->
+
+<div class="input-group" style="margin: 10px; margin-top: 0px; width: 80px; float: right;">
+<span class="input-group-btn">
+<button type="button" class="btn btn-default disabled" id="bTC" style="color: red;">0C</button>
+<button type="button" class="btn btn-default disabled" id="bTS" style="color: green;">0C</button>
+</span>
+</div><!-- /input-group -->
+
+<hr style="clear: both;" />
+
+<h4>Command Console</h4>
+
+<div id="console"></div>
+
+<div class="input-group">
+<input type="text" class="form-control" id="command">
+<span class="input-group-btn">
+<button id="sendCommand" class="btn btn-default" type="button">
+Send
+</button>
+</span>
+</div><!-- /input-group -->
+
+<!-- END RIGHT COLUMN -->
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

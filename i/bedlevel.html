@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kossel Bedlevel graphical plot</title>
+<script src="jquery.min.js"></script>
+</head>
+
+<body>
+
+<center>
+<p>Create bedlevel.data in this directory with data from Kossel Marlin output, sample exists.</p>
+<canvas id="myCanvas" width="800" height="800">
+</canvas> 
+</center>
+
+<script>
+
+$.get( "bedlevel.data", function( data ) {
+	var d = data;
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+ctx.font = "10px Arial";
+
+var nl = d.split('\n');
+
+for (i in nl) {
+	if (nl[i] != '') {
+		var s = nl[i].split(/[xyz]/);
+		//coords.push([s[1].slice(1).trim(),s[2].slice(1).trim(),s[3].slice(1).trim()]);
+		ctx.fillStyle = "blue";
+		ctx.font = "10px Arial";
+		ctx.fillText('x'+s[1].slice(1).trim()+',y'+s[2].slice(1).trim(),Number(s[1].slice(1).trim())*4+400,Number(s[2].slice(1).trim())*4+400-20);
+		ctx.fillStyle = "black";
+		ctx.font = "20px Arial";
+		ctx.fillText(s[3].slice(1).trim(),Number(s[1].slice(1).trim())*4+400,Number(s[2].slice(1).trim())*4+400);
+	}
+}
+
+//console.log(coords);
+
+});
+
+</script>
+
+</body>
+</html>
