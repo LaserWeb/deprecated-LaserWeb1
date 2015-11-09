@@ -1,10 +1,10 @@
 ## About
 
-RepRapWeb is a fully function 3d Printer Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
+LaserWeb is a fully function Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
-More information can be found at http://xyzbots.com
+More information can be found at http://xyzbots.com (soon)
 
-Copyright 2015 Andrew Hodel andrewhodel@gmail.com under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
+Copyright 2015 Andrew Hodel andrewhodel@gmail.com  under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
 
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
@@ -18,25 +18,24 @@ You must share the source of your project and notify the original author via ema
 
 If you would like to include this code in a project which is not licensed under the AGPL V3, please contact the author at andrewhodel@gmail.com
 
-## Raspberry Pi prebuilt Image
-
-There is a prebuilt Rasbperry Pi Image with everything configured.  More information and a link to the .img can be found at http://xyzbots.com
 
 ## Serial baud rate
 
-Your printer should be configured to use a baud rate of 115200, you can set that in Configuration.h for Marlin.  You can also modify the RepRapWeb config.js to change it's speed.
+Your Marlin based lasercutter should be configured to use a baud rate of 115200, you can set that in Configuration.h for Marlin.  You can also modify the RepRapWeb config.js to change it's speed.
 
 ## Installation
 
 ```
-git clone https://github.com/andrewhodel/reprapweb.git
-cd reprapweb
+git clone https://github.com/openhardwarecoza/LaserWeb.git
+cd LaserWeb
 npm install
 ```
 
 ## Config
 
 edit config.js to change serial baud rate and web port
+edit /i/main.js to change size of your laser's bed
+edit /i/gcode-viewer/ui.js to change size of your laser's bed
 
 ## Running
 
@@ -56,10 +55,6 @@ forever start server.js
 The default port in config.js is 8000, you can change it by editing the file.
 
 http://hostaddress:8000/
-
-## CuraEngine and Slic3r
-
-RepRapWeb expects to find ../CuraEngine/build/CuraEngine and ../Slic3r/slic3r.pl (same directory as reprapweb).
 
 ## Timelapse
 
