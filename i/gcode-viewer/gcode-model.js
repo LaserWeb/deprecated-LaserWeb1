@@ -40,7 +40,7 @@ function createObjectFromGCode(gcode) {
     }
 
     function getLineGroup(line) {
-          console.log("getLineGroup:", line);
+          //console.log("getLineGroup:", line);
                 if (layer == undefined) newLayer(line);
                 var speed = Math.round(line.e / 1000);
                 var grouptype = (line.extruding ? 10000 : 0) + speed;

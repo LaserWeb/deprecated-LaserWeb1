@@ -243,7 +243,7 @@ var queuePause = 0;
 io.sockets.on('connection', function (socket) {
 
 	socket.on('firstLoad', function(data) {
-		// emit slic3r saved options to ui
+		
 		socket.emit('config', config);
 	});
 

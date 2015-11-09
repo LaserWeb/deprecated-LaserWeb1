@@ -8,8 +8,8 @@ THREE.GridHelperRect = function ( sizeX, stepX, sizeZ, stepZ ) {
     sizeX = x * stepX;
     sizeZ = y * stepZ;
 
-    console.log( "Grid sizeX: " + sizeX * 2 );
-    console.log( "Grid sizeZ: " + sizeZ * 2 );
+//    console.log( "Grid sizeX: " + sizeX * 2 );
+    //console.log( "Grid sizeZ: " + sizeZ * 2 );
 
     var geometry = new THREE.Geometry();
     var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );

@@ -26,8 +26,7 @@
 */
 
 // Specific to your machine.  Also see same config in ui.js
-var laserxmax = 600
-var laserymax = 400
+
 
 
 $(document).ready(function() {
@@ -58,165 +57,22 @@ $(document).ready(function() {
 	});
 
 
-
 	// config options from server
 	socket.on('config', function (data) {
 		//console.log(data);
+		laserxmax = data.xmax
+		laserymax = data.ymax
 
 		if (data.showWebCam == true) {
 			// show the webcam and link
 			var webroot = window.location.protocol+'//'+window.location.hostname;
-
 			console.log(webroot);
-
 			$('#wcImg').attr('src', webroot+':'+data.webcamPort+'/?action=stream');
-
 			$('#wcLink').attr('href', webroot+':'+data.webcamPort+'/javascript_simple.html');
-
 			$('#webcam').show();
 		}
-
+	
 	});
-
-	// slicer status update
-	socket.on('slStatus', function (data) {
-		$('#mainStatus').html(data);
-	});
-
-	// called when slicing is finished
-	socket.on('slDone', function (data) {
-		if (data.status == 'success') {
-			$('#sendToPrinter').removeClass('disabled');
-			$('#mainStatus').html('Slicer Finished Processing, Ready to Print...');
-			gCodeToSend = null;
-		} else {
-			$('#mainStatus').html('Error in STL->GCODE Process, retry...');
-		}
-		$('#processStl').removeClass('disabled');
-		$('#slActivity').hide();
-		$('#processStl').html('Process STL -> GCODE');
-	});
-
-	// create new preset
-	$('#newPreset').on('click', function() {
-
-		if ($('#newPresetName').val() == '') {
-			alert('You must type a name for a preset to save it.');
-			return;
-		}
-
-		var opts = [];
-		jQuery.each($('[name|="slOptsArray"]').serializeArray(), function( c, field ) {
-			field.name = field.name.slice(12);
-			//console.log(field.name, field.value);
-			opts.push({o:field.name, v:field.value});
-		});
-
-		socket.emit('savePreset', {'slicer':defaultSlicer, 'name': $('#newPresetName').val(), 'opts': opts, isNew:true});
-
-		// clear field
-		$('#newPresetName').val('');
-
-		// reset changed options color to black
-		$('[name|="slOptsArray"]').css('color','black');
-
-	});
-
-	// update selected preset
-	$('#updatePreset').on('click', function() {
-
-		if ($('#selectPreset option:selected').val() == 0) {
-			// this is the slicer presets option, can't be updated
-			alert('select a preset to update first');
-		}
-
-		var opts = [];
-		jQuery.each($('[name|="slOptsArray"]').serializeArray(), function( c, field ) {
-			field.name = field.name.slice(12);
-			//console.log(field.name, field.value);
-			opts.push({o:field.name, v:field.value});
-		});
-
-		socket.emit('savePreset', {'slicer':defaultSlicer, 'name': $('#selectPreset :selected').html(), 'opts': opts, isNew:false});
-
-		// reset changed options color to black
-		$('[name|="slOptsArray"]').css('color','black');
-
-		// disable Update Preset
-		$('#updatePreset').addClass('disabled');
-
-	});
-
-	// delete selected preset
-	$('#deletePreset').on('click', function() {
-
-		if ($('#selectPreset option:selected').val() == 0) {
-			// this is the slicer presets option, can't be updated
-			alert('select a preset to delete first');
-		}
-
-		socket.emit('deletePreset', {'slicer':defaultSlicer, 'name': $('#selectPreset :selected').html()});
-
-		// disable Update and Delete Preset
-		$('#updatePreset').addClass('disabled');
-		$('#deletePreset').addClass('disabled');
-
-	});
-
-	// handle preset changes
-	$('#selectPreset').on('change', function(e) {
-
-		if ($('#selectPreset').val() > 0) {
-			// this is a valid preset
-			var preset = localPresets[defaultSlicer][Number($('#selectPreset').val())-1].opts;
-			for (c in preset) {
-				// update values
-				$('[name="slOptsArray-'+preset[c].o+'"]').val(preset[c].v);
-			}
-
-			// reset changed options color to black
-			$('[name|="slOptsArray"]').css('color','black');
-
-			// enable Delete Preset
-			$('#deletePreset').removeClass('disabled');
-
-		} else {
-			// disable Delete Preset
-			$('#deletePreset').addClass('disabled');
-		}
-	});
-
-	socket.on('presets', function (data) {
-		// incoming presets
-		localPresets = data.presets;
-		loadPresetsForSlicer(data.exists);
-	});
-
-	function loadPresetsForSlicer(exists) {
-
-		// {slicerName:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}],slicer2Name:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}]}
-		$('#selectPreset').html('<option value="0">'+defaultSlicer+' presets</option>');
-		for (c in localPresets[defaultSlicer]) {
-			$('#selectPreset').append('<option value="'+(Number(c)+Number(1))+'">'+localPresets[defaultSlicer][c].name+'</option>');
-		}
-
-		//console.log('exists: '+exists);
-
-		if (exists == -2) {
-			// select newly created preset (last as it was added)
-			$('#selectPreset').val($('#selectPreset option').last().val());
-		} else if (exists >= 0) {
-			// select updated preset
-			$('#selectPreset option').each(function() {
-				if (Number($(this).val()) == Number(exists)+1) {
-					// set selected to this option
-					$(this).prop('selected', true);
-				}
-			});
-		}
-		// exists == -1 if this is the first load or delete
-
-	}
 
 	socket.on('qStatus', function (data) {
 		var pct = 100-((data.currentLength/data.currentMax)*100);
@@ -243,120 +99,7 @@ $(document).ready(function() {
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
 
-	socket.on('stlUploadSuccess', function (data) {
-		$('#mainStatus').html('Status: STL file uploaded, please set STL->GCODE options and process...');
-		$('#processStl').removeClass('disabled');
-	});
-
-	$('#processStl').on('click', function() {
-
-		// cura send mm parameters *1000 so .4mm should be 400, 3mm should be 3000
-		// each param here needs to be modified before sending to cura
-		var curaModifiers = {layerThickness:1000,initialLayerThickness:1000,filamentDiameter:1000,posx:1000,posy:1000,extrusionWidth:1000,retractionAmount:1000,skirtDistance:1000,retractionZHop:1000};
-
-		// send vars from slOptsArray
-		var opts = [];
-		jQuery.each($('[name|="slOptsArray"]').serializeArray(), function( c, field ) {
-			field.name = field.name.slice(12);
-			//console.log(field.name, field.value);
-			var skip = 0;
-
-			// cura handles some settings logic in the client
-			if (defaultSlicer == 'cura') {
-				if (field.name == 'bedTemp' || field.name == 'printTemp') {
-					// printTemp and bedTemp are added to startCode and not set directly
-					skip = 1;
-				}
-				if (field.name == 'startCode') {
-					// add bedTemp and printTemp to startCode
-					var prepend = "M140 S" + $('[name="slOptsArray-bedTemp"]').val() + "\nM109 TO S" + $('[name="slOptsArray-printTemp"]').val() + "\n" + "M190 S" + $('[name="slOptsArray-bedTemp"]').val() + "\n";
-					opts.push({o:field.name, v:prepend+field.value});
-					skip = 1;
-				}
-				if (field.name == 'fillDensity') {
-					// set values which account for fill density
-					if (field.value == 0) {
-						opts.push({o:'sparseInfillLineDistance', v:'-1'});
-					} else if (field.value == 100) {
-						opts.push({o:'sparseInfillLineDistance', v:$('[name="slOptsArray-extrusionWidth"]').val()});
-						opts.push({o:'downSkinCount', v:'10000'});
-						opts.push({o:'upSkinCount', v:'10000'});
-					} else {
-						opts.push({o:'sparseInfillLineDistance', v:$('[name="slOptsArray-extrusionWidth"]').val()*100*1000/field.value});
-					}
-					skip = 1;
-				}
-				if (field.name == 'inset0Speed') {
-					// set inner and outer perimter to this value
-					opts.push({o:'inset0Speed', v:field.value});
-					opts.push({o:'insetXSpeed', v:field.value});
-					skip = 1;
-				}
-				if (field.name == 'supportType') {
-					skip = 1;
-				}
-				if (field.name == 'platformAdhesionType') {
-					if (field.value == 'Brim') {
-						// just set skirtDistance to 0 and skirtLineCount to N
-						opts.push({o:'skirtDistance', v:'0'});
-						opts.push({o:'skirtLineCount', v:'10'});
-					} else if (field.value == 'Raft') {
-						opts.push({o:'skirtDistance', v:'0'});
-						opts.push({o:'skirtLineCount', v:'0'});
-						opts.push({o:'raftMargin', v:'5000'});
-						opts.push({o:'raftLineSpacing', v:'3000'});
-						opts.push({o:'raftBaseThickness', v:'300'});
-						opts.push({o:'raftBaseLinewidth', v:'1000'});
-						opts.push({o:'raftInterfaceThickness', v:'270'});
-						opts.push({o:'raftInterfaceLinewidth', v:'400'});
-						opts.push({o:'raftInterfaceLineSpacing', v:'800'});
-						opts.push({o:'raftAirGapLayer0', v:'220'});
-						opts.push({o:'raftBaseSpeed', v:'20'});
-						opts.push({o:'raftFanSpeed', v:'100'});
-						opts.push({o:'raftSurfaceThickness', v:'270'});
-						opts.push({o:'raftSurfaceLinewidth', v:$('[name="slOptsArray-extrusionWidth"]').val()*1000});
-						opts.push({o:'raftSurfaceLineSpacing', v:$('[name="slOptsArray-extrusionWidth"]').val()*1000*.9});
-						opts.push({o:'raftSurfaceLayers', v:'2'});
-						opts.push({o:'raftSurfaceSpeed', v:'20'});
-					}
-					skip = 1;
-				}
-
-			}
-
-			// if we haven't set skip
-			if (skip == 0) {
-				// test if option already exists in opts
-				var alreadySet = 0;
-				for (c in opts) {
-					if (opts[c].o == field.name) {
-						// this option has already been set
-						alreadySet = 1;
-					}
-				}
-				if (alreadySet == 0) {
-					if (defaultSlicer == 'cura' && typeof curaModifiers[field.name] != 'undefined') {
-						// multiply value by modifier
-						opts.push({o:field.name, v:curaModifiers[field.name]*field.value});
-					} else {
-						opts.push({o:field.name, v:field.value});
-					}
-				}
-			}
-		});
-
-		for (c in opts) {
-			//console.log(opts[c].o+': '+opts[c].v);
-		}
-
-		socket.emit('slStart', {slicer:defaultSlicer,opts:opts});
-		$('#sendToPrinter').addClass('disabled');
-		$('#processStl').addClass('disabled');
-		$('#mainStatus').html('Status: Starting STL->GCODE Process');
-		$('#slActivity').show();
-		$('#processStl').html('Processing STL -> GCODE');
-	});
-
+	
 	$('#choosePort').on('change', function() {
 		// select port
 		socket.emit('usePort', $('#choosePort').val());
@@ -489,11 +232,6 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'G28' });
 	});
 
-
-	$('#g29').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G29' });
-	});
-
 	$('#pause').on('click', function() {
 		if ($('#pause').html() == 'Pause') {
 			// pause queue on server
@@ -510,6 +248,7 @@ $(document).ready(function() {
 	$('#clearQ').on('click', function() {
 		// if paused let user clear the command queue
 		socket.emit('clearQ', 1);
+		$('#sendToPrinter').removeClass('disabled');
 		// must clear queue first, then unpause (click) because unpause does a sendFirstQ on server
 		$('#pause').click();
 	});
@@ -520,31 +259,9 @@ $(document).ready(function() {
 		if (gCodeToSend) {
 			// !null
 			socket.emit('printGcode', { line: gCodeToSend });
-		} else {
-			// print stl
-			socket.emit('printStl', true);
-		}
+		} 
 	});
 
-	$('#extrudeMM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 F200 E'+$('#extrudeValue').val()+' F'+$('#jogSpeed').val()+'\nG90' });
-	});
-
-	$('#extrudeTempSet').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M104 S'+$('#extrudeTemp').val() });
-	});
-
-	$('#extrudeTempOff').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M104 S0' });
-	});
-
-	$('#bedTempSet').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M140 S'+$('#bedTemp').val() });
-	});
-
-	$('#bedTempOff').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M140 S0' });
-	});
 
 	// handle uploads
 	if (window.FileReader) {
@@ -556,6 +273,10 @@ $(document).ready(function() {
 		var fileInputGcode = document.getElementById('fileInputGcode');
 		fileInputGcode.addEventListener('change', function(e) {
 			reader.onloadend = function (ev) {
+				scene.remove(object);
+				scene.remove(cylinder);
+				scene.remove(helper);
+				scene.remove(axesgrp);
 				// load gcode-viewer
 				//openGCodeFromText(this.result);
 				document.getElementById('gcodepreview').value = this.result;

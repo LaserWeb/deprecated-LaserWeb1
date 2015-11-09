@@ -11,8 +11,7 @@ var lineincrement = 50
 
 $(function() {
 
-
-    scene = createScene($('#renderArea'));
+	scene = createScene($('#renderArea'));
 });
 
 function createObject(gcode) {
@@ -25,12 +24,6 @@ function createObject(gcode) {
 		
     scene.add(object);
     
-	
-	
-	if (helper) {
-        scene.remove(helper);
-    }
-    
 	// jogArrow Cylinder
     		cylinder = new THREE.Mesh(new THREE.CylinderGeometry(0, 5, 40, 15, 1, false), new THREE.MeshNormalMaterial());
             cylinder.overdraw = true;
@@ -38,14 +31,15 @@ function createObject(gcode) {
             cylinder.material.opacity = 0.6;
             cylinder.material.transparent = true;
             cylinder.castShadow = false;
-            console.log("jogArrow cone:", cylinder);
-			cylinder.position.x = (laserxmax /2 * -1)
+            cylinder.position.x = (laserxmax /2 * -1)
 			cylinder.position.y = (laserymax /2 * -1)
 			cylinder.position.z = 20;
-			scene.add(cylinder)
+			cylinder.needsUpdate = true;	
+		scene.add(cylinder)
 	
 	
-	var helper = new THREE.GridHelperRect((laserxmax /2), 10, (laserymax /2), 10);
+	
+	helper = new THREE.GridHelperRect((laserxmax /2), 10, (laserymax /2), 10);
             helper.setColors(0x0000ff, 0x707070);
             helper.position.y = 0;
             helper.position.x = 0;
@@ -54,17 +48,14 @@ function createObject(gcode) {
             helper.material.opacity = 0.15;
             helper.material.transparent = true;
             helper.receiveShadow = false;
-            console.log("helper grid:", helper);
+            //console.log("helper grid:", helper);
             this.grid = helper;
             //this.sceneAdd(this.grid);
 			scene.add(helper);
 	
-	if (axesgrp) {
-        scene.remove(axesgrp);
-		
-    }
+	
     
-	var axesgrp = new THREE.Object3D();
+	axesgrp = new THREE.Object3D();
             
 	        axes = new THREE.AxisHelper(120);
 
@@ -138,7 +129,7 @@ function createObject(gcode) {
 
 function openGCodeFromText() {
     var gcode = $('#gcodepreview').val();
-    if (document.hasFocus()) {
+	if (document.hasFocus()) {
 	createObject(gcode);
         //console.log('adding object with existing focus');
     } else {
