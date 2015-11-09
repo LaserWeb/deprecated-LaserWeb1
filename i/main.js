@@ -383,94 +383,94 @@ $(document).ready(function() {
 	});
 
 	$('#xM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	
 	$('#xM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#xMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-10 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#xMCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 	
 	$('#xP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#xP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#xPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X10 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#xPCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X100 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#yP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 	
 	$('#yP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#yPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y10 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#yPCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y100 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 	
 	$('#yM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#yM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#yMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-10 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#yMCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	
 	$('#zP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	
 	$('#zP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#zPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z10 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#zM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z-0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#zM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z-1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#zMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z-10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-10 F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#homeX').on('click', function() {
@@ -527,7 +527,7 @@ $(document).ready(function() {
 	});
 
 	$('#extrudeMM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 F200 E'+$('#extrudeValue').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 F200 E'+$('#extrudeValue').val()+' F'+$('#jogSpeed').val()+'\nG90' });
 	});
 
 	$('#extrudeTempSet').on('click', function() {
