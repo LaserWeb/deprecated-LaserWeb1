@@ -2,6 +2,8 @@
 
 LaserWeb is a fully function Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
+![Screenshot 9 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/laserweb.PNG)
+
 More information can be found at http://xyzbots.com (soon)
 
 Copyright 2015 Andrew Hodel andrewhodel@gmail.com  under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
