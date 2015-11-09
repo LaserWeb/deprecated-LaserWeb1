@@ -25,10 +25,6 @@ If you would like to include this code in a project which is not licensed under 
 
 Your Marlin based lasercutter should be configured to use a baud rate of 115200, you can set that in Configuration.h for Marlin.  You can also modify the RepRapWeb config.js to change it's speed.
 
-## Installation
-
-
-```
 
 ## Installation Instructions
 
