@@ -1,0 +1,491 @@
+<!--
+
+    LaserMarlinWeb - A Web Based Lasercutters running Marlin
+    Copyright (C) 2015 Andrew Hodel & Peter van der Walt
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>LaserWeb - A fully featured Web UI for Lasercutters running Marlin</title>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script src="bootstrap-notify.js"></script>
+<script src="main.js"></script>
+
+ <!-- v68 Three.js -->
+    <script src="gcode-viewer/Three.js"></script>
+    <script src="gcode-viewer/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
+    <script src="gcode-viewer/TrackballControls.js"></script>
+    <script src="gcode-viewer/gcode-parser.js"></script>
+    <script src="gcode-viewer/gcode-model.js"></script>
+    <script src="gcode-viewer/renderer.js"></script>
+    <script src="gcode-viewer/ui.js"></script>
+
+	
+<link rel="stylesheet" href="bootstrap.min.css" />
+<link rel="stylesheet" href="bootstrap-theme.min.css" />
+<link rel="stylesheet" href="bootstrap-notify.css" />
+<link rel="stylesheet" href="screen.css" />
+<style type="text/css">
+#renderArea {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    float: left;
+	padding-top: 40px;
+    padding-bottom: 40px;
+    margin-right: 1%;
+	z-index: 1; 
+	position: absolute; 
+	left: 0;  
+	top:  0;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#">LaserWeb</a>
+</div>
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div>
+</div>
+</div>
+
+<!-- END HEADER -->
+
+<div class="container-fluid" style="margin-top: 60px;">
+<div class="row">
+
+
+<!-- LEFT COLUMN -->
+<div style=" width: 320px;  z-index: 10; position: absolute; left: 0;  top: 40;"> <!-- Left floating div-->
+
+<span style="margin-right: 10px;" class="btn btn-info btn-file">Upload GCODE <input type="file" id="fileInputGcode" /></span>
+
+<p style="margin-top: 4px;" id="fileStatus">File Loaded: </p>
+
+<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange;" id="gcodepreview">
+
+
+
+</textarea>
+
+<span style="padding-left: 10px; width:100%; height:25px; float: right;" id="mainStatus">Status: Waiting for GCODE upload...</span>
+
+<br style="clear: both;" />
+
+<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
+<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
+</div>
+
+<hr style="clear: both;" />
+<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToPrinter">Send to Laser</button>
+<button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
+<button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
+<hr style="clear: both;" />
+ <div class='notifications bottom-left'></div>
+
+ 			<span class="btn btn-default btn-file" onclick="controls.reset();">Reset 3D View</span>	
+            
+ <!-- Left Column ^^^ -->
+
+
+
+<p style="color: #aaa; font-size: .8em; margin-top: 20px;">
+<a href="http://xyzbots.com">&copy; XYZBots 2015</a>
+</p>
+
+</div>
+<!-- END LEFT COLUMN -->
+
+<!-- RIGHT COLUMN -->
+<div style=" width: 320px;  z-index: 10; position: absolute; right: 0;  top: 40;"> <!-- Right floating div-->
+
+<!-- Port Selection -->
+<select id="choosePort" class="form-control">
+<option val="no">Select a serial port</option>
+</select>
+
+
+<!-- Digital Readout -->
+<div id="mPosition" >
+<div id="mX" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
+<div id="mY" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
+<div id="mZ" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
+</div>
+
+<!-- Pronterface Jog Widget -->
+  <svg width="320" height="260" xmlns="http://www.w3.org/2000/svg" version="1.1">
+
+    <defs>
+
+        <style type="text/css"><![CDATA[
+
+    text {
+        font-family: helvetica;
+        stroke: black;
+        stroke-width: 1;
+        fill: black;
+    }
+
+    text.home {
+        font-family: helvetica;
+        stroke: black;
+        stroke-width: 1;
+        fill: black;
+        font-weight: 900;
+        font-size: 16;
+        pointer-events: none;
+    }
+
+    text.scl {
+        font-family: helvetica;
+        stroke: white;
+        stroke-width: 1;
+        fill: white;
+        pointer-events: none;
+        }
+
+    circle.scl {
+        fill: black;
+        fill-opacity: 0.5;
+        stroke: red;
+        stroke-width: 3;
+        filter: url(#f1);
+        pointer-events: none;
+   }
+
+    path.home {
+        stroke: black;
+        }
+
+    path.std {
+        stroke: black;
+        stroke-width: 1;
+        filter: url(#f1);
+        }
+
+    rect.std {
+        stroke: black;
+        stroke-width: 1;
+        filter: url(#f1);
+        }
+
+  ]]></style>
+
+        <filter id="f1" x="-1" y="-1" width="300%" height="300%">
+            <feOffset result="offOut" in="SourceAlpha" dx="3" dy="3"/>
+            <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4"/>
+            <feBlend in="SourceGraphic" in2="blurOut" mode="normal"/>
+        </filter>
+
+        <symbol id="HomeIcon" viewBox="0 0 20 18" pointer-events="none">
+            <desc>HomeIcon - house</desc>
+            <path class="home" d="M3,18 v-8 l7,-6 l7,6 v8 h-5 v-6 h-4 v6 z" fill="black"/>
+            <path class="home" d="M0,10 l10-8.5 l10,8.5" stroke-width="1.5" fill="none"/>
+            <path class="home" d="M15,3 v2.8 l1,.8 v-3.6 z"/>
+        </symbol>
+
+        <symbol id="JogRose" viewBox="20 -10 260 260">
+            <g id="homeAll">
+                <path class="std" d="M10 182.5 h-10 v57.5 h57.5 v-10 a 125,125 0 0,1 -47.5 -47.5 Z" fill="#f0f0f0">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </path>
+                <use x="3" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
+            </g>
+
+            <g id="homeX">
+                <path class="std" d="M10 57.50 h-10 v-57.5 h57.5 v10 a 125,125 0 0,0 -47.5 47.5 Z" fill="Khaki">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </path>
+                <use x="3" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
+                <text x="25" y="20" class="home"> X </text>
+            </g>
+            <g id="homeY">
+                <path class="std" d="M230 57.50 h10 v-57.5 h-57.5 v10 a 125,125 0 0,1 47.5 47.5 z" fill="SteelBlue">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </path>
+                <use x="217" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
+                <text x="202" y="20" class="home"> Y </text>
+            </g>
+
+            <g id="homeZ">
+                <path class="std" d="M230 182.5 h10 v57.5 h-57.5 v-10 a 125,125 0 0,0 47.5 -47.5 z" fill="DarkSeaGreen">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </path>
+                <use x="217" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
+                <text x="202" y="232" class="home"> Z </text>
+            </g>
+
+            <g id="Jog100" fill="#c0c0c0" class="std">
+                <g id="yPCen" transform="translate(120 120)">
+                    <path class="std" d="M-60 -67.07 L-75.93,-83 A112.5,112.5 0 0,1 75,-83 L60,-67.07 A90,90 0 0,0 -60.00,-67.07 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout" />
+                    </path>
+                </g>
+                <g id="xPCen" transform="translate(120 120)">
+                    <path class="std" d="M67.07,-60 L83,-75.93 A112.5,112.5 0 0,1 83,75.93 L67.07,60 A90,90 0 0,0 67.07,-60">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="yMCen" transform="translate(120 120)">
+                    <path class="std" d="M-60,67.07 L-75.93,83 A112.5,112.5 0 0,0 75,83 L60,67.07 A90,90 0 0,1 -60.00,67.07 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xMCen" transform="translate(120 120)">
+                    <path class="std" d="M-67.07,-60 L-83,-75.93 A112.5,112.5 0 0,0 -83,75.93 L-67.07,60 A90,90 0 0,1 -67.07,-60 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+            </g>
+            <g id="Jog10" fill="#d0d0d0">
+
+                <g id="yPTen" transform="translate(120 120)">
+                    <path class="std" d="M-44.06 -51.13 L-60,-67.07 A90,90 0 0,1 60,-67 L44.06,-51.13 A67.5,67.5 0 0,0 -44.06,-51.13 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xPTen" transform="translate(120 120)">
+                    <path class="std" d="M51.13 44.06 L67.07,60 A90,90 0 0,0 67.07,-60 L51.13,-44.06 A67.5,67.5 0 0,1 51.13,44.06 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="yMTen" transform="translate(120 120)">
+                    <path class="std" d="M-44.06 51.13 L-60,67.07 A90,90 0 0,0 60,67 L44.06,51.13 A67.5,67.5 0 0,1 -44.06,51.13 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xMTen" transform="translate(120 120)">
+                    <path class="std" d="M-51.13 44.06 L-67.07,60 A90,90 0 0,1 -67.07,-60 L-51.13,-44.06 A67.5,67.5 0 0,0 -51.13,44.06 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+            </g>
+
+            <g id="Jog1" fill="#e0e0e0">
+                <g id="yP" transform="translate(120 120)">
+                    <path class="std" d="M-28.09 -35.16 L-44.06,-51.13 A67.5,67.5 0 0,1 44.06,-51.13 L28.09,-35.16 A45,45 0 0,0 -28.09,-35.16 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xP" transform="translate(120 120)">
+                    <path class="std" d="M35.16 -28.09 L51.13,-44.06 A67.5,67.05 0 0,1 51.13,44.06 L35.16,28.09 A45,45 0 0,0 35.16,-28.09 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="yM" transform="translate(120 120)">
+                    <path class="std" d="M-28.09 35.16 L-44.06,51.13 A67.5,67.5 0 0,0 44.06,51.13 L28.09,35.16 A45,45 0 0,1 -28.09,35.16 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xM" transform="translate(120 120)">
+                    <path class="std" d="M-35.16 -28.09 L-51.13,-44.06 A67.5,67.05 0 0,0 -51.13,44.06 L-35.16,28.09 A45,45 0 0,1 -35.16,-28.09 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+            </g>
+
+            <g id="Jog0_1" fill="#f0f0f0">
+                <g id="yP01" transform="translate(120 120)">
+                    <path class="std" d="M-28.09 -35.16 A45,45 0 0,1 29.09,-35.16 L0,-7.07 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xP01" transform="translate(120 120)">
+                    <path class="std" d="M35.16 -28.09 A45,45 0 0,1 35.16,28.09 L7.07,0 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="yM01" transform="translate(120 120)">
+                    <path class="std" d="M-28.09 35.16 A45,45 0 0,0 29.09,35.16 L0,7.07 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+                <g id="xM01" transform="translate(120 120)">
+                    <path class="std" d="M-35.16 -28.09 A45,45 0 0,0 -35.16,28.09 L-7.07,0 z">
+                        <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                    </path>
+                </g>
+            </g>
+
+            <g id="RoseScale">
+                <g>
+                    <circle class="scl" cx="144" cy="96" r="9.5"/>
+                    <circle class="scl" cx="159.5" cy="80.5" r="10.5"/>
+                    <circle class="scl" cx="175" cy="65" r="12"/>
+                    <circle class="scl" cx="195" cy="45" r="15"/>
+                    <text class="scl" x="137" y="99" font-size="10"> 0.1 </text>
+                    <text class="scl" x="155" y="85" font-size="14"> 1  </text>
+                    <text class="scl" x="166" y="70" font-size="15"> 10 </text>
+                    <text class="scl" x="182" y="50" font-size="15"> 100 </text>
+                </g>
+            </g>
+            <g id="Decoration" pointer-events="none"
+                font-weight="900" font-size="11" fill-opacity=".6">
+                <path class="std" d="M120,20 l17,17 h-10 v11 h-14 v-11 h-10 z" fill="SteelBlue"/>   <!-- y pos arrow -->
+                <path class="std" d="M120,220 l17,-17 h-10 v-11 h-14 v11 h-10 z" fill="SteelBlue"/> <!-- y neg arrow -->
+                <path class="std" d="M20,120 l17,17 v-10 h11 v-14 h-11 v-10 z" fill="Khaki"/> <!-- x neg arrow -->
+                <path class="std" d="M220,120 l-17,-17 v10 h-11 v14 h11 v10 z" fill="Khaki"/> <!-- x pos arrow -->
+                <text x="113" y="37" > +Y </text>
+                <text x="113" y="212"> -Y </text>
+                <text x="27" y="124"> -X </text>
+                <text x="196" y="124"> +X </text>
+            </g>
+
+        </symbol>
+
+        <symbol id="JogBar" viewBox="20 -10 260 260">
+            <desc>JogBar - Z jogging bar</desc>
+            <g id="+Z" fill="#b0b0b0">
+                <path class="std" d=" M5,0 h30 a5,5 0 0,1 5,5 v27 h-40 v-27 a5,5 0 0,1 5,-5 z"/>
+                <path class="std" d="M20,2 l17,17 h-10 v11 h-14 v-11 h-10 z" fill="DarkSeaGreen"/>
+                <text x="11" y="18" font-size="12"> +Z </text>
+            </g>
+            <g id="-Z" fill="#b0b0b0">
+                <path class="std" d=" M0,208 h40 v27 a5,5 0 0,1 -5,5 h-30 a5,5 0 0,1 -5,-5 z"/>
+                <path class="std" d="M20,238 l-17,-17 h10 v-11 h14 v11 h10 z" fill="DarkSeaGreen"/>
+                <text x="13" y="230" font-size="12"> -Z </text>
+            </g>
+            <g id="zPTen" fill="#d0d0d0">
+                <rect class="std" x="0" y="32" width="40" height="30">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </rect>
+                <circle class="scl" cx="20" cy="47" r="13"/>
+                <text class="scl" x="9" y="53" font-size="18"> 10 </text>
+            </g>
+            <g id="zP" fill="#e0e0e0">
+                <rect class="std" x="0" y="62" width="40" height="26">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </rect>
+                <circle class="scl" cx="20" cy="75" r="11"/>
+                <text class="scl" x="15" y="81.5" font-size="18"> 1 </text>
+            </g>
+            <g id="zP01" fill="#f0f0f0">
+                <rect class="std" x="0" y="88" width="40" height="24">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </rect>
+                <circle class="scl" cx="20" cy="100" r="9.5"/>
+                <text class="scl" x="13" y="103.5" font-size="10"> 0.1 </text>
+            </g>
+            <g id="zMTen" fill="#d0d0d0">
+                <rect class="std" x="0" y="178" width="40" height="30">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </rect>
+            </g>
+            <g id="zM" fill="#e0e0e0" >
+                <rect class="std" x="0" y="152" width="40" height="26">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </rect>
+            </g>
+            <g id="zM01" fill="#f0f0f0" >
+                <rect class="std" x="0" y="128" width="40" height="24">
+                    <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+                </rect>
+            </g>
+            <g id="ZSpace" fill="#000000">
+                <rect class="std" x="0" y="112" width="40" height="16"/>
+            </g>
+        </symbol>
+
+        <symbol id="PrinterCtl">
+            <use x="0" y="0" xlink:href="#JogRose"/>
+            <use x="260" y="0" xlink:href="#JogBar"/>
+        </symbol>
+
+    </defs>
+
+    <use x="0" y="0" xlink:href="#PrinterCtl"/>
+
+  </svg>
+
+  <select class="form-control" id="jogSpeed">
+<option value="8000">Feed Rate: 8000</option>
+<option selected value="5000">Feed Rate: 5000</option>
+<option value="2500">Feed Rate: 2500</option>
+<option value="1000">Feed Rate: 1000</option>
+<option value="500">Feed Rate: 500</option>
+<option value="100">Feed Rate: 100</option>
+</select>
+  
+<br />
+
+
+<!-- Command Console -->
+<div id="console"></div>
+<div class="input-group">
+<input type="text" class="form-control" id="command">
+<span class="input-group-btn">
+<button id="sendCommand" class="btn btn-default" type="button">
+Send
+</button>
+</span>
+</div><!-- /input-group -->
+<hr style="clear: both;" />
+
+</div> <!-- Right floating div -->
+<!-- END RIGHT COLUMN -->
+
+<!-- CENTER COLUMN -->
+<div style="display: none; margin-top: 10px; width: 330px; height: 250px; float: left; clear: both;" id="webcam">
+<img id="wcImg" width="320" height="240" />
+<br />
+<a id="wcLink" target="_blank" href="#">Webcam</a>
+</div>
+
+            
+<div id="renderArea"></div>
+<!-- END CENTER COLUMN -->
+
+
+
+</div>
+</div>
+
+</body>
+</html>
