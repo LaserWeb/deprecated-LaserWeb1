@@ -25,6 +25,11 @@
 
 */
 
+// Specific to your machine.  Also see same config in ui.js
+var laserxmax = 600
+var laserymax = 400
+
+
 $(document).ready(function() {
 
 	var socket = io.connect(''); // socket.io init
@@ -378,99 +383,112 @@ $(document).ready(function() {
 	});
 
 	$('#xM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X-0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1\nG90' });
 	});
 
 	
 	$('#xM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X-1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-1\nG90' });
 	});
 
 	$('#xMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X-10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-10\nG90' });
 	});
 
 	$('#xMCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X-100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-100\nG90' });
 	});
 	
 	$('#xP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1\nG90' });
 	});
 
 	$('#xP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X1\nG90' });
 	});
 
 	$('#xPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X10\nG90' });
 	});
 
 	$('#xPCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 X100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X100\nG90' });
 	});
 
 	$('#yP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1\nG90' });
 	});
 	
 	$('#yP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y1\nG90' });
 	});
 
 	$('#yPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y10\nG90' });
 	});
 
 	$('#yPCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y100\nG90' });
 	});
 	
 	$('#yM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y-0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1\nG90' });
 	});
 
 	$('#yM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y-1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-1\nG90' });
 	});
 
 	$('#yMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y-10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-10\nG90' });
 	});
 
 	$('#yMCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Y-100\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100\nG90' });
 	});
 
 	
 	$('#zP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Z0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1\nG90' });
 	});
 
 	
 	$('#zP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Z1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z1\nG90' });
 	});
 
 	$('#zPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Z10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z10\nG90' });
 	});
 
 	$('#zM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Z-0.1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-0.1\nG90' });
 	});
 
 	$('#zM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Z-1\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-1\nG90' });
 	});
 
 	$('#zMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 Z-10\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-10\nG90' });
 	});
 
-	$('#g28').on('click', function() {
+	$('#homeX').on('click', function() {
+		socket.emit('gcodeLine', { line: 'G28 X0' });
+	});
+	
+	$('#homeY').on('click', function() {
+		socket.emit('gcodeLine', { line: 'G28 Y0' });
+	});
+
+	$('#homeZ').on('click', function() {
+		socket.emit('gcodeLine', { line: 'G28 Z0' });
+	});
+
+	$('#homeAll').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G28' });
 	});
+
 
 	$('#g29').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G29' });
@@ -509,7 +527,7 @@ $(document).ready(function() {
 	});
 
 	$('#extrudeMM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG1 F200 E'+$('#extrudeValue').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 F200 E'+$('#extrudeValue').val()+'\nG90' });
 	});
 
 	$('#extrudeTempSet').on('click', function() {
@@ -541,6 +559,7 @@ $(document).ready(function() {
 				// load gcode-viewer
 				//openGCodeFromText(this.result);
 				document.getElementById('gcodepreview').value = this.result;
+				openGCodeFromText();
 				gCodeToSend = this.result;
 				$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
 				$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
@@ -571,6 +590,10 @@ $(document).ready(function() {
 			$('#mX').html('X: '+posArray[2]);
 			$('#mY').html('Y: '+posArray[4]);
 			$('#mZ').html('Z: '+posArray[6]);
+			cylinder.position.x = posArray[2] - (laserxmax /2);
+			cylinder.position.y = posArray[4] - (laserymax /2);
+			cylinder.position.z = posArray[6] + 20;
+			
 	});
 	
 	

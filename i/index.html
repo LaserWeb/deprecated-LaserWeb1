@@ -42,10 +42,35 @@
 <script src="bootstrap-notify.js"></script>
 <script src="main.js"></script>
 
+ <!-- v68 Three.js -->
+    <script src="gcode-viewer/Three.js"></script>
+    <script src="gcode-viewer/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
+    <script src="gcode-viewer/TrackballControls.js"></script>
+    <script src="gcode-viewer/gcode-parser.js"></script>
+    <script src="gcode-viewer/gcode-model.js"></script>
+    <script src="gcode-viewer/renderer.js"></script>
+    <script src="gcode-viewer/ui.js"></script>
+
+	
 <link rel="stylesheet" href="bootstrap.min.css" />
 <link rel="stylesheet" href="bootstrap-theme.min.css" />
 <link rel="stylesheet" href="bootstrap-notify.css" />
 <link rel="stylesheet" href="screen.css" />
+<style type="text/css">
+#renderArea {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    float: left;
+	padding-top: 40px;
+    padding-bottom: 40px;
+    margin-right: 1%;
+	z-index: 1; 
+	position: absolute; 
+	left: 0;  
+	top:  0;
+}
+</style>
 
 </head>
 
@@ -75,36 +100,39 @@
 
 <div class="container-fluid" style="margin-top: 60px;">
 <div class="row">
-<div class="col-lg-3">
+
 
 <!-- LEFT COLUMN -->
-
-<select id="choosePort" class="form-control">
-<option val="no">Select a serial port</option>
-</select>
-
-<br style="clear: both;" />
+<div style=" width: 320px;  z-index: 10; position: absolute; left: 0;  top: 40;"> <!-- Left floating div-->
 
 <span style="margin-right: 10px;" class="btn btn-info btn-file">Upload GCODE <input type="file" id="fileInputGcode" /></span>
 
 <p style="margin-top: 4px;" id="fileStatus">File Loaded: </p>
 
-<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange;" id="gcodepreview"></textarea>
+<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange;" id="gcodepreview">
+
+
+
+</textarea>
 
 <span style="padding-left: 10px; width:100%; height:25px; float: right;" id="mainStatus">Status: Waiting for GCODE upload...</span>
 
 <br style="clear: both;" />
 
-<div style="width:100%; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
+<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
 <div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
 </div>
+
 <hr style="clear: both;" />
-<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToPrinter">Send to Printer</button>
+<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToPrinter">Send to Laser</button>
 <button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
 <button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
 <hr style="clear: both;" />
  <div class='notifications bottom-left'></div>
-<!-- Left Column ^^^ -->
+
+ 			<span class="btn btn-default btn-file" onclick="controls.reset();">Reset 3D View</span>	
+            
+ <!-- Left Column ^^^ -->
 
 
 
@@ -112,44 +140,23 @@
 <a href="http://xyzbots.com">&copy; XYZBots 2015</a>
 </p>
 
+</div>
 <!-- END LEFT COLUMN -->
 
-</div>
-<div class="col-lg-5">
-
-<!-- CENTER COLUMN -->
-
-
-
-<br style="clear: both;" />
-
-
-
-<br style="clear: both;" />
-
-
-
-
-<div style="display: none; margin-top: 10px; width: 330px; height: 250px; float: left; clear: both;" id="webcam">
-<img id="wcImg" width="320" height="240" />
-<br />
-<a id="wcLink" target="_blank" href="#">Webcam</a>
-</div>
-
-<!-- END CENTER COLUMN -->
-
-</div>
-
-
 <!-- RIGHT COLUMN -->
-
 <div style=" width: 320px;  z-index: 10; position: absolute; right: 0;  top: 40;"> <!-- Right floating div-->
+
+<!-- Port Selection -->
+<select id="choosePort" class="form-control">
+<option val="no">Select a serial port</option>
+</select>
+
 
 <!-- Digital Readout -->
 <div id="mPosition" >
-<div id="mX" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
-<div id="mY" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
-<div id="mZ" style="text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
+<div id="mX" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
+<div id="mY" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
+<div id="mZ" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
 </div>
 
 <!-- Pronterface Jog Widget -->
@@ -225,21 +232,21 @@
         </symbol>
 
         <symbol id="JogRose" viewBox="20 -10 260 260">
-            <g id="HomeAll" onmouseup="runCommandSilent('G28')">
+            <g id="homeAll">
                 <path class="std" d="M10 182.5 h-10 v57.5 h57.5 v-10 a 125,125 0 0,1 -47.5 -47.5 Z" fill="#f0f0f0">
                     <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
                 </path>
                 <use x="3" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
             </g>
 
-            <g id="HomeX" onmouseup="runCommandSilent('G28 X0')">
+            <g id="homeX">
                 <path class="std" d="M10 57.50 h-10 v-57.5 h57.5 v10 a 125,125 0 0,0 -47.5 47.5 Z" fill="Khaki">
                     <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
                 </path>
                 <use x="3" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
                 <text x="25" y="20" class="home"> X </text>
             </g>
-            <g id="HomeY" onmouseup="runCommandSilent('G28 Y0')">
+            <g id="homeY">
                 <path class="std" d="M230 57.50 h10 v-57.5 h-57.5 v10 a 125,125 0 0,1 47.5 47.5 z" fill="SteelBlue">
                     <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
                 </path>
@@ -247,7 +254,7 @@
                 <text x="202" y="20" class="home"> Y </text>
             </g>
 
-            <g id="HomeZ" onmouseup="runCommandSilent('G28 Z0')">
+            <g id="homeZ">
                 <path class="std" d="M230 182.5 h10 v57.5 h-57.5 v-10 a 125,125 0 0,0 47.5 -47.5 z" fill="DarkSeaGreen">
                     <set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
                 </path>
@@ -453,11 +460,19 @@ Send
 <hr style="clear: both;" />
 
 </div> <!-- Right floating div -->
-
-
-
-
 <!-- END RIGHT COLUMN -->
+
+<!-- CENTER COLUMN -->
+<div style="display: none; margin-top: 10px; width: 330px; height: 250px; float: left; clear: both;" id="webcam">
+<img id="wcImg" width="320" height="240" />
+<br />
+<a id="wcLink" target="_blank" href="#">Webcam</a>
+</div>
+
+            
+<div id="renderArea"></div>
+<!-- END CENTER COLUMN -->
+
 
 
 </div>

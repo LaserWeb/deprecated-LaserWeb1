@@ -35,7 +35,6 @@ var static = require('node-static');
 var EventEmitter = require('events').EventEmitter;
 var url = require('url');
 var qs = require('querystring');
-var slBaseOpts = require('./slBaseOpts');
 var util = require('util');
 var http = require('http');
 
@@ -127,7 +126,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	console.log('got newline from serial: '+data);
+	// console.log('got newline from serial: '+data);
 
 	// handle M105
 	if (data.indexOf('ok T:') == 0 || data.indexOf('T:') == 0) {
@@ -245,7 +244,6 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('firstLoad', function(data) {
 		// emit slic3r saved options to ui
-		socket.emit('slOpts', slBaseOpts);
 		socket.emit('config', config);
 	});
 
