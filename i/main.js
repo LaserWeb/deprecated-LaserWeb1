@@ -262,6 +262,16 @@ $(document).ready(function() {
 		} 
 	});
 
+	$('#motorsOff').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M84' }); 
+	});
+
+	$('#commmand').keyup(function(event){
+		if(event.keyCode == 13){
+			$('#sendCommand').click();
+		}
+	});
+
 
 	// handle uploads
 	if (window.FileReader) {
