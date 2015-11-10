@@ -56,8 +56,10 @@ $(document).ready(function() {
 		}
 	});
 
+	// Enable the buttons once a port is selected
 	$("#choosePort").change(function () {
         $('#openMachineControl').removeClass('disabled');
+		$('#sendCommand').removeClass('disabled');	
     });
 
 	// config options from server
@@ -348,9 +350,6 @@ $(document).ready(function() {
 				type: 'danger'
 			}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
 	});
-
-
-	
 	
 	// Unknown Command
 	//data = echo:Unknown command: "X26.0480 Y29.1405 R7.4125"   unknownGcode
@@ -358,6 +357,7 @@ $(document).ready(function() {
 			//console.log("Unknown GCode");
 			var gcArray = data.split(/:/);   
 			console.log(gcArray);  // ["echo", "Unknown command", " "X11.4089 Y29.4258 R1.9810""]
+			// NB MIGHT MAKE IT PAUSE WHEN THIS HAPPENS, A WRONG COMMAND MIGHT ANYWAY MEAN A RUINED JOB
 			$('.bottom-left').notify({
 				message: { text: 'Unknown GCODE: '+gcArray[2] },
 				// settings

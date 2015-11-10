@@ -156,8 +156,6 @@ function serialData(data, port) {
 		return;
 	}
 	
-	
-
 	if (queuePause == 1) {
 		// pause queue
 		return;
