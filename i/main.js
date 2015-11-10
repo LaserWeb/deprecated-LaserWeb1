@@ -47,7 +47,7 @@ $(document).ready(function() {
 		//console.log('ports event',data);
 		$('#choosePort').html('<option val="no">Select a serial port</option>');
 		for (var i=0; i<data.length; i++) {
-			$('#choosePort').append('<option value="'+i+'">'+data[i].comName+':'+data[i].pnpId+'</option>');
+			$('#choosePort').append('<option value="'+i+'">'+data[i].comName+'</option>');
 		}
 		if (data.length == 1) {
 			// select first and only
@@ -56,6 +56,9 @@ $(document).ready(function() {
 		}
 	});
 
+	$("#choosePort").change(function () {
+        $('#openMachineControl').removeClass('disabled');
+    });
 
 	// config options from server
 	socket.on('config', function (data) {
