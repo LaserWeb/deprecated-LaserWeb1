@@ -43,7 +43,21 @@ On Windows 7 and above, please use the following instructions. We are assuming f
 8.  git clone https://github.com/openhardwarecoza/LaserWeb.git
 9.  cd LaserWeb
 10.  npm install
+
+
+## Ubuntu
+
+1. Open a terminal
+2. Enter the following commands
 ```
+sudo apt-get install nodejs nodejs-legacy npm build-essential git
+npm install serialport
+npm install socket.io
+npm install node-static
+```
+3. Go to the directory you would like to install LaserWeb in by entering ```cd Desktop``` for example
+4. Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
+5. Finally enter ```nodejs server.js```
 
 ## Config
 
