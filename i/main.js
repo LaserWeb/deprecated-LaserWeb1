@@ -244,6 +244,10 @@ $(document).ready(function() {
 			$('#clearQ').addClass('disabled');
 		}
 	});
+	
+	$('#openMachineControl').on('click', function() {
+		$('#machineControl').modal('toggle');
+	});
 
 	$('#clearQ').on('click', function() {
 		// if paused let user clear the command queue
