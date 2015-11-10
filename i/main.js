@@ -269,13 +269,25 @@ $(document).ready(function() {
 		$('#pause').click();
 	});
 
+	// Enable SendtoPrinter if we receive gcode in #gcodepreview
+	$("#gcodepreview").change(function () {
+		openGCodeFromText();
+        $('#openMachineControl').removeClass('disabled');
+		$('#sendCommand').removeClass('disabled');	
+		$('#sendToPrinter').removeClass('disabled');
+    });
+	
 	$('#sendToPrinter').on('click', function() {
 		$('#sendToPrinter').addClass('disabled');
 		$('#mainStatus').html('Status: Printing');
-		if (gCodeToSend) {
-			// !null
-			socket.emit('printGcode', { line: gCodeToSend });
-		} 
+		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
+		$('#gcodepreview').val('');
+	});
+	
+	$('#sendCommand').on('click', function() {
+
+		socket.emit('gcodeLine', { line: $('#command').val() });
+		$('#command').val('');Work
 	});
 
 	$('#motorsOff').on('click', function() {
