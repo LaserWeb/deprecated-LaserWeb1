@@ -31,6 +31,13 @@
 
 $(document).ready(function() {
 
+  $('.spinner .btn:first-of-type').on('click', function() {
+    $('.spinner input').val( parseInt($('.spinner input').val(), 10) + 100);
+  });
+  $('.spinner .btn:last-of-type').on('click', function() {
+    $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 100);
+  });
+
 	var socket = io.connect(''); // socket.io init
 	var gCodeToSend = null; // if uploaded file is gcode
 	var localPresets = []; // locally stored presets
@@ -275,6 +282,15 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'M84' }); 
 	});
 
+	$('#fanOn').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M106' }); 
+	});
+	
+	$('#fanOff').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M107' }); 
+	});
+
+	
 	$('#commmand').keyup(function(event){
 		if(event.keyCode == 13){
 			$('#sendCommand').click();
