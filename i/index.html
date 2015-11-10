@@ -162,7 +162,7 @@
 </div>
 
 <hr style="clear: both;" />
-<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToPrinter">Send to Laser</button>
+<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToLaser">Send to Laser</button>
 <button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
 <button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
 <hr style="clear: both;" />
@@ -566,7 +566,7 @@ Send
 $(document).ready(function(){ 
 	$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
 	$('#mainStatus').html('Status: Example only: Please Load proper file for cutting...');
-	$('#sendToPrinter').addClass('disabled');
+	$('#sendToLaser').addClass('disabled');
 	createObject("G0");
 })
 </script>

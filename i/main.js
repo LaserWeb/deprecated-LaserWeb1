@@ -264,21 +264,21 @@ $(document).ready(function() {
 	$('#clearQ').on('click', function() {
 		// if paused let user clear the command queue
 		socket.emit('clearQ', 1);
-		$('#sendToPrinter').removeClass('disabled');
+		$('#sendToLaser').removeClass('disabled');
 		// must clear queue first, then unpause (click) because unpause does a sendFirstQ on server
 		$('#pause').click();
 	});
 
-	// Enable SendtoPrinter if we receive gcode in #gcodepreview
+	// Enable sendToLaser if we receive gcode in #gcodepreview
 	$("#gcodepreview").change(function () {
 		openGCodeFromText();
         $('#openMachineControl').removeClass('disabled');
 		$('#sendCommand').removeClass('disabled');	
-		$('#sendToPrinter').removeClass('disabled');
+		$('#sendToLaser').removeClass('disabled');
     });
 	
-	$('#sendToPrinter').on('click', function() {
-		$('#sendToPrinter').addClass('disabled');
+	$('#sendToLaser').on('click', function() {
+		$('#sendToLaser').addClass('disabled');
 		$('#mainStatus').html('Status: Printing');
 		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
 		$('#gcodepreview').val('');
@@ -331,7 +331,7 @@ $(document).ready(function() {
 				gCodeToSend = this.result;
 				$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
 				$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
-				$('#sendToPrinter').removeClass('disabled');
+				$('#sendToLaser').removeClass('disabled');
 			};
 			reader.readAsText(fileInputGcode.files[0]);
 		});
