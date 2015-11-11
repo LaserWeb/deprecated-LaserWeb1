@@ -13,9 +13,7 @@ environment:
     secure: azLeMAlIn7bfsIjPriD3O8kg3/uLPNOnAE6FgwPvIT+MWSlMsG3giURb7SxQ01tB
 
   matrix:
-  - nodejs_version: "0.10"
   - nodejs_version: "0.12"
-  - nodejs_version: "4.2"
 
 platform:
   - x86
