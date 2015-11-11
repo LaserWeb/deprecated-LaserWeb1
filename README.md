@@ -65,7 +65,7 @@ npm install node-static
 
 ## Mac OS X
 
-1. Download and install nodejs version node-v0.12.7 (NOTE:  At the time of writing SerialPort is not supported on Node,js 4.0+) from https://nodejs.org/download/release/v0.12.7/
+1. Download and install nodejs version node-v0.12.7 (NOTE:  At the time of writing SerialPort is not supported on Node,js 4.0+) from https://nodejs.org/download/release/v0.12.7/   Note2: Compiling SerialPort sometimes fails. Read the auhors blog post about why its hard to manage over at http://www.voodootikigod.com/on-maintaining-a-native-node-module/
 2. ```cd``` to a directory to put LaserWeb in
 3. Open a terminal and enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git```
 4. Enter ```cd LaserWeb``` in the terminal window
