@@ -61,6 +61,16 @@ npm install socket.io
 npm install node-static
 ```
 6. Finally enter ```nodejs server.js```
+7. 
+
+## Mac OS X
+
+1. Download and install nodejs version node-v0.12.7 (NOTE:  At the time of writing SerialPort is not supported on Node,js 4.0+) from https://nodejs.org/download/release/v0.12.7/
+2. ```cd``` to a directory to put LaserWeb in
+3. Open a terminal and enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git```
+4. Enter ```cd LaserWeb``` in the terminal window
+5. Enter ```npm install```
+6. Now you can start it with ```node server.js```
 
 ## Config
 
