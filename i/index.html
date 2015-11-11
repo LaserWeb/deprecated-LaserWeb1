@@ -147,21 +147,28 @@
 <!-- LEFT COLUMN -->
 <div style=" width: 320px;  z-index: 10; position: absolute; left: 0;  top: 40; margin-left: 10px;"> <!-- Left floating div-->
 
-<span style="margin: 10px; width: 100%" class="btn btn-info btn-file"><i class="fa fa-folder-open" style="margin-right: 20px;" ></i>Upload GCODE <input type="file" id="fileInputGcode" /></span>
+<span style="margin-right: 10px;" class="btn btn-info btn-file">Upload GCODE <input type="file" id="fileInputGcode" /></span>
 
-<p style="margin: 4px;" id="fileStatus">File Loaded: </p>
+<p style="margin-top: 4px;" id="fileStatus">File Loaded: </p>
 
-<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; " id="gcodepreview"></textarea>
+<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange;" id="gcodepreview"></textarea>
 
-<a class="btn btn-warning disabled" style="margin: 10px; width:100% " id="sendToLaser"><i class="fa fa-fire fa-lg"  style="margin-right: 20px;"></i>Send to Laser</a>
+<span style="padding-left: 10px; width:100%; height:40px; float: right;" id="mainStatus">Status: Waiting for GCODE upload...</span>
+
+
+
+<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
+<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
+</div>
+
+<hr style="clear: both;" />
+<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToLaser">Send to Laser</button>
 <button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
 <button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
 <hr style="clear: both;" />
-<span style="padding-left: 10px; width:100%; height:40px; float: right;" id="mainStatus">Status: Waiting for GCODE upload...</span>
-<hr style="clear: both;" />
+ <div class='notifications bottom-left'></div>
 
-<div class='notifications bottom-left'></div>
-<span class="btn btn-default btn-file" onclick="controls.reset();">Reset 3D View</span>	
+ 			<span class="btn btn-default btn-file" onclick="controls.reset();">Reset 3D View</span>	
             
  <!-- Left Column ^^^ -->
 
@@ -175,16 +182,12 @@
 <!-- END LEFT COLUMN -->
 
 <!-- RIGHT COLUMN -->
-<div style=" width: 320px;  z-index: 10; position: absolute; right: 10px;  top: 40; margin-right: 0px;"> <!-- Right floating div-->
+<div style=" width: 320px;  z-index: 10; position: absolute; right: 0;  top: 40; margin-right: 10px;"> <!-- Right floating div-->
 
 <!-- Port Selection -->
-
-<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  ><i class="fa fa-plug" style="margin-right: 10px;"></i>Port</span>
-					<select id="choosePort" class="form-control">
-					<option val="no">Select a serial port</option>
-					</select>
-				</div>
+<select id="choosePort" class="form-control">
+<option val="no">Select a serial port</option>
+</select>
 
 <!-- Digital Readout -->
 <div id="mPosition" >
@@ -193,12 +196,12 @@
 <div id="mZ" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
 </div>
 
-<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-arrows fa-lg"" style="margin-right: 20px;"></i>Machine Control</a>
+<button type="button" class="btn btn-success disabled" style="width: 100%"  id="openMachineControl">Machine Control</button>
 
 <hr style="clear: both;" />
 
 <!-- Command Console -->
-<div id="console" ></div>
+<div id="console"></div>
 <div class="input-group">
 <input type="text" class="form-control" id="command">
 <span class="input-group-btn">
@@ -207,10 +210,6 @@ Send
 </button>
 </span>
 </div><!-- /input-group -->
-<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333; margin-top: 10px;"" id="qStatusHolder">
-<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
-</div>
-
 <hr style="clear: both;" />
 
 </div> <!-- Right floating div -->
@@ -566,7 +565,7 @@ Send
 <script>
 $(document).ready(function(){ 
 	$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
-	$('#mainStatus').html('Status: Upload a file, or paste GCode in the Orange Block');
+	$('#mainStatus').html('Status: Example only: Please Load proper file for cutting...');
 	$('#sendToLaser').addClass('disabled');
 	createObject("G0");
 })
