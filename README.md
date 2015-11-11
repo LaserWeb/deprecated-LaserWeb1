@@ -49,19 +49,15 @@ On Windows 7 and above, please use the following instructions. We are assuming f
 
 1. Open a terminal
 2. Enter the following command
-```
-sudo apt-get install nodejs nodejs-legacy npm build-essential git
-```
+```sudo apt-get install nodejs nodejs-legacy npm build-essential git```
 3. Go to the directory you would like to install LaserWeb in by entering ```cd Desktop``` for example
 4. Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
-5. Next install the npm modules by entering the following
-```
+5. Next install the npm modules by entering the following```
 npm install serialport
 npm install socket.io
-npm install node-static
-```
+npm install node-static```
 6. Finally enter ```nodejs server.js```
-7. 
+
 
 ## Mac OS X
 
