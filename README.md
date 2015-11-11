@@ -53,9 +53,7 @@ On Windows 7 and above, please use the following instructions. We are assuming f
 3. Go to the directory you would like to install LaserWeb in by entering ```cd Desktop``` for example
 4. Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
 5. Next install the npm modules by entering the following```
-npm install serialport
-npm install socket.io
-npm install node-static```
+npm install serialport socket.io node-static```
 6. Finally enter ```nodejs server.js```
 
 
