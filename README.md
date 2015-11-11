@@ -72,23 +72,24 @@ npm install node-static
 5. Enter ```npm install```
 6. Now you can start it with ```node server.js```
 
+### Ubuntu
+
+* Open a terminal
+* Enter the following command
+```
+sudo apt-get install nodejs nodejs-legacy npm build-essential git
+```
+* Go to the directory you would like to install LaserWeb in by entering ```cd Desktop``` for example
+* Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
+* Next install the npm modules by entering the following
+```
+npm install serialport
+npm install socket.io
+npm install node-static
+```
+* Finally enter ```nodejs server.js```
+
 ## Config
-
-edit config.js to change serial baud rate and web port
-edit /i/gcode-viewer/ui.js to change size of your laser's bed
-
-## Running
-
-// standalone
-```
-node server.js
-```
-
-// with forever
-```
-npm install -g forever
-forever start server.js
-```
 
 ## Access
 
