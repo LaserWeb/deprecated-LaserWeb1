@@ -603,9 +603,11 @@ $(document).ready(function() {
 			$('#mX').html('X: '+posArray[2]);
 			$('#mY').html('Y: '+posArray[4]);
 			$('#mZ').html('Z: '+posArray[6]);
-			cylinder.position.x = posArray[2] - (laserxmax /2);
-			cylinder.position.y = posArray[4] - (laserymax /2);
-			cylinder.position.z = posArray[6] + 20;
+			cylinder.position.x = (parseInt(posArray[2],10) - (laserxmax /2));
+			cylinder.position.y = (parseInt(posArray[4],10) - (laserymax /2));
+			cylinder.position.z = (parseInt(posArray[6],10) + 20);
+			
+			
 			
 	});
 	
