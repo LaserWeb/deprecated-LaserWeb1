@@ -5,9 +5,9 @@ LaserWeb is a fully function Laser Cutter Controller which runs over http.  Mult
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/laserweb.PNG)
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/controlmodal.PNG)
 
-More information can be found at http://xyzbots.com (soon)
+More information can be found at http://xyzbots.com (soon)  and http://www.openhardware.co.za
 
-Copyright 2015 Andrew Hodel andrewhodel@gmail.com  under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
+Copyright 2015 Andrew Hodel andrewhodel@gmail.com and Peter van der Walt https://plus.google.com/+PetervanderWalt/posts under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
 
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
