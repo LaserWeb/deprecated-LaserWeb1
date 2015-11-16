@@ -2,6 +2,12 @@
 
 LaserWeb is a fully function Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
+## Changelog
+
+* 16 Nov 2015: Integrating Millcrum.com libraries to provide DXF, SVG and MILLCRUM support 
+* 10 Nov 2015: Added FontAwesome icons, moved Jogging to a Modal widget so its out of the way when not in use
+* 8 Nov 2015:  Project started
+
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/laserweb.PNG)
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/controlmodal.PNG)
 
