@@ -263,10 +263,10 @@ function createObjectFromGCode(gcode) {
     var dY = bbbox.max.y-bbbox.min.y;
     var dZ = bbbox.max.z-bbbox.min.z;
 
-    $('#console').append('\n<span style="color: red;">--------------New Gcode Loaded--------------</span>\n');
-    $('#console').append('<span style="color: red;">Min Dimensions X: '+bbbox.min.x+' Y: '+bbbox.min.y+' Z: '+bbbox.min.z+'</span>\n');
-    $('#console').append('<span style="color: red;">Max Dimensions X: '+bbbox.max.x+' Y: '+bbbox.max.y+' Z: '+bbbox.max.z+'</span>\n\n');
-    $('#console').append('<span style="color: red;">Total Dimensions X: '+dX+' Y: '+dY+' Z: '+dZ+'</span>\n\n');
+    $('#console').append('<br><span style="color: red;"><u><b>New Gcode Loaded</b></u></span><br>');
+    $('#console').append('<span style="color: red;"><b>Min Dimensions<br> X:</b> '+bbbox.min.x+' <b>Y:</b> '+bbbox.min.y+' <b>Z:</b> '+bbbox.min.z+'</span><br>');
+    $('#console').append('<span style="color: red;"><b>Max Dimensions<br> X:</b> '+bbbox.max.x+' <b>Y:</b> '+bbbox.max.y+' <b>Z:</b> '+bbbox.max.z+'</span><br>');
+    $('#console').append('<span style="color: red;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
     $('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	
 
