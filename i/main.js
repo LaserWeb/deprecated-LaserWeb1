@@ -1,7 +1,7 @@
 /*
 
-    RepRapWeb - A Web Based 3d Printer Controller
-    Copyright (C) 2015 Andrew Hodel
+    LaserWeb - A Web Based Marlin Laser cutter Controller
+    Copyright (C) 2015 Andrew Hodel & Peter van der Walt
 
     THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
     WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
@@ -45,6 +45,7 @@ $(document).ready(function() {
 	var baseSlOpts;
 	
 	// Millcrum
+	var ogcode = document.getElementById('fileInputGcode');
 	var odxf = document.getElementById('fileInputDXF');
 	var osvg = document.getElementById('fileInputSVG');
 	var omc = document.getElementById('fileInputMILL');
@@ -354,11 +355,12 @@ $(document).ready(function() {
 		} catch (e) {
 			// log it to the alert window
 			//console.log('Millcrum Code Error: '+mcCode);
-			console.log('Millcrum Code Error');
+			//console.log('Millcrum Code Error');
 		}
 
 		// set saveGcode to visible
-		sgc.style.display = 'inline';
+		//sgc.style.display = 'inline';
+		// Execute Gcode toSaveGcode -> inject to gcodepreview here
 
 	});
 
@@ -372,16 +374,15 @@ $(document).ready(function() {
 	});
 
 
-	// handle uploads
-	if (window.FileReader) {
-
-		var reader = new FileReader ();
-		var ABreader = new FileReader ();
-
-		// gcode upload
+	// open .gcode
+	
+	ogcode.addEventListener('change', function(e) {
+		console.log("Open GCode")
+		$('#sendToLaser').addClass('disabled');
 		var fileInputGcode = document.getElementById('fileInputGcode');
-		fileInputGcode.addEventListener('change', function(e) {
-			reader.onloadend = function (ev) {
+		var r = new FileReader();
+		r.readAsText(fileInputGcode.files[0]);
+		r.onload = function(e) {
 				scene.remove(object);
 				scene.remove(cylinder);
 				scene.remove(helper);
@@ -396,21 +397,24 @@ $(document).ready(function() {
 				$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
 				$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
 				$('#sendToLaser').removeClass('disabled');
-			};
-			reader.readAsText(fileInputGcode.files[0]);
+				document.getElementById('fileInputGcode').value = '';
+				document.getElementById('fileInputDXF').value = '';
+				document.getElementById('fileInputSVG').value = '';
+				document.getElementById('fileInputMILL').value = '';
+			}
 		});
 
-	
-	} else {
-		alert('your browser is too old to upload files, get the latest Chromium or Firefox');
-	}
 	
 	
 	// open .dxf
 	odxf.addEventListener('change', function(e) {
+		$('#sendToLaser').addClass('disabled');
 		var r = new FileReader();
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
+
+		
+			var fileName = document.getElementById('fileInputDXF');
 
 			var dxf = new Dxf();
 
@@ -474,20 +478,27 @@ $(document).ready(function() {
 			generate.click();
 			$('#mcC').click();
 			openGCodeFromText();
-			//gCodeToSend = this.result;
-			//$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
-			//$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
-			//$('#sendToLaser').removeClass('disabled');
+			gCodeToSend = document.getElementById('gcodepreview').value;
+			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
+			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
+			$('#sendToLaser').removeClass('disabled');
+			document.getElementById('fileInputGcode').value = '';
+			document.getElementById('fileInputDXF').value = '';
+			document.getElementById('fileInputSVG').value = '';
+			document.getElementById('fileInputMILL').value = '';
+			
 			
 		}
 	});
 
 	// open .svg
 	osvg.addEventListener('change', function(e) {
+		$('#sendToLaser').addClass('disabled');
 		var r = new FileReader();
 		r.readAsText(osvg.files[0]);
 		r.onload = function(e) {
 
+			var fileName = document.getElementById('fileInputSVG');
 			var svg = new Svg();
 			svg.process(r.result);
 
@@ -529,10 +540,24 @@ $(document).ready(function() {
 
 			s += 'mc.get();\n\n';
 
+						//console.log(s+'\n DXF Converted to Millcrum');
 			// load the new millcrum code
-			//millcrumCode = s.value;
+			document.getElementById('millcrumCode').value = s;
+				
+			//millcrumCode.innerHTML = hljs.highlight('javascript',s).value;
 			// convert the .millcrum to gcode
-			//generate.click();
+			document.getElementById('gcodepreview').value = '';
+			generate.click();
+			$('#mcC').click();
+			openGCodeFromText();
+			gCodeToSend = document.getElementById('gcodepreview').value;
+			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
+			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
+			$('#sendToLaser').removeClass('disabled');
+			document.getElementById('fileInputGcode').value = '';
+			document.getElementById('fileInputDXF').value = '';
+			document.getElementById('fileInputSVG').value = '';
+			document.getElementById('fileInputMILL').value = '';
 		}
 	});
 
@@ -542,9 +567,22 @@ $(document).ready(function() {
 		r.readAsText(omc.files[0]);
 		r.onload = function(e) {
 			// load the file
-			millcrumCode.innerHTML = hljs.highlight('javascript',r.result).value;
-			// convert the .millcrum to gcode
+			var fileName = document.getElementById('fileInputMILL');
+			document.getElementById('gcodepreview').value = '';
+			
+			document.getElementById('millcrumCode').value = this.result;
+			
 			generate.click();
+			$('#mcC').click();
+			openGCodeFromText();
+			gCodeToSend = document.getElementById('gcodepreview').value;
+			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
+			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
+			$('#sendToLaser').removeClass('disabled');
+			document.getElementById('fileInputGcode').value = '';
+			document.getElementById('fileInputDXF').value = '';
+			document.getElementById('fileInputSVG').value = '';
+			document.getElementById('fileInputMILL').value = '';
 		}
 	});
 

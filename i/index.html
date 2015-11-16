@@ -154,12 +154,18 @@
 <!-- LEFT COLUMN -->
 <div style=" width: 320px;  z-index: 10; position: absolute; left: 0;  top: 40; margin-left: 10px;"> <!-- Left floating div-->
 
-<span style="margin: 10px; width: 100%" class="btn btn-info btn-file"><i class="fa fa-folder-open" style="margin-right: 20px;" ></i>Upload GCODE <input type="file" id="fileInputGcode" /></span>
-<span style="margin: 10px; width: 100%" class="btn btn-info btn-file"><i class="fa fa-folder-open" style="margin-right: 20px;" ></i>Upload DXF <input type="file" id="fileInputDXF" /></span>
-<span style="margin: 10px; width: 100%" class="btn btn-info btn-file"><i class="fa fa-folder-open" style="margin-right: 20px;" ></i>Upload SVG <input type="file" id="fileInputSVG" /></span>
-<span style="margin: 10px; width: 100%" class="btn btn-info btn-file"><i class="fa fa-folder-open" style="margin-right: 20px;" ></i>Upload MILLCRUM <input type="file" id="fileInputMILL" /></span>
-<button id="generate">Generate</button>
+
+<div class="btn-group">
+	<!-- span class="-group-addon"  ><i class="fa fa-folder-open" style="margin-right: 10px;"></i>Upload</span -->
+	<button type="button" class="btn btn-info btn-file">GCODE <input type="file" id="fileInputGcode" /></button>
+	<button type="button" class="btn btn-info btn-file">DXF <input type="file" id="fileInputDXF" /></button>
+	<button type="button" class="btn btn-info btn-file">SVG <input type="file" id="fileInputSVG" /></button>
+	<button type="button" class="btn btn-info btn-file">MILLCRUM <input type="file" id="fileInputMILL" /></button>
+</div>
+<p>
+<button style="display: none;" id="generate" >Generate</button>
 <button style="display: none;" id="saveGcode">Save Gcode</button>
+
 
 
 <p style="margin: 4px;" id="fileStatus">File Loaded: </p>
