@@ -1,5 +1,5 @@
 var Millcrum = function(tool) {
-	console.log("millcrum func");
+	//console.log("millcrum func");
 	this.gcode = '';
 	this.debug = false;
 	this.tool = tool;
@@ -843,7 +843,6 @@ Millcrum.prototype.get = function() {
 
 	var s = '';
 
-	console.log("millcrum.prototype.get");
 	// first list the options
 	s = '; TOOL OPTIONS\n';
 	for (key in this.tool) {
@@ -871,7 +870,7 @@ Millcrum.prototype.get = function() {
 		this.gcode += 'G0 F'+this.tool.rapid+' X0 Y0 Z0\n';
 	}
 
-	console.log(this.gcode);
+	//console.log(this.gcode);
 	document.getElementById('gcodepreview').value = this.gcode;
 	
 

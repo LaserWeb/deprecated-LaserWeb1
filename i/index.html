@@ -164,8 +164,8 @@
 	</div>
 
 <p>
-<button style="display: none;" id="generate" >Generate</button>
-<button style="display: none;" id="saveGcode">Save Gcode</button>
+
+
 
 
 
@@ -608,6 +608,46 @@ Send
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="cutParams" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Cutting Parameters</h4>
+      </div>
+      <div class="modal-body">
+	  
+		<div class="input-group" style="margin-bottom:10px; width: 100%;">
+				<span class="input-group-addon"  style="width: 100px;">Cut Feedrate</span>
+				<div class="input-group spinnercut">
+					<input type="text" class="form-control" value="5000" id="cutSpeed">
+					<div class="input-group-btn-vertical">
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+					</div>
+				</div>
+				<span class="input-group-addon"  style="width: 60px;">mm/min</span>
+		</div>
+	  
+	    <div class="input-group" style="margin-bottom:10px; width: 100%;">
+				<span class="input-group-addon"  style="width: 100px;">Move Feedrate</span>
+				<div class="input-group spinnermove">
+					<input type="text" class="form-control" value="5000" id="rapidSpeed">
+					<div class="input-group-btn-vertical">
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+					</div>
+				</div>
+				<span class="input-group-addon"  style="width: 60px;">mm/min</span>
+		</div>
+	  
+	  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button>
+      </div>
+    </div>
 
 
 <script>

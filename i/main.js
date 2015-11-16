@@ -38,7 +38,19 @@ $(document).ready(function() {
     $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 100);
   });
 
+  $('.spinnermove .btn:first-of-type').on('click', function() {
+    $('.spinnermove input').val( parseInt($('.spinnermove input').val(), 10) + 100);
+  });
+  $('.spinnermove .btn:last-of-type').on('click', function() {
+    $('.spinnermove input').val( parseInt($('.spinnermove input').val(), 10) - 100);
+  });
 
+  $('.spinnercut .btn:first-of-type').on('click', function() {
+    $('.spinnercut input').val( parseInt($('.spinnercut input').val(), 10) + 100);
+  });
+  $('.spinnercut .btn:last-of-type').on('click', function() {
+    $('.spinnercut input').val( parseInt($('.spinnercut input').val(), 10) - 100);
+  });
   
 	var socket = io.connect(''); // socket.io init
 	var gCodeToSend = null; // if uploaded file is gcode
@@ -343,9 +355,11 @@ $(document).ready(function() {
 	// handle generate click
 	generate.addEventListener("click", function() {
 
-			
-		var mcCode = document.getElementById('millcrumCode').value
-
+	console.log("Creating Millcrum");
+	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:1,step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';	
+	var mcCode = mcheader + document.getElementById('millcrumCode').value
+	
+	// This sends the mc JS vars to mc.js and creates GCode
 		try {
 			eval(mcCode);
 		} catch (e) {
@@ -353,19 +367,18 @@ $(document).ready(function() {
 			console.log(e+'Millcrum Code Error:');
 		}
 
-		// set saveGcode to visible
-		//sgc.style.display = 'inline';
-		// Execute Gcode toSaveGcode -> inject to gcodepreview here
-
-	});
-
-
-	
-		// save .gcode
-		sgc.addEventListener('click', function() {
-		console.log(toSaveGcode);
-		var blob = new Blob([toSaveGcode]);
-		saveAs(blob, 'output.gcode', true);
+	// Generate Gcode view and setup job for sending	
+	document.getElementById('millcrumCode').value = mcCode;
+	openGCodeFromText();
+	gCodeToSend = document.getElementById('gcodepreview').value;
+	$('.bottom-left').notify({
+				message: { text: 'Converted to GCode' },
+				// settings
+				type: 'success'
+			}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
+	// Activate GCode Tab
+	$('#gcC').click();
+		
 	});
 
 
@@ -438,7 +451,9 @@ $(document).ready(function() {
 				console.log('DXF Errors:'+errStr);
 			}
 
-			var s = 'var tool = {units:"mm",diameter:6.35,passDepth:4,step:1,rapid:2000,plunge:100,cut:600,zClearance:5,returnHome:true};\n\n';
+			//var s = 'var tool = {units:"mm",diameter:0.1,passDepth:1,step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';
+			var s = '// setup a new Millcrum object with that tool';
+						
 			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 			s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
 
@@ -475,10 +490,9 @@ $(document).ready(function() {
 			//millcrumCode.innerHTML = hljs.highlight('javascript',s).value;
 			// convert the .millcrum to gcode
 			document.getElementById('gcodepreview').value = '';
-			generate.click();
+			//generate.click();
+			$('#cutParams').modal('toggle');
 			$('#mcC').click();
-			openGCodeFromText();
-			gCodeToSend = document.getElementById('gcodepreview').value;
 			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
 			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
 			$('#sendToLaser').removeClass('disabled');
@@ -525,7 +539,8 @@ $(document).ready(function() {
 			// then flipping the y
 
 			// millcrum code holder
-			var s = 'var tool = {units:"mm",diameter:6.35,passDepth:4,step:1,rapid:2000,plunge:100,cut:600,zClearance:5,returnHome:true};\n\n';
+			//var s = 'var tool = {units:"mm",diameter:0.1,passDepth:1,step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';
+			var s = '// Setup SVG Job';
 			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 			s += '// set the surface dimensions for the viewer, svg import specified '+svg.units+'\nmc.surface('+svg.width+','+svg.height+');\n\n\n';
 
@@ -550,11 +565,10 @@ $(document).ready(function() {
 			//millcrumCode.innerHTML = hljs.highlight('javascript',s).value;
 			// convert the .millcrum to gcode
 			document.getElementById('gcodepreview').value = '';
-			generate.click();
+			//generate.click();
+			$('#cutParams').modal('toggle');
 			$('#mcC').click();
-			openGCodeFromText();
-			gCodeToSend = document.getElementById('gcodepreview').value;
-			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
+			$('#fileStatus').html('File Loaded: '+fileName.value+' as SVG');
 			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
@@ -584,7 +598,7 @@ $(document).ready(function() {
 			$('#mcC').click();
 			openGCodeFromText();
 			gCodeToSend = document.getElementById('gcodepreview').value;
-			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
+			$('#fileStatus').html('File Loaded: '+fileName.value+' as MILLCRUM');
 			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
