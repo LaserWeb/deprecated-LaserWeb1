@@ -1,4 +1,5 @@
 var Millcrum = function(tool) {
+	console.log("millcrum func");
 	this.gcode = '';
 	this.debug = false;
 	this.tool = tool;
@@ -18,11 +19,11 @@ Millcrum.prototype.addDegrees = function(base,mod) {
 
 Millcrum.prototype.surface = function(x,y) {
 	// set the surface dimensions
-	document.getElementById('surfaceX').value = x;
-	document.getElementById('surfaceY').value = y;
+	x = 600;
+	y = 400;
 
 	// run the init function
-	init();
+	//init();
 
 };
 
@@ -693,7 +694,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 	//console.log(toolPath);
 
 	// draw the original path on the html canvas
-	drawPath(basePath, this.tool, cutType, depth, true, obj.name);
+	//drawPath(basePath, this.tool, cutType, depth, true, obj.name);
 
 	//console.log('basePath first point inside mc.cut ',basePath[0]);
 
@@ -842,6 +843,7 @@ Millcrum.prototype.get = function() {
 
 	var s = '';
 
+	console.log("millcrum.prototype.get");
 	// first list the options
 	s = '; TOOL OPTIONS\n';
 	for (key in this.tool) {
@@ -870,7 +872,7 @@ Millcrum.prototype.get = function() {
 	}
 
 	console.log(this.gcode);
-	toSaveGcode = this.gcode;
+	document.getElementById('gcodepreview').value = this.gcode;
 	
 
 };
