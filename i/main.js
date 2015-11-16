@@ -388,7 +388,9 @@ $(document).ready(function() {
 				scene.remove(axesgrp);
 				// load gcode-viewer
 				//openGCodeFromText(this.result);
+				document.getElementById('millcrumCode').value = '';
 				document.getElementById('gcodepreview').value = this.result;
+				$('#gcC').click();
 				openGCodeFromText();
 				gCodeToSend = this.result;
 				$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
@@ -402,7 +404,6 @@ $(document).ready(function() {
 	} else {
 		alert('your browser is too old to upload files, get the latest Chromium or Firefox');
 	}
-	
 	
 	
 	// open .dxf
@@ -469,11 +470,10 @@ $(document).ready(function() {
 				
 			//millcrumCode.innerHTML = hljs.highlight('javascript',s).value;
 			// convert the .millcrum to gcode
+			document.getElementById('gcodepreview').value = '';
 			generate.click();
 			$('#mcC').click();
-		
-			
-			//openGCodeFromText();
+			openGCodeFromText();
 			//gCodeToSend = this.result;
 			//$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
 			//$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
