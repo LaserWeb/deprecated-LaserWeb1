@@ -1,0 +1,27 @@
+<p>
+Millcrum is a tool for generating toolpaths for a milling machine from a definition of objects.  It is very powerful in it's ability.
+</p>
+
+<p>
+It was created as a way to easily write code to generate a toolpath for a CNC.  Z passes are automatically generated based on definitions of total depth and per pass depth.  Objects are defined and assigned a total Z depth based on the global total Z depth which allows the easy positioning of said objects.
+</p>
+
+<p>View the examples at http://millcrum.com for a quick introduction on how to use it.</p>
+
+<p>
+It was created because of the ease of use with OpenSCAD when creating 3d printable objects for engineering and mechanical design.  The normal toolchain with CNC operations would be to draw the path in a CAD program, then use a CAM program to convert everything to gcode.  You could use OpenSCAD to generate a dxf, then use a CAM tool to create the toolpath but that's still too many steps.  With Millcrum everything is defined as a parameter for the design and the machine.  This allows anyone to create a design and share it with the world so that anyone else can simply change a few variables to use it with any machine.  It also allows for things like loops to create patterned toolpaths, see the Pegboard example.
+</p>
+
+<p>
+It creates every path, even those including arcs as line segments so there is no need to have ARC support with the machine.  It does this completely without external libraries, you can view the pathing code in mc.js
+</p>
+
+<p>
+It also calculates the tool offsets and creates different operations (inside, outside and pocket).  Inside and Outside operations can be created with G10 on *some* machines but that does nothing for Pocket operations.  With Millcrum all offsets are handled internally and parametrically which means you can count on it working correctly and you don't have to deal with G53!
+</p>
+
+<p>It was created by Andrew Hodel in 2015.  Check out <a href="http://xyzbots.com">xyzbots.com</a> for a CNC controller by the same author.</p>
+
+<p>All code and work is Copyright 2015 Andrew Hodel, you may use this for whatever you want but if you are making a ton of money from it you should probably give me some.</p>
+
+<p>Code is available at <a href="https://github.com/andrewhodel/millcrum">https://github.com/andrewhodel/millcrum</a></p>

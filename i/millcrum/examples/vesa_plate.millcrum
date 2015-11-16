@@ -1,0 +1,39 @@
+// examples/vesa_plate.millcrum - an example plate adapter for a standard VESA mount
+
+// create the tool options
+// units: mm or inch
+// diameter: tool diameter in mm or inch
+// passDepth: depth to cut per pass in mm or inch, if a cut operation has a deeper depth then multiple passes will occur
+// step: how far the bit should step for pocket operations, between 0 and 1 (full step)
+// rapid: how fast the tool should move when it is not cutting
+// plunge: how fast the tool should move down on the Z axis when cutting
+// cut: how fast the tool should move on the X and Y axes when cutting
+// zClearance: how high above the surface the tool should be when not cutting
+// returnHome: should the tool return to 0,0,0 after finishing, true or false
+var tool = {units:'mm',diameter:6.35,passDepth:4,step:1,rapid:2000,plunge:100,cut:600,zClearance:5,returnHome:true};
+
+// setup a new Millcrum object with that tool
+var mc = new Millcrum(tool);
+
+// set the surface dimensions for the viewer
+mc.surface(200,200);
+
+// circle object for screw holes the size of the bit
+var circle = {type:'circle',r:6.35/2};
+
+// cut each of the 4 with inside cuts
+mc.cut('inside', circle, 4, [20,20]);
+mc.cut('inside', circle, 4, [120,20]);
+mc.cut('inside', circle, 4, [120,120]);
+mc.cut('inside', circle, 4, [20,120]);
+
+// cut center screw holes
+mc.cut('inside', circle, 4, [40,70]);
+mc.cut('inside', circle, 4, [100,70]);
+
+// create a rectangle of 110mm x 110mm with a corner radius of 4mm
+var plate = {type:'rect',xLen:120,yLen:120,cornerRadius:4};
+mc.cut('outside', plate, 4, [10,10]);
+
+// get the gcode
+mc.get();

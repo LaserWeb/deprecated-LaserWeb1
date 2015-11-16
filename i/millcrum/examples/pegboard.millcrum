@@ -1,0 +1,43 @@
+// examples/pegboard.millcrum - example 1" x 1" pegboard generator
+
+// create the tool options
+// units: mm or inch
+// diameter: tool diameter in mm or inch
+// passDepth: depth to cut per pass in mm or inch, if a cut operation has a deeper depth then multiple passes will occur
+// step: how far the bit should step for pocket operations, between 0 and 1 (full step)
+// rapid: how fast the tool should move when it is not cutting
+// plunge: how fast the tool should move down on the Z axis when cutting
+// cut: how fast the tool should move on the X and Y axes when cutting
+// zClearance: how high above the surface the tool should be when not cutting
+// returnHome: should the tool return to 0,0,0 after finishing, true or false
+var tool = {units:'inches',diameter:.25,passDepth:.55,step:1,rapid:75,plunge:4,cut:20,zClearance:1,returnHome:true};
+
+// setup a new Millcrum object with that tool
+var mc = new Millcrum(tool);
+
+// set the surface dimensions for the viewer
+mc.surface(24,24);
+
+// pegboard holes are spaced in 1" squares
+// we can simply define the size of the sheet we plan to cut
+// and have Millcrum do all the work
+
+// this will be a 2ft x 2ft sheet
+var totalLength = 24; // X
+var totalWidth = 24; // Y
+
+// the tool.passDepth is set to .55 which will cut through a 1/2" sheet
+
+// we want a 1 inch border without holes
+// we are making .25" holes (the size of the bit)
+var circle = {type:'circle',r:.25/2};
+
+// for each totalLength-1 line, cut totalWidth-1 holes
+for (var c=1; c<totalLength; c++) {
+	for (a=1; a<totalWidth; a++) {
+		mc.cut('inside', circle, .55, [c,a]);
+	}
+}
+
+// get the gcode
+mc.get();
