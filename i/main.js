@@ -52,6 +52,20 @@ $(document).ready(function() {
     $('.spinnercut input').val( parseInt($('.spinnercut input').val(), 10) - 100);
   });
   
+  $('.spinnerthickness .btn:first-of-type').on('click', function() {
+    $('.spinnerthickness input').val( parseInt($('.spinnerthickness input').val(), 10) + 1);
+  });
+  $('.spinnerthickness .btn:last-of-type').on('click', function() {
+    $('.spinnerthickness input').val( parseInt($('.spinnerthickness input').val(), 10) - 1);
+  });
+  
+  $('.spinnerperpass .btn:first-of-type').on('click', function() {
+    $('.spinnerperpass input').val( parseInt($('.spinnerperpass input').val(), 10) + 1);
+  });
+  $('.spinnerperpass .btn:last-of-type').on('click', function() {
+    $('.spinnerperpass input').val( parseInt($('.spinnerperpass input').val(), 10) - 1);
+  });
+  
 	var socket = io.connect(''); // socket.io init
 	var gCodeToSend = null; // if uploaded file is gcode
 	var localPresets = []; // locally stored presets
@@ -356,7 +370,7 @@ $(document).ready(function() {
 	generate.addEventListener("click", function() {
 
 	console.log("Creating Millcrum");
-	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:1,step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';	
+	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:'+$('#perpass').val()+',step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';	
 	var mcCode = mcheader + document.getElementById('millcrumCode').value
 	
 	// This sends the mc JS vars to mc.js and creates GCode
@@ -367,18 +381,18 @@ $(document).ready(function() {
 			console.log(e+'Millcrum Code Error:');
 		}
 
-	// Generate Gcode view and setup job for sending	
-	document.getElementById('millcrumCode').value = mcCode;
-	openGCodeFromText();
-	gCodeToSend = document.getElementById('gcodepreview').value;
-	$('.bottom-left').notify({
-				message: { text: 'Converted to GCode' },
-				// settings
-				type: 'success'
-			}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
-	// Activate GCode Tab
-	$('#gcC').click();
-		
+		// Generate Gcode view and setup job for sending	
+		document.getElementById('millcrumCode').value = mcCode;
+		openGCodeFromText();
+		gCodeToSend = document.getElementById('gcodepreview').value;
+		$('.bottom-left').notify({
+					message: { text: 'Converted to GCode' },
+					// settings
+					type: 'success'
+				}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
+		// Activate GCode Tab
+		$('#gcC').click();
+			
 	});
 
 
@@ -402,7 +416,7 @@ $(document).ready(function() {
 				$('#gcC').click();
 				openGCodeFromText();
 				gCodeToSend = this.result;
-				$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
+				('#perpass').val()+
 				$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
@@ -469,7 +483,7 @@ $(document).ready(function() {
 					s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
 				}
 
-				s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', 4, [0,0]);\n\n';
+				s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 			}
 
 			// convert lines to millcrum
@@ -478,7 +492,7 @@ $(document).ready(function() {
 				s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
 				s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
 
-				s += ']};\nmc.cut(\'centerOnPath\', line'+c+', 4, [0,0]);\n\n';
+				s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 			}
 
 			s += '\nmc.get();\n';
@@ -552,7 +566,7 @@ $(document).ready(function() {
 					s += '['+svg.paths[c][p][0]+','+svg.paths[c][p][1]+'],';
 				}
 				s += ']};\n';
-				s += 'mc.cut(\'centerOnPath\', polygon'+c+', 4, [0,0]);\n\n'
+				s += 'mc.cut(\'centerOnPath\', polygon'+c+', '+$('#thickness').val()+', [0,0]);\n\n'
 			}
 
 

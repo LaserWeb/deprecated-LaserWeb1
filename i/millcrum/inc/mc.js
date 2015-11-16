@@ -700,7 +700,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 
 	if (cutType != 'centerOnPath') {
 		// draw the offset path on the html canvas
-		drawPath(toolPath, this.tool, cutType, depth, false, obj.name);
+		//drawPath(toolPath, this.tool, cutType, depth, false, obj.name);
 	}
 
 	// now put a comment that explains that the next block of GCODE is for this obj

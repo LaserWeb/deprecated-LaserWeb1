@@ -157,13 +157,23 @@
 
 	<div class="btn-group" style="width: 100%;">
 	<button type="button" style="width: 39px;" class="btn btn-info btn-sm"><i class="fa fa-folder-open fa-lg"></i></button>
-	<button type="button" class="btn btn-info btn-file btn-sm">GCODE <input type="file" id="fileInputGcode" /></button>
-	<button type="button" class="btn btn-info btn-file btn-sm">DXF <input type="file" id="fileInputDXF" /></button>
-	<button type="button" class="btn btn-info btn-file btn-sm">SVG <input type="file" id="fileInputSVG" /></button>
-	<button type="button" class="btn btn-info btn-file btn-sm">MILLCRUM <input type="file" id="fileInputMILL" /></button>
+	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">GCODE <input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button>
+	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf"" id="fileInputDXF" /></button>
+	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">SVG <input type="file" accept=".svg" id="fileInputSVG" /></button>
+	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">MC <input type="file" accept=".millcrum,.mill,.js" id="fileInputMILL" /></button>
 	</div>
-
-<p>
+	<p>
+	<div class="input-group" style="margin-bottom:10px; width: 100%;">
+				<span class="input-group-addon"  style="width: 100px;">Material Thickness</span>
+				<div class="input-group spinnerthickness">
+					<input type="text" class="form-control" value="3" id="thickness">
+					<div class="input-group-btn-vertical">
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+					</div>
+				</div>
+				<span class="input-group-addon"  style="width: 60px;">mm</span>
+	</div>
 
 
 
@@ -620,9 +630,9 @@ Send
       <div class="modal-body">
 	  
 		<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 100px;">Cut Feedrate</span>
+				<span class="input-group-addon"  style="width: 200px;">Cut Feedrate</span>
 				<div class="input-group spinnercut">
-					<input type="text" class="form-control" value="5000" id="cutSpeed">
+					<input type="text" class="form-control" value="1000" id="cutSpeed">
 					<div class="input-group-btn-vertical">
 						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
 						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -632,9 +642,9 @@ Send
 		</div>
 	  
 	    <div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 100px;">Move Feedrate</span>
+				<span class="input-group-addon"  style="width: 200px;">Rapid Feedrate</span>
 				<div class="input-group spinnermove">
-					<input type="text" class="form-control" value="5000" id="rapidSpeed">
+					<input type="text" class="form-control" value="3000" id="rapidSpeed">
 					<div class="input-group-btn-vertical">
 						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
 						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -642,6 +652,19 @@ Send
 				</div>
 				<span class="input-group-addon"  style="width: 60px;">mm/min</span>
 		</div>
+		
+		<div class="input-group" style="margin-bottom:10px; width: 100%;">
+				<span class="input-group-addon"  style="width: 200px;">Z-Down per pass</span>
+				<div class="input-group spinnerperpass">
+					<input type="text" class="form-control" value="3" id="perpass">
+					<div class="input-group-btn-vertical">
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+					</div>
+				</div>
+				<span class="input-group-addon"  style="width: 60px;">mm</span>
+		</div>
+
 	  
 	  </div>
       <div class="modal-footer">
