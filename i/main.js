@@ -43,7 +43,19 @@ $(document).ready(function() {
 	var localPresets = []; // locally stored presets
 	var defaultSlicer = 'cura';
 	var baseSlOpts;
-
+	
+	// Millcrum
+	var odxf = document.getElementById('fileInputDXF');
+	var osvg = document.getElementById('fileInputSVG');
+	var omc = document.getElementById('fileInputMILL');
+	var millcrumCode = document.getElementById('millcrumCode');
+	var toSaveGcode = '';
+	var generate = document.getElementById('generate');
+	var sgc = document.getElementById('saveGcode');
+	/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+	var saveAs=saveAs||function(e){"use strict";if("undefined"==typeof navigator||!/MSIE [1-9]\./.test(navigator.userAgent)){var t=e.document,n=function(){return e.URL||e.webkitURL||e},o=t.createElementNS("http://www.w3.org/1999/xhtml","a"),r="download"in o,i=function(n){var o=t.createEvent("MouseEvents");o.initMouseEvent("click",!0,!1,e,0,0,0,0,0,!1,!1,!1,!1,0,null),n.dispatchEvent(o)},a=e.webkitRequestFileSystem,c=e.requestFileSystem||a||e.mozRequestFileSystem,u=function(t){(e.setImmediate||e.setTimeout)(function(){throw t},0)},f="application/octet-stream",s=0,d=500,l=function(t){var o=function(){"string"==typeof t?n().revokeObjectURL(t):t.remove()};e.chrome?o():setTimeout(o,d)},v=function(e,t,n){t=[].concat(t);for(var o=t.length;o--;){var r=e["on"+t[o]];if("function"==typeof r)try{r.call(e,n||e)}catch(i){u(i)}}},p=function(e){return/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(e.type)?new Blob(["\ufeff",e],{type:e.type}):e},w=function(t,u){t=p(t);var d,w,y,m=this,S=t.type,h=!1,O=function(){v(m,"writestart progress write writeend".split(" "))},E=function(){if((h||!d)&&(d=n().createObjectURL(t)),w)w.location.href=d;else{var o=e.open(d,"_blank");void 0==o&&"undefined"!=typeof safari&&(e.location.href=d)}m.readyState=m.DONE,O(),l(d)},R=function(e){return function(){return m.readyState!==m.DONE?e.apply(this,arguments):void 0}},b={create:!0,exclusive:!1};return m.readyState=m.INIT,u||(u="download"),r?(d=n().createObjectURL(t),o.href=d,o.download=u,i(o),m.readyState=m.DONE,O(),void l(d)):(e.chrome&&S&&S!==f&&(y=t.slice||t.webkitSlice,t=y.call(t,0,t.size,f),h=!0),a&&"download"!==u&&(u+=".download"),(S===f||a)&&(w=e),c?(s+=t.size,void c(e.TEMPORARY,s,R(function(e){e.root.getDirectory("saved",b,R(function(e){var n=function(){e.getFile(u,b,R(function(e){e.createWriter(R(function(n){n.onwriteend=function(t){w.location.href=e.toURL(),m.readyState=m.DONE,v(m,"writeend",t),l(e)},n.onerror=function(){var e=n.error;e.code!==e.ABORT_ERR&&E()},"writestart progress write abort".split(" ").forEach(function(e){n["on"+e]=m["on"+e]}),n.write(t),m.abort=function(){n.abort(),m.readyState=m.DONE},m.readyState=m.WRITING}),E)}),E)};e.getFile(u,{create:!1},R(function(e){e.remove(),n()}),R(function(e){e.code===e.NOT_FOUND_ERR?n():E()}))}),E)}),E)):void E())},y=w.prototype,m=function(e,t){return new w(e,t)};return"undefined"!=typeof navigator&&navigator.msSaveOrOpenBlob?function(e,t){return navigator.msSaveOrOpenBlob(p(e),t)}:(y.abort=function(){var e=this;e.readyState=e.DONE,v(e,"abort")},y.readyState=y.INIT=0,y.WRITING=1,y.DONE=2,y.error=y.onwritestart=y.onprogress=y.onwrite=y.onabort=y.onerror=y.onwriteend=null,m)}}("undefined"!=typeof self&&self||"undefined"!=typeof window&&window||this.content);"undefined"!=typeof module&&module.exports?module.exports.saveAs=saveAs:"undefined"!=typeof define&&null!==define&&null!=define.amd&&define([],function(){return saveAs});
+	var localMc = new Millcrum();
+	
 	socket.emit('firstLoad', 1);
 
 	socket.on('serverError', function (data) {
@@ -137,6 +149,7 @@ $(document).ready(function() {
 		}
 	});
 
+	
 	$('#xM01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1 F'+$('#jogSpeed').val()+'\nG90' });
 	});
@@ -257,6 +270,21 @@ $(document).ready(function() {
 		}
 	});
 	
+	$('#mcC').on('click', function() {
+		$('#mcA').addClass('active');
+		$('#gcA').removeClass('active');
+		$('#mPosition').show();
+		$('#wPosition').hide();
+	});
+
+	$('#gcC').on('click', function() {
+		$('#gcA').addClass('active');
+		$('#mcA').removeClass('active');
+		$('#wPosition').show();
+		$('#mPosition').hide();
+	});
+
+	
 	$('#openMachineControl').on('click', function() {
 		$('#machineControl').modal('toggle');
 	});
@@ -303,10 +331,44 @@ $(document).ready(function() {
 	});
 
 	
-	$('#commmand').keyup(function(event){
+	$('#command').keyup(function(event){
 		if(event.keyCode == 13){
 			$('#sendCommand').click();
 		}
+	});
+
+	// handle generate click
+	generate.addEventListener("click", function() {
+
+		// remove any open pathInfo
+		//pathInfo.style.display = 'none';
+
+		// reset clickPaths
+		clickPaths = [];
+
+		// this gets the text (no html nodes so no formatting) of the millcrum code
+		var mcCode = document.getElementById('millcrumCode').value
+
+		try {
+			eval(mcCode);
+		} catch (e) {
+			// log it to the alert window
+			//console.log('Millcrum Code Error: '+mcCode);
+			console.log('Millcrum Code Error');
+		}
+
+		// set saveGcode to visible
+		sgc.style.display = 'inline';
+
+	});
+
+
+	
+		// save .gcode
+		sgc.addEventListener('click', function() {
+		console.log(toSaveGcode);
+		var blob = new Blob([toSaveGcode]);
+		saveAs(blob, 'output.gcode', true);
 	});
 
 
@@ -341,6 +403,151 @@ $(document).ready(function() {
 		alert('your browser is too old to upload files, get the latest Chromium or Firefox');
 	}
 	
+	
+	
+	// open .dxf
+	odxf.addEventListener('change', function(e) {
+		var r = new FileReader();
+		r.readAsText(odxf.files[0]);
+		r.onload = function(e) {
+
+			var dxf = new Dxf();
+
+			dxf.parseDxf(r.result);
+
+			var errStr = '';
+			if (dxf.invalidEntities.length > 0) {
+				for (var c=0; c<dxf.invalidEntities.length; c++) {
+					errStr += 'Invalid Entity: '+dxf.invalidEntities[c] + '\n';
+				}
+				errStr += '\n';
+			}
+
+			if (dxf.alerts.length > 0) {
+				for (var c=0; c<dxf.alerts.length; c++) {
+					errStr += dxf.alerts[c] + '\n\n';
+				}
+			}
+
+			if (errStr != '') {
+				console.log('DXF Errors:'+errStr);
+			}
+
+			var s = 'var tool = {units:"mm",diameter:6.35,passDepth:4,step:1,rapid:2000,plunge:100,cut:600,zClearance:5,returnHome:true};\n\n';
+			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
+			s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
+
+			// convert polylines to millcrum
+			for (var c=0; c<dxf.polylines.length; c++) {
+				if (dxf.polylines[c].layer == '') {
+					// name it polyline+c
+					dxf.polylines[c].layer = 'polyline'+c;
+				}
+				s += '//LAYER '+dxf.polylines[c].layer+'\n';
+				s += 'var polyline'+c+' = {type:\'polygon\',name:\''+dxf.polylines[c].layer+'\',points:[';
+				for (var p=0; p<dxf.polylines[c].points.length; p++) {
+					s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
+				}
+
+				s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', 4, [0,0]);\n\n';
+			}
+
+			// convert lines to millcrum
+			for (var c=0; c<dxf.lines.length; c++) {
+				s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
+				s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
+				s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
+
+				s += ']};\nmc.cut(\'centerOnPath\', line'+c+', 4, [0,0]);\n\n';
+			}
+
+			s += '\nmc.get();\n';
+
+			//console.log(s+'\n DXF Converted to Millcrum');
+			// load the new millcrum code
+			document.getElementById('millcrumCode').value = s;
+				
+			//millcrumCode.innerHTML = hljs.highlight('javascript',s).value;
+			// convert the .millcrum to gcode
+			generate.click();
+			$('#mcC').click();
+		
+			
+			//openGCodeFromText();
+			//gCodeToSend = this.result;
+			//$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
+			//$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
+			//$('#sendToLaser').removeClass('disabled');
+			
+		}
+	});
+
+	// open .svg
+	osvg.addEventListener('change', function(e) {
+		var r = new FileReader();
+		r.readAsText(osvg.files[0]);
+		r.onload = function(e) {
+
+			var svg = new Svg();
+			svg.process(r.result);
+
+			console.log('\n\nall paths',svg.paths);
+			console.log('svg units '+svg.units);
+
+			if (svg.alerts.length > 0) {
+				var errStr = '';
+				for (a in svg.alerts) {
+					errStr += svg.alerts[a]+'\n\n';
+				}
+				doAlert(errStr, 'SVG Errors:');
+			}
+
+			// now that we have a proper path in absolute coordinates regardless of transforms, matrices or relative/absolute coordinates
+			// we can write out the millcrum (clean) code
+
+			// we need to flip all the y points because svg and cnc are reverse
+			// this way, regardless, what people draw is what they get on the machine
+			// that requires getting the actual min and max, moving everything into the positive
+			// then flipping the y
+
+			// millcrum code holder
+			var s = 'var tool = {units:"mm",diameter:6.35,passDepth:4,step:1,rapid:2000,plunge:100,cut:600,zClearance:5,returnHome:true};\n\n';
+			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
+			s += '// set the surface dimensions for the viewer, svg import specified '+svg.units+'\nmc.surface('+svg.width+','+svg.height+');\n\n\n';
+
+			// now loop through the paths and write them to mc code
+			for (var c=0; c<svg.paths.length; c++) {
+				s += 'var polygon'+c+' = {type:\'polygon\',name:\'polygon'+c+'\',points:['
+				for (var p=0; p<svg.paths[c].length; p++) {
+					svg.paths[c][p][1] = svg.height-svg.paths[c][p][1];
+					s += '['+svg.paths[c][p][0]+','+svg.paths[c][p][1]+'],';
+				}
+				s += ']};\n';
+				s += 'mc.cut(\'centerOnPath\', polygon'+c+', 4, [0,0]);\n\n'
+			}
+
+
+			s += 'mc.get();\n\n';
+
+			// load the new millcrum code
+			//millcrumCode = s.value;
+			// convert the .millcrum to gcode
+			//generate.click();
+		}
+	});
+
+	// open .millcrum
+	omc.addEventListener('change', function(e) {
+		var r = new FileReader();
+		r.readAsText(omc.files[0]);
+		r.onload = function(e) {
+			// load the file
+			millcrumCode.innerHTML = hljs.highlight('javascript',r.result).value;
+			// convert the .millcrum to gcode
+			generate.click();
+		}
+	});
+
 	// Position
 	// data =  X:100.00 Y:110.00 Z:10.00 E:0.00
 	socket.on('posStatus', function(data) {

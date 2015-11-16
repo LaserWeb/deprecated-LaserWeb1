@@ -869,7 +869,8 @@ Millcrum.prototype.get = function() {
 		this.gcode += 'G0 F'+this.tool.rapid+' X0 Y0 Z0\n';
 	}
 
-	//console.log(this.gcode);
+	console.log(this.gcode);
 	toSaveGcode = this.gcode;
+	
 
 };
