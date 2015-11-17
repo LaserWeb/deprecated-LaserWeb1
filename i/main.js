@@ -474,7 +474,7 @@ $(document).ready(function() {
 			}
 
 			var s = '// setup a new Millcrum object with that tool';
-						
+			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 			s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
 
 			// convert polylines to millcrum
