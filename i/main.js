@@ -395,11 +395,8 @@ $(document).ready(function() {
 		document.getElementById('millcrumCode').value = mcCode;
 		openGCodeFromText();
 		gCodeToSend = document.getElementById('gcodepreview').value;
-		$('.bottom-left').notify({
-					message: { text: 'Converted to GCode' },
-					// settings
-					type: 'success'
-				}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
+				$('#console').append('<p class="pf" style="color: #000000;"><b>Incoming file Converted to GCode...</b></p>');
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
 		// Activate GCode Tab
 		$('#gcC').click();
 			
@@ -409,7 +406,7 @@ $(document).ready(function() {
 	
 	// open .gcode (File Open Function)
 	ogcode.addEventListener('change', function(e) {
-		console.log("Open GCode")
+		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: GCODE</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
 		var fileInputGcode = document.getElementById('fileInputGcode');
 		var r = new FileReader();
@@ -419,25 +416,20 @@ $(document).ready(function() {
 				scene.remove(cylinder);
 				scene.remove(helper);
 				scene.remove(axesgrp);
-			
 				document.getElementById('millcrumCode').value = '';
 				document.getElementById('gcodepreview').value = this.result;
-				
 				$('#gcC').click();
 				openGCodeFromText();
 				gCodeToSend = this.result;
-				
-				$('#mainStatus').html('Status: GCODE for '+fileInputGcode.value+' loaded and ready to cut...');
+				$('#fileStatus').html('File Loaded: '+fileName.value+' as GCODE');
+				$('#mainStatus').html('Status: '+fileInputGcode.value+' loaded and ready to cut...');
 				$('#sendToLaser').removeClass('disabled');
-			
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
 				document.getElementById('fileInputSVG').value = '';
 				document.getElementById('fileInputMILL').value = '';
-				$('.bottom-left').notify({
-				message: { text: 'GCODE File Loaded' },
-					type: 'success'
-				}).show(); 
+				$('#console').append('<p class="pf" style="color: #000000;"><b>GCode File Upload Complete...</b></p>');
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
 			}
 		});
 
@@ -445,6 +437,7 @@ $(document).ready(function() {
 	
 	// open .dxf  (File Open Function)
 	odxf.addEventListener('change', function(e) {
+		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: DXF</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
 		var r = new FileReader();
 		r.readAsText(odxf.files[0]);
@@ -452,14 +445,17 @@ $(document).ready(function() {
 	
 			var fileName = document.getElementById('fileInputDXF');
 			var dxf = new Dxf();
-
+					
+			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			
 			dxf.parseDxf(r.result);
 
 			var errStr = '';
 			if (dxf.invalidEntities.length > 0) {
 				for (var c=0; c<dxf.invalidEntities.length; c++) {
 					errStr += 'Invalid Entity: '+dxf.invalidEntities[c] + '\n';
-				}
+					}
 				errStr += '\n';
 			}
 
@@ -471,64 +467,64 @@ $(document).ready(function() {
 
 			if (errStr != '') {
 				console.log('DXF Errors:'+errStr);
-			}
+				$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			} 
+				
+				var s = '// setup a new Millcrum object with that tool';
+				s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
+				s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
 
-			var s = '// setup a new Millcrum object with that tool';
-			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
-			s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
+				// convert polylines to millcrum
+				for (var c=0; c<dxf.polylines.length; c++) {
+					if (dxf.polylines[c].layer == '') {
+						// name it polyline+c
+						dxf.polylines[c].layer = 'polyline'+c;
+					}
+					s += '//LAYER '+dxf.polylines[c].layer+'\n';
+					s += 'var polyline'+c+' = {type:\'polygon\',name:\''+dxf.polylines[c].layer+'\',points:[';
+					for (var p=0; p<dxf.polylines[c].points.length; p++) {
+						s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
+					}
 
-			// convert polylines to millcrum
-			for (var c=0; c<dxf.polylines.length; c++) {
-				if (dxf.polylines[c].layer == '') {
-					// name it polyline+c
-					dxf.polylines[c].layer = 'polyline'+c;
+					s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 				}
-				s += '//LAYER '+dxf.polylines[c].layer+'\n';
-				s += 'var polyline'+c+' = {type:\'polygon\',name:\''+dxf.polylines[c].layer+'\',points:[';
-				for (var p=0; p<dxf.polylines[c].points.length; p++) {
-					s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
+
+				// convert lines to millcrum
+				for (var c=0; c<dxf.lines.length; c++) {
+					s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
+					s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
+					s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
+
+					s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 				}
 
-				s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+				s += '\nmc.get();\n';
+
+				// load the new millcrum code
+				document.getElementById('millcrumCode').value = s;
+				document.getElementById('gcodepreview').value = '';
+				
+				$('#cutParams').modal('toggle');
+				
+				$('#mcC').click();
+				
+				$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
+				$('#mainStatus').html('Status: '+fileName.value+' loaded and ready to cut...');
+				$('#sendToLaser').removeClass('disabled');
+				document.getElementById('fileInputGcode').value = '';
+				document.getElementById('fileInputDXF').value = '';
+				document.getElementById('fileInputSVG').value = '';
+				document.getElementById('fileInputMILL').value = '';
+				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
 			}
-
-			// convert lines to millcrum
-			for (var c=0; c<dxf.lines.length; c++) {
-				s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
-				s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
-				s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
-
-				s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
-			}
-
-			s += '\nmc.get();\n';
-
-			// load the new millcrum code
-			document.getElementById('millcrumCode').value = s;
-			document.getElementById('gcodepreview').value = '';
-			
-			$('#cutParams').modal('toggle');
-			
-			$('#mcC').click();
-			
-			$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
-			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
-			$('#sendToLaser').removeClass('disabled');
-			
-			document.getElementById('fileInputGcode').value = '';
-			document.getElementById('fileInputDXF').value = '';
-			document.getElementById('fileInputSVG').value = '';
-			document.getElementById('fileInputMILL').value = '';
-			$('.bottom-left').notify({
-				message: { text: 'DXF File Loaded' },
-				// settings
-				type: 'success'
-			}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
-		}
+		
 	});
 
 	// open .svg (File Open Function)
 	osvg.addEventListener('change', function(e) {
+		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
 		var r = new FileReader();
 		r.readAsText(osvg.files[0]);
@@ -546,7 +542,10 @@ $(document).ready(function() {
 				for (a in svg.alerts) {
 					errStr += svg.alerts[a]+'\n\n';
 				}
-				doAlert(errStr, 'SVG Errors:');
+				console.log('SVG Errors:'+errStr);
+				$('#console').append('<br>Parsing SVG:<br><p class="pf" style="color: #c95500;"><b><u>SVG Errors:</u></b><br>'+errStr+'</p>');
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());			
+				//doAlert(errStr, 'SVG Errors:');
 			}
 
 			// now that we have a proper path in absolute coordinates regardless of transforms, matrices or relative/absolute coordinates
@@ -577,27 +576,25 @@ $(document).ready(function() {
 
 			// load the new millcrum code
 			document.getElementById('millcrumCode').value = s;
-				
 			document.getElementById('gcodepreview').value = '';
 			$('#cutParams').modal('toggle');
 			$('#mcC').click();
 			$('#fileStatus').html('File Loaded: '+fileName.value+' as SVG');
-			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
+			$('#mainStatus').html('Status: '+fileName.value+' loaded and ready to cut...');
 			$('#sendToLaser').removeClass('disabled');
-
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
 			document.getElementById('fileInputSVG').value = '';
 			document.getElementById('fileInputMILL').value = '';
-			$('.bottom-left').notify({
-				message: { text: 'SVG File Loaded' },
-				type: 'success'
-			}).show(); 
-		}
+			$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+					}
 	});
 
 	// open .millcrum (File Open Function)
 	omc.addEventListener('change', function(e) {
+		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: MILLCRUM</b></u></span><br>');
+		$('#sendToLaser').addClass('disabled');
 		var r = new FileReader();
 		r.readAsText(omc.files[0]);
 		r.onload = function(e) {
@@ -605,24 +602,20 @@ $(document).ready(function() {
 			var fileName = document.getElementById('fileInputMILL');
 			document.getElementById('gcodepreview').value = '';
 			document.getElementById('millcrumCode').value = this.result;
-			
-			generate.click();
-			
 			$('#mcC').click();
-			openGCodeFromText();
+			generate.click();
+			$('#gcC').click();
 			gCodeToSend = document.getElementById('gcodepreview').value;
 			$('#fileStatus').html('File Loaded: '+fileName.value+' as MILLCRUM');
-			$('#mainStatus').html('Status: GCODE for '+fileName.value+' loaded and ready to cut...');
+			$('#mainStatus').html('Status: '+fileName.value+' loaded and ready to cut...');
 			$('#sendToLaser').removeClass('disabled');
-			
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
 			document.getElementById('fileInputSVG').value = '';
 			document.getElementById('fileInputMILL').value = '';
-			$('.bottom-left').notify({
-				message: { text: 'Millcrum File Loaded' },
-				type: 'success'
-			}).show(); // for the ones that aren't closable and don't fade out there is a .hide() function.
+			$('#console').append('<p class="pf" style="color: #000000;"><b>MILLCRUM File Upload Complete...</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+						
 		}
 	});
 
@@ -650,6 +643,8 @@ $(document).ready(function() {
 			data = data.replace(/:/g,' ');
 			var esArray = data.split(/(\s+)/);
 			//console.log(esArray);  // ["echo", " ", "endstops", " ", "hit", "   ", "X", " ", "71.61"]
+			$('#console').append('<p class="pf" style="color: red;">'+esArray[6]+' Axis Endstop Hit</p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());			
 			$('.bottom-left').notify({
 				message: { text: 'WARNING: '+esArray[6]+' Axis Endstop Hit' },
 				type: 'danger'
@@ -660,6 +655,8 @@ $(document).ready(function() {
 	socket.on('unknownGcode', function(data) {
 			var gcArray = data.split(/:/);   
 			// NB MIGHT MAKE IT PAUSE WHEN THIS HAPPENS, A WRONG COMMAND MIGHT ANYWAY MEAN A RUINED JOB
+			$('#console').append('<p class="pf" style="color: red;">Unknown GCode:  '+gcArray[2]+'</p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
 			$('.bottom-left').notify({
 				message: { text: 'Unknown GCODE: '+gcArray[2] },
 				type: 'warning'

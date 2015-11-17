@@ -25,14 +25,6 @@
 	padding: 0px;
 }
 
-#renderArea {
-	width: 500px;
-	height: 500px;
-	border: 5px solid #eee;
-	background-color: #fff;
-	border-radius: 4px;
-}
-
 #console {
 	height: 200px;
 	width: auto;
@@ -57,7 +49,7 @@
 	white-space: pre;
 }
 
-	
+
 #renderArea {
     background-color: #ffffff;
     width: 100%;
