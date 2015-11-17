@@ -36,6 +36,7 @@
 
 <title>LaserWeb - A fully featured Web UI for Lasercutters running Marlin</title>
 
+ <!-- Socket and UI -->
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="jquery.min.js"></script>
 	<script src="bootstrap.min.js"></script>
@@ -56,114 +57,57 @@
 	<script type="text/javascript" src="millcrum/inc/dxf.js"></script>
 	<script type="text/javascript" src="millcrum/inc/svg.js"></script>
 	
-
-	
-	
-<link rel="stylesheet" href="bootstrap.min.css" />
-<link rel="stylesheet" href="bootstrap-theme.min.css" />
-<link rel="stylesheet" href="bootstrap-notify.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="screen.css" />
-<style type="text/css">
-#renderArea {
-    background-color: #ffffff;
-    width: 100%;
-    height: 100%;
-    float: left;
-	padding-top: 40px;
-    padding-bottom: 40px;
-    margin-right: 1%;
-	z-index: 1; 
-	position: absolute; 
-	left: 0;  
-	top:  0;
-}
-
-.spinner {
-  width: 100px;
-}
-.spinner input {
-  text-align: right;
-}
-.input-group-btn-vertical {
-  position: relative;
-  white-space: nowrap;
-  width: 1%;
-  vertical-align: middle;
-  display: table-cell;
-}
-.input-group-btn-vertical > .btn {
-  display: block;
-  float: none;
-  width: 100%;
-  max-width: 100%;
-  padding: 8px;
-  margin-left: -1px;
-  position: relative;
-  border-radius: 0;
-}
-.input-group-btn-vertical > .btn:first-child {
-  border-top-right-radius: 4px;
-}
-.input-group-btn-vertical > .btn:last-child {
-  margin-top: -2px;
-  border-bottom-right-radius: 4px;
-}
-.input-group-btn-vertical i{
-  position: absolute;
-  top: 0;
-  left: 4px;
-}
-
-</style>
+	<link rel="stylesheet" href="bootstrap.min.css" />
+	<link rel="stylesheet" href="bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="bootstrap-notify.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="screen.css" />
 
 </head>
 
 <body>
 
 <!-- HEADER -->
-
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-<div class="container-fluid">
-<div class="navbar-header">
-<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-<span class="sr-only">Toggle navigation</span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-</button>
-<a class="navbar-brand" href="#">LaserWeb</a>
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">LaserWeb</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but1">Button</button></li-->
+				<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but2">Button</button></li-->
+				<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but3">Button</button></li-->
+				<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but4">Button</button></li-->
+			</ul>
+		</div>
+	</div>
 </div>
-<div class="navbar-collapse collapse">
-<ul class="nav navbar-nav navbar-right">
-	<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but1">Button</button></li-->
-	<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but2">Button</button></li-->
-	<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but3">Button</button></li-->
-	<!--li><button type="button" class="btn btn-default" style="margin: 10px;" id="but4">Button</button></li-->
-</ul>
-</div>
-</div>
-</div>
-
 <!-- END HEADER -->
 
 <div class="container-fluid" style="margin-top: 60px;">
-<div class="row">
+	<div class="row">
 
+		<!-- LEFT COLUMN -->
+		<div style=" width: 320px;  z-index: 10; position: absolute; left: 0;  top: 40; margin-left: 10px;"> <!-- Left floating div-->
 
-<!-- LEFT COLUMN -->
-<div style=" width: 320px;  z-index: 10; position: absolute; left: 0;  top: 40; margin-left: 10px;"> <!-- Left floating div-->
-
-
-	<div class="btn-group" style="width: 100%;">
-	<button type="button" style="width: 42px;" class="btn btn-info btn-sm"><i class="fa fa-folder-open fa-lg"></i></button>
-	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">GCODE <input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button>
-	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf"" id="fileInputDXF" /></button>
-	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">SVG <input type="file" accept=".svg" id="fileInputSVG" /></button>
-	<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">MC <input type="file" accept=".millcrum,.mill,.js" id="fileInputMILL" /></button>
-	</div>
-	<p>
-	<div class="input-group" style="margin-bottom:10px; width: 100%;">
+			<!-- File Open Buttons -->
+			<div class="btn-group" style="width: 100%;">
+			<button type="button" style="width: 42px;" class="btn btn-info btn-sm"><i class="fa fa-folder-open fa-lg"></i></button>
+			<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">GCODE <input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button>
+			<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf"" id="fileInputDXF" /></button>
+			<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">SVG <input type="file" accept=".svg" id="fileInputSVG" /></button>
+			<button type="button" style="width: 70px;" class="btn btn-info btn-file btn-sm">MC <input type="file" accept=".millcrum,.mill,.js" id="fileInputMILL" /></button>
+			</div>
+			<p>
+			<!-- Material Setup -->
+			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon"  style="width: 100px;">Material Thickness</span>
 				<div class="input-group spinnerthickness">
 					<input type="text" class="form-control" value="3" id="thickness">
@@ -173,122 +117,110 @@
 					</div>
 				</div>
 				<span class="input-group-addon"  style="width: 60px;">mm</span>
-	</div>
+			</div>
 
+			<!-- Status of file loaded -->
+			<p style="margin: 4px;" id="fileStatus">File Loaded: </p>
 
+			<!-- Tabs -->
+			<ul class="nav nav-tabs nav-justified" role="tablist">
+				<li id="mcA">
+					<a id="mcC" href="#">Millcrum</a>
+				</li>
+				<li id="gcA" class="active">
+					<a id="gcC" href="#">GCode</a>
+				</li>
+			</ul>
 
+			<!-- Gcode Tab -->
+			<div id="gcPosition">
+				<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; " id="gcodepreview"></textarea>
+			</div>
 
+			<!-- Millcrum Tab -->
+			<div id="mcPosition" style="display: none;">
+				<textarea id="millcrumCode" style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; "></textarea>
+			</div>
 
-<p style="margin: 4px;" id="fileStatus">File Loaded: </p>
+			<!-- Status of Job Preperation -->
+			<span style="padding-left: 10px; width:100%; height:40px; float: right;" id="mainStatus">Status: Waiting for GCODE upload...</span>
 
-
-
-<!-- Tabs -->
-<ul class="nav nav-tabs nav-justified" role="tablist">
-<li id="mcA">
-<a id="mcC" href="#">Millcrum</a>
-</li>
-<li id="gcA" class="active">
-<a id="gcC" href="#">GCode</a>
-</li>
-</ul>
-
-<!-- Gcode Tab -->
-<div id="wPosition">
-<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; " id="gcodepreview"></textarea>
-</div>
-<!-- Millcrum Tab -->
-<div id="mPosition" style="display: none;">
-<textarea id="millcrumCode" style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; "></textarea>
-</div>
-
-<!-- -->
-<span style="padding-left: 10px; width:100%; height:40px; float: right;" id="mainStatus">Status: Waiting for GCODE upload...</span>
-
-<hr style="clear: both;" />
-<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToLaser">Send to Laser</button>
-<button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
-<button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
-<hr style="clear: both;" />
- <div class='notifications bottom-left'></div>
-
- 			<span class="btn btn-default btn-file" onclick="controls.reset();">Reset 3D View</span>	
-            
+			<hr style="clear: both;" />
 			
- <!-- Left Column ^^^ -->
+			<!-- Job Control Buttons -->
+			<button type="button" class="btn btn-warning disabled" style="float: right; margin: 10px;" id="sendToLaser">Send to Laser</button>
+			<button type="button" id="pause" class="btn btn-default btn-sm">Pause</button>
+			<button type="button" id="clearQ" class="btn btn-default btn-sm disabled">Clear Q</button>
+			<hr style="clear: both;" />
+			
+			<!-- Div for popup Notifications -->
+			<div class='notifications bottom-left'></div>
 
+			<!-- 3D Viewer control buttons -->
+			<span class="btn btn-default btn-file" onclick="controls.reset();">Reset 3D View</span>	
+			
+			<!-- Credits in bottom of left column -->
+			<p style="color: #aaa; font-size: .8em; margin-top: 20px;">
+			<a href="http://xyzbots.com">&copy; XYZBots 2015</a>
+			</p>
 
+		</div>
+		<!-- END LEFT COLUMN -->
 
-<p style="color: #aaa; font-size: .8em; margin-top: 20px;">
-<a href="http://xyzbots.com">&copy; XYZBots 2015</a>
-</p>
+		<!-- RIGHT COLUMN -->
+		<div style=" width: 320px;  z-index: 10; position: absolute; right: 0;  top: 40; margin-right: 10px;"> <!-- Right floating div-->
 
-</div>
-<!-- END LEFT COLUMN -->
-
-<!-- RIGHT COLUMN -->
-<div style=" width: 320px;  z-index: 10; position: absolute; right: 0;  top: 40; margin-right: 10px;"> <!-- Right floating div-->
-
-<!-- Port Selection -->
-
-<div class="input-group" style="margin-bottom:10px; width: 100%;">
+			<!-- Port Selection -->
+			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon"  ><i class="fa fa-plug" style="margin-right: 10px;"></i>Port</span>
-					<select id="choosePort" class="form-control">
+				<select id="choosePort" class="form-control">
 					<option val="no">Select a serial port</option>
-					</select>
-				</div>
+				</select>
+			</div>
 
-<!-- Digital Readout -->
-<div id="mPosition" >
-<div id="mX" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
-<div id="mY" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
-<div id="mZ" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
-</div>
+			<!-- Digital Readout -->
+			<div id="mPosition" >
+				<div id="mX" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
+				<div id="mY" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
+				<div id="mZ" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin: 4px; font-size: 30px; width: 308px; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
+			</div>
 
-<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-arrows fa-lg"" style="margin-right: 20px;"></i>Machine Control</a>
+			<!-- Button to open Jogging and Machine Control Widget -->
+			<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-arrows fa-lg"" style="margin-right: 20px;"></i>Machine Control</a>
 
-<hr style="clear: both;" />
+			<hr style="clear: both;" />
 
-<!-- Command Console -->
-<div id="console"></div>
-<div class="input-group">
-<input type="text" class="form-control" id="command">
-<span class="input-group-btn">
-<button id="sendCommand" class="btn btn-default disabled" type="button">
-Send
-</button>
-</span>
-</div><!-- /input-group -->
-<hr style="clear: both;" />
+			<!-- Command Console -->
+			<div id="console"></div>
+				<div class="input-group">
+					<input type="text" class="form-control" id="command">
+					<span class="input-group-btn">
+						<button id="sendCommand" class="btn btn-default disabled" type="button">Send</button>
+					</span>
+				</div><!-- /input-group -->
+				<hr style="clear: both;" />
+				<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
+				<!-- Progress bar Queue status -->
+				<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
+			</div>
 
-<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
-<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
-</div>
+		</div> 
+		<!-- END RIGHT COLUMN -->
 
-</div> <!-- Right floating div -->
-<!-- END RIGHT COLUMN -->
+		<!-- CENTER COLUMN -->
+			<div style="display: none; margin-top: 10px; width: 330px; height: 250px; float: left; clear: both;" id="webcam">
+				<img id="wcImg" width="320" height="240" />
+				<br />
+				<a id="wcLink" target="_blank" href="#">Webcam</a>
+			</div>
 
-<!-- CENTER COLUMN -->
-<div style="display: none; margin-top: 10px; width: 330px; height: 250px; float: left; clear: both;" id="webcam">
-<img id="wcImg" width="320" height="240" />
-<br />
-<a id="wcLink" target="_blank" href="#">Webcam</a>
-</div>
-
-
-            
-<div id="renderArea"></div>
-
-
-
-<!-- END CENTER COLUMN -->
+			<div id="renderArea"></div> <!-- Note - background div - see CSS -->
+		<!-- END CENTER COLUMN -->
+	</div> <!-- End of Row -->
+</div> <!-- End of container-fluid -->
 
 
-
-</div>
-</div>
-
-
+<!-- Jog and Machine Control Widget (Modal) -->
 <div class="modal fade" id="machineControl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -300,8 +232,7 @@ Send
       <table style="width: 100%; margin-left: -15px;">
 	  <tr>
 	  <td>
-	  
-					  <!-- Pronterface Jog Widget -->
+		<!-- Pronterface Jog Widget -->
 				  <svg width="320" height="260" xmlns="http://www.w3.org/2000/svg" version="1.1">
 
 					<defs>
@@ -351,14 +282,14 @@ Send
 						stroke-width: 1;
 						filter: url(#f1);
 						}
-
+					
 					rect.std {
 						stroke: black;
 						stroke-width: 1;
 						filter: url(#f1);
-						}
-
-				  ]]></style>
+					}
+						
+					]]></style>
 
 						<filter id="f1" x="-1" y="-1" width="300%" height="300%">
 							<feOffset result="offOut" in="SourceAlpha" dx="3" dy="3"/>
@@ -376,21 +307,21 @@ Send
 						<symbol id="JogRose" viewBox="20 -10 260 260">
 							<g id="homeAll">
 								<path class="std" d="M10 182.5 h-10 v57.5 h57.5 v-10 a 125,125 0 0,1 -47.5 -47.5 Z" fill="#f0f0f0">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</path>
 								<use x="3" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
 							</g>
 
 							<g id="homeX">
 								<path class="std" d="M10 57.50 h-10 v-57.5 h57.5 v10 a 125,125 0 0,0 -47.5 47.5 Z" fill="Khaki">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</path>
 								<use x="3" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="25" y="20" class="home"> X </text>
 							</g>
 							<g id="homeY">
 								<path class="std" d="M230 57.50 h10 v-57.5 h-57.5 v10 a 125,125 0 0,1 47.5 47.5 z" fill="SteelBlue">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</path>
 								<use x="217" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="202" y="20" class="home"> Y </text>
@@ -398,7 +329,7 @@ Send
 
 							<g id="homeZ">
 								<path class="std" d="M230 182.5 h10 v57.5 h-57.5 v-10 a 125,125 0 0,0 47.5 -47.5 z" fill="DarkSeaGreen">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</path>
 								<use x="217" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="202" y="232" class="home"> Z </text>
@@ -407,22 +338,22 @@ Send
 							<g id="Jog100" fill="#c0c0c0" class="std">
 								<g id="yPCen" transform="translate(120 120)">
 									<path class="std" d="M-60 -67.07 L-75.93,-83 A112.5,112.5 0 0,1 75,-83 L60,-67.07 A90,90 0 0,0 -60.00,-67.07 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout" />
+						
 									</path>
 								</g>
 								<g id="xPCen" transform="translate(120 120)">
 									<path class="std" d="M67.07,-60 L83,-75.93 A112.5,112.5 0 0,1 83,75.93 L67.07,60 A90,90 0 0,0 67.07,-60">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="yMCen" transform="translate(120 120)">
 									<path class="std" d="M-60,67.07 L-75.93,83 A112.5,112.5 0 0,0 75,83 L60,67.07 A90,90 0 0,1 -60.00,67.07 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xMCen" transform="translate(120 120)">
 									<path class="std" d="M-67.07,-60 L-83,-75.93 A112.5,112.5 0 0,0 -83,75.93 L-67.07,60 A90,90 0 0,1 -67.07,-60 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 							</g>
@@ -430,22 +361,22 @@ Send
 
 								<g id="yPTen" transform="translate(120 120)">
 									<path class="std" d="M-44.06 -51.13 L-60,-67.07 A90,90 0 0,1 60,-67 L44.06,-51.13 A67.5,67.5 0 0,0 -44.06,-51.13 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xPTen" transform="translate(120 120)">
 									<path class="std" d="M51.13 44.06 L67.07,60 A90,90 0 0,0 67.07,-60 L51.13,-44.06 A67.5,67.5 0 0,1 51.13,44.06 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="yMTen" transform="translate(120 120)">
 									<path class="std" d="M-44.06 51.13 L-60,67.07 A90,90 0 0,0 60,67 L44.06,51.13 A67.5,67.5 0 0,1 -44.06,51.13 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xMTen" transform="translate(120 120)">
 									<path class="std" d="M-51.13 44.06 L-67.07,60 A90,90 0 0,1 -67.07,-60 L-51.13,-44.06 A67.5,67.5 0 0,0 -51.13,44.06 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 							</g>
@@ -453,22 +384,22 @@ Send
 							<g id="Jog1" fill="#e0e0e0">
 								<g id="yP" transform="translate(120 120)">
 									<path class="std" d="M-28.09 -35.16 L-44.06,-51.13 A67.5,67.5 0 0,1 44.06,-51.13 L28.09,-35.16 A45,45 0 0,0 -28.09,-35.16 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xP" transform="translate(120 120)">
 									<path class="std" d="M35.16 -28.09 L51.13,-44.06 A67.5,67.05 0 0,1 51.13,44.06 L35.16,28.09 A45,45 0 0,0 35.16,-28.09 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="yM" transform="translate(120 120)">
 									<path class="std" d="M-28.09 35.16 L-44.06,51.13 A67.5,67.5 0 0,0 44.06,51.13 L28.09,35.16 A45,45 0 0,1 -28.09,35.16 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xM" transform="translate(120 120)">
 									<path class="std" d="M-35.16 -28.09 L-51.13,-44.06 A67.5,67.05 0 0,0 -51.13,44.06 L-35.16,28.09 A45,45 0 0,1 -35.16,-28.09 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 							</g>
@@ -476,22 +407,22 @@ Send
 							<g id="Jog0_1" fill="#f0f0f0">
 								<g id="yP01" transform="translate(120 120)">
 									<path class="std" d="M-28.09 -35.16 A45,45 0 0,1 29.09,-35.16 L0,-7.07 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xP01" transform="translate(120 120)">
 									<path class="std" d="M35.16 -28.09 A45,45 0 0,1 35.16,28.09 L7.07,0 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="yM01" transform="translate(120 120)">
 									<path class="std" d="M-28.09 35.16 A45,45 0 0,0 29.09,35.16 L0,7.07 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 								<g id="xM01" transform="translate(120 120)">
 									<path class="std" d="M-35.16 -28.09 A45,45 0 0,0 -35.16,28.09 L-7.07,0 z">
-										<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+										
 									</path>
 								</g>
 							</g>
@@ -536,38 +467,38 @@ Send
 							</g>
 							<g id="zPTen" fill="#d0d0d0">
 								<rect class="std" x="0" y="32" width="40" height="30">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</rect>
 								<circle class="scl" cx="20" cy="47" r="13"/>
 								<text class="scl" x="9" y="53" font-size="18"> 10 </text>
 							</g>
 							<g id="zP" fill="#e0e0e0">
 								<rect class="std" x="0" y="62" width="40" height="26">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</rect>
 								<circle class="scl" cx="20" cy="75" r="11"/>
 								<text class="scl" x="15" y="81.5" font-size="18"> 1 </text>
 							</g>
 							<g id="zP01" fill="#f0f0f0">
 								<rect class="std" x="0" y="88" width="40" height="24">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</rect>
 								<circle class="scl" cx="20" cy="100" r="9.5"/>
 								<text class="scl" x="13" y="103.5" font-size="10"> 0.1 </text>
 							</g>
 							<g id="zMTen" fill="#d0d0d0">
 								<rect class="std" x="0" y="178" width="40" height="30">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</rect>
 							</g>
 							<g id="zM" fill="#e0e0e0" >
 								<rect class="std" x="0" y="152" width="40" height="26">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</rect>
 							</g>
 							<g id="zM01" fill="#f0f0f0" >
 								<rect class="std" x="0" y="128" width="40" height="24">
-									<set attributeName="fill" to="orange" begin="mouseover" end="mouseout"/>
+									
 								</rect>
 							</g>
 							<g id="ZSpace" fill="#000000">
@@ -585,6 +516,7 @@ Send
 					<use x="0" y="0" xlink:href="#PrinterCtl"/>
 
 				  </svg>
+				  
 				</td>
 				<td>
 				<button type="button" class="btn btn-default" style="margin-bottom:10px; width: 100%;" id="motorsOff">Motors Off</button>
@@ -608,9 +540,7 @@ Send
 				</div>
 				</td>
 				</table>
-	  
-	  
-      </div>
+	  </div>
       <div class="modal-footer">
         <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button // Commented out - using $('#sliceModal').modal('toggle'); in main.js to close once sliced-->
         
@@ -618,8 +548,9 @@ Send
     </div>
   </div>
 </div>
+<!-- End of Jog and Machine Control Widget -->
 
-
+<!-- Cutting Parameters for DXF/SVG Widget (modal) -->
 <div class="modal fade" id="cutParams" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -671,8 +602,9 @@ Send
         <button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button>
       </div>
     </div>
+<!-- End of Cutting Parameters for DXF/SVG Widget (modal) -->
 
-
+<!-- Load an empty viewer grid -->
 <script>
 $(document).ready(function(){ 
 	$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');

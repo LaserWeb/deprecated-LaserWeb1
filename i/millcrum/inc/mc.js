@@ -1,5 +1,5 @@
 var Millcrum = function(tool) {
-	//console.log("millcrum func");
+
 	this.gcode = '';
 	this.debug = false;
 	this.tool = tool;
@@ -19,11 +19,8 @@ Millcrum.prototype.addDegrees = function(base,mod) {
 
 Millcrum.prototype.surface = function(x,y) {
 	// set the surface dimensions
-	x = 600;
-	y = 400;
-
-	// run the init function
-	//init();
+	x = laserxmax;  // lasermax values come from main.js socket.on('config', function (data)
+	y = laserymax;
 
 };
 
