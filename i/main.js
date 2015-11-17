@@ -319,10 +319,22 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'M84' }); 
 	});
 
-	$('#fanOn').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M106' }); 
+	$('#fan25').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M106 S64' }); 
 	});
 	
+	$('#fan50').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M106 S128' }); 
+	});
+	
+	$('#fan75').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M106 S192' }); 
+	});
+	
+	$('#fan100').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M106 S255' }); 
+	});
+		
 	$('#fanOff').on('click', function() {
 		socket.emit('gcodeLine', { line: 'M107' }); 
 	});
