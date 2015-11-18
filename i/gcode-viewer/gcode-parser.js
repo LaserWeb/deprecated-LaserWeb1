@@ -1034,10 +1034,10 @@ function createObjectFromGCode(gcode) {
 			var dY = bbbox.max.y-bbbox.min.y;
 			var dZ = bbbox.max.z-bbbox.min.z;
 
-			$('#console').append('<span style="color: #060606;"><b>Min Dimensions<br> X:</b> '+bbbox.min.x+' <b>Y:</b> '+bbbox.min.y+' <b>Z:</b> '+bbbox.min.z+'</span><br>');
-			$('#console').append('<span style="color: #060606;"><b>Max Dimensions<br> X:</b> '+bbbox.max.x+' <b>Y:</b> '+bbbox.max.y+' <b>Z:</b> '+bbbox.max.z+'</span><br>');
-			$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			//$('#console').append('<span style="color: #060606;"><b>Min Dimensions<br> X:</b> '+bbbox.min.x+' <b>Y:</b> '+bbbox.min.y+' <b>Z:</b> '+bbbox.min.z+'</span><br>');
+			//$('#console').append('<span style="color: #060606;"><b>Max Dimensions<br> X:</b> '+bbbox.max.x+' <b>Y:</b> '+bbbox.max.y+' <b>Z:</b> '+bbbox.max.z+'</span><br>');
+			//$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
+			//$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			
             // Center
             var scale = 1; // TODO: Auto size
