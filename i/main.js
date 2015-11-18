@@ -363,6 +363,7 @@ $(document).ready(function() {
 	// Enable sendToLaser button, if we receive gcode in #gcodepreview 
 	$("#gcodepreview").change(function () {
 		openGCodeFromText();
+		$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
         $('#openMachineControl').removeClass('disabled');
 		$('#sendCommand').removeClass('disabled');	
 		$('#sendToLaser').removeClass('disabled');
@@ -421,6 +422,8 @@ $(document).ready(function() {
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: GCODE</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
 		var fileInputGcode = document.getElementById('fileInputGcode');
+		var fileName = fileInputGcode.value.replace("C:\\fakepath\\", "");
+		console.log(fileName);
 		var r = new FileReader();
 		r.readAsText(fileInputGcode.files[0]);
 		r.onload = function(e) {
@@ -433,8 +436,7 @@ $(document).ready(function() {
 				$('#gcC').click();
 				openGCodeFromText();
 				gCodeToSend = this.result;
-				$('#fileStatus').html('File Loaded: '+fileName.value+' as GCODE');
-				$('#mainStatus').html('Status: '+fileInputGcode.value+' loaded and ready to cut...');
+				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
@@ -455,7 +457,7 @@ $(document).ready(function() {
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
 	
-			var fileName = document.getElementById('fileInputDXF');
+			var fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
 			var dxf = new Dxf();
 					
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
@@ -520,9 +522,8 @@ $(document).ready(function() {
 				$('#cutParams').modal('toggle');
 				
 				$('#mcC').click();
-				
-				$('#fileStatus').html('File Loaded: '+fileName.value+' as DXF');
-				$('#mainStatus').html('Status: '+fileName.value+' loaded and ready to cut...');
+								
+				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
@@ -542,7 +543,7 @@ $(document).ready(function() {
 		r.readAsText(osvg.files[0]);
 		r.onload = function(e) {
 
-			var fileName = document.getElementById('fileInputSVG');
+			var fileName = fileInputSVG.value.replace("C:\\fakepath\\", "");
 			var svg = new Svg();
 			svg.process(r.result);
 
@@ -590,9 +591,10 @@ $(document).ready(function() {
 			document.getElementById('millcrumCode').value = s;
 			document.getElementById('gcodepreview').value = '';
 			$('#cutParams').modal('toggle');
+			
 			$('#mcC').click();
-			$('#fileStatus').html('File Loaded: '+fileName.value+' as SVG');
-			$('#mainStatus').html('Status: '+fileName.value+' loaded and ready to cut...');
+			
+			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
@@ -611,15 +613,17 @@ $(document).ready(function() {
 		r.readAsText(omc.files[0]);
 		r.onload = function(e) {
 			// load the file
-			var fileName = document.getElementById('fileInputMILL');
+			var fileName = fileInputMILL.value.replace("C:\\fakepath\\", "");
 			document.getElementById('gcodepreview').value = '';
 			document.getElementById('millcrumCode').value = this.result;
 			$('#mcC').click();
 			generate.click();
+			
 			$('#gcC').click();
+			
 			gCodeToSend = document.getElementById('gcodepreview').value;
-			$('#fileStatus').html('File Loaded: '+fileName.value+' as MILLCRUM');
-			$('#mainStatus').html('Status: '+fileName.value+' loaded and ready to cut...');
+			
+			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
