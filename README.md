@@ -4,7 +4,8 @@ LaserWeb is a fully function Laser Cutter Controller which runs over http.  Mult
 
 ## Changelog
 
-* 16 Nov 2015: Integrating Millcrum.com libraries to provide DXF, SVG and MILLCRUM support 
+* 18 Nov 2015: Upgraded to Bootstrap 3.3.5 and changed to a responsive layout
+* 17 Nov 2015: Integrated Millcrum.com libraries to provide DXF, SVG and MILLCRUM support 
 * 10 Nov 2015: Added FontAwesome icons, moved Jogging to a Modal widget so its out of the way when not in use
 * 8 Nov 2015:  Project started
 
