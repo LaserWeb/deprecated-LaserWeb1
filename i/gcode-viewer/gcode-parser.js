@@ -1028,18 +1028,9 @@ function createObjectFromGCode(gcode) {
             // gcode line is its own segment with its own userData
             //object = new3dObj;
 
-
             console.log("bbox ", bbbox);
-			var dX = bbbox.max.x-bbbox.min.x;
-			var dY = bbbox.max.y-bbbox.min.y;
-			var dZ = bbbox.max.z-bbbox.min.z;
-
-			//$('#console').append('<span style="color: #060606;"><b>Min Dimensions<br> X:</b> '+bbbox.min.x+' <b>Y:</b> '+bbbox.min.y+' <b>Z:</b> '+bbbox.min.z+'</span><br>');
-			//$('#console').append('<span style="color: #060606;"><b>Max Dimensions<br> X:</b> '+bbbox.max.x+' <b>Y:</b> '+bbbox.max.y+' <b>Z:</b> '+bbbox.max.z+'</span><br>');
-			//$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
-			//$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-			
-            // Center
+		
+			// Center
             var scale = 1; // TODO: Auto size
 
             var center = new THREE.Vector3(
@@ -1054,6 +1045,16 @@ function createObjectFromGCode(gcode) {
             bbbox2.min.z + ((bbbox2.max.z - bbbox2.min.z) / 2));
             console.log("center2 of all gcode ", center2);
 
+			var dX = bbbox2.max.x-bbbox2.min.x;
+			var dY = bbbox2.max.y-bbbox2.min.y;
+			var dZ = bbbox2.max.z-bbbox2.min.z;
+
+			
+			$('#console').append('<span style="color: #060606;"><b>Min Dimensions<br> X:</b> '+bbbox2.min.x+' <b>Y:</b> '+bbbox2.min.y+' <b>Z:</b> '+bbbox2.min.z+'</span><br>');
+			$('#console').append('<span style="color: #060606;"><b>Max Dimensions<br> X:</b> '+bbbox2.max.x+' <b>Y:</b> '+bbbox2.max.y+' <b>Z:</b> '+bbbox2.max.z+'</span><br>');
+			$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+				
             // store meta data in userData of object3d for later use like in animation
             // of toolhead
             object.userData.bbbox2 = bbbox2;
