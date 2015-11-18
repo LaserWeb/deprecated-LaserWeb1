@@ -102,7 +102,7 @@ $(document).ready(function() {
 		//console.log('ports event',data);
 		$('#choosePort').html('<option val="no">Select a serial port</option>');
 		for (var i=0; i<data.length; i++) {
-			$('#choosePort').append('<option value="'+i+'">'+data[i].comName+'</option>');
+			$('#choosePort').append('<option value="'+i+'">'+data[i].comName+':  '+data[i].manufacturer+'</option>');
 		}
 		if (data.length == 1) {
 			// select first and only
@@ -380,7 +380,7 @@ $(document).ready(function() {
 	// Sends single commands to laser (typed into #command)
 	$('#sendCommand').on('click', function() {
 		socket.emit('gcodeLine', { line: $('#command').val() });
-		$('#command').val('');Work
+		$('#command').val('');
 	});
 	
 	$('#command').keyup(function(event){
