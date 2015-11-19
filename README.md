@@ -4,6 +4,7 @@ LaserWeb is a fully function Laser Cutter Controller which runs over http.  Mult
 
 ## Changelog
 
+* 19 Nov 2015: Upgraded to latest socket.io and serialport versions (Socket.io 1.3.7 and SerialPort 2.0.5) since there are precompiled binaries for Windows - no more recompile required
 * 18 Nov 2015: Upgraded to Bootstrap 3.3.5 and changed to a responsive layout
 * 17 Nov 2015: Integrated Millcrum.com libraries to provide DXF, SVG and MILLCRUM support 
 * 10 Nov 2015: Added FontAwesome icons, moved Jogging to a Modal widget so its out of the way when not in use
@@ -42,15 +43,12 @@ Your Marlin based lasercutter should be configured to use a baud rate of 115200,
 On Windows 7 and above, please use the following instructions. We are assuming from a vanilla Windows installation so your mileage may vary depending on things you already have installed. If you find conflicts, please let us know via a GitHub Issue
 
 1. Starting with a vanilla Windows 7 (or higher, should be fine) installation
-2. Download and Install the **free** [Windows SDK 7.1](http://www.microsoft.com/en-us/download/details.aspx?id=8279) and select every option (you can unselect options if you absolutely know what you are doing by unselecting them, but it is easier just to select all options).
-3. Download and install Node.js version node-v0.12.7 (NOTE:  At the time of writing SerialPort is not supported on Node,js 4.0+) from https://nodejs.org/download/release/v0.12.7/
-4. Install [Python 2.7.5](http://www.python.org/download/releases/2.7.5/) for any questions, please refer to their [FAQ](http://docs.python.org/2/faq/windows.html). Default settings are perfect.
-5. Open the Windows SDK 7.1 Command prompt (this allows the C++ compiler to be available on the path). You might have to run the command prompt as Administrator
-6. Enter the following command in the prompt which adds Python to the path (the Python installed doesn't do this for you).<pre>set path=%path%;C:\Python27</pre>
-7. Open a command prompt and 'cd' to where you want to install LaserWeb (for example 'cd c:\users\Peter\Desktop')
-8.  git clone https://github.com/openhardwarecoza/LaserWeb.git
-9.  cd LaserWeb
-10.  npm install
+2. Download and install Node.js version node-v0.12.7 (NOTE:  At the time of writing SerialPort is not supported on Node,js 4.0+) from https://nodejs.org/download/release/v0.12.7/
+3. Open a command prompt and 'cd' to where you want to install LaserWeb (for example 'cd c:\users\Peter\Desktop')
+4.  git clone https://github.com/openhardwarecoza/LaserWeb.git
+5.  cd LaserWeb
+6.  npm install  (ignore any errors about socket.io failing to find vcbuild.exe, it has a built in fallback to pure JS when that happens, so its still fine.)
+
 
 
 ## Ubuntu

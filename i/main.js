@@ -37,13 +37,20 @@ $(document).ready(function() {
 	});
 
 	// Spinner for Feedrate
-	$('.spinner .btn:first-of-type').on('click', function() {
-		$('.spinner input').val( parseInt($('.spinner input').val(), 10) + 100);
+	$('.spinnerXY .btn:first-of-type').on('click', function() {
+		$('.spinnerXY input').val( parseInt($('.spinnerXY input').val(), 10) + 100);
 	});
-	$('.spinner .btn:last-of-type').on('click', function() {
-		$('.spinner input').val( parseInt($('.spinner input').val(), 10) - 100);
+	$('.spinnerXY .btn:last-of-type').on('click', function() {
+		$('.spinnerXY input').val( parseInt($('.spinnerXY input').val(), 10) - 100);
 	});
 
+	$('.spinnerZ .btn:first-of-type').on('click', function() {
+		$('.spinnerZ input').val( parseInt($('.spinnerZ input').val(), 10) + 10);
+	});
+	$('.spinnerZ .btn:last-of-type').on('click', function() {
+		$('.spinnerZ input').val( parseInt($('.spinnerZ input').val(), 10) - 10);
+	});
+	
 	// Spinner for Rapids speed
 	$('.spinnermove .btn:first-of-type').on('click', function() {
 		$('.spinnermove input').val( parseInt($('.spinnermove input').val(), 10) + 100);
@@ -211,92 +218,92 @@ $(document).ready(function() {
 	
 	// Jog and machine control Buttons
 	$('#xM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	
 	$('#xM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#xMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-10 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#xMCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 	
 	$('#xP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#xP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#xPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X10 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#xPCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 X100 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 X100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#yP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 	
 	$('#yP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#yPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y10 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#yPCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y100 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 	
 	$('#yM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#yM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#yMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-10 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 	$('#yMCen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 	
 	$('#zP01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
 
 	$('#zP').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
 
 	$('#zPTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z10 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z10 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
 
 	$('#zM01').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z-0.1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-0.1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
 
 	$('#zM').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z-1 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
 
 	$('#zMTen').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G91\nG0 Z-10 F'+$('#jogSpeed').val()+'\nG90' });
+		socket.emit('gcodeLine', { line: 'G91\nG0 Z-10 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
 
 	$('#homeX').on('click', function() {
@@ -315,6 +322,10 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'G28' });
 	});
 
+	$('#zeroWork').on('click', function() {
+		socket.emit('gcodeLine', { line: 'G92 X0 Y0 Z0' }); 
+	});
+	
 	$('#motorsOff').on('click', function() {
 		socket.emit('gcodeLine', { line: 'M84' }); 
 	});
@@ -360,6 +371,8 @@ $(document).ready(function() {
 		$('#machineControl').modal('toggle');
 	});
 
+
+	
 	// Enable sendToLaser button, if we receive gcode in #gcodepreview 
 	$("#gcodepreview").change(function () {
 		openGCodeFromText();
