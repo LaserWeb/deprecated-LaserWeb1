@@ -2,6 +2,10 @@
 
 LaserWeb is a fully function Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
+## NB NOTE: BROWSER SUPPORT: 
+
+This is only test/suppoted on Chrome!  NB, for best results, use Chrome
+
 ## Changelog
 
 * 19 Nov 2015: Upgraded to latest socket.io and serialport versions (Socket.io 1.3.7 and SerialPort 2.0.5) since there are precompiled binaries for Windows - no more recompile required
