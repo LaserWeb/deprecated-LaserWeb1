@@ -12,8 +12,6 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 ## Changelog
 
 * 15 Dec 2015: Added Scale, Translate, Flip functions
-![Screenshot 15 Dec 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/Scale Widget.PNG)
-
 * 15 Dec 2015: Added Support for SmoothieBoard / SmoothieWare to Master branch
 * 15 Dec 2015: Added Clear GCode button instead of clearing GCode automatically. Helps if you want to repeat same job a few times. 
 * 19 Nov 2015: Upgraded to latest socket.io and serialport versions (Socket.io 1.3.7 and SerialPort 2.0.5) since there are precompiled binaries for Windows - no more recompile required
@@ -24,6 +22,7 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/laserweb.PNG)
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/controlmodal.PNG)
+![Screenshot 15 Dec 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/Scale Widget.PNG)
 
 
 More information can be found at http://xyzbots.com (soon)  and http://www.openhardware.co.za
