@@ -126,7 +126,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	//console.log('got newline from serial: '+data);
+	console.log('got newline from serial: '+data);
 
 	// handle M105
 	if (data.indexOf('ok T:') == 0 || data.indexOf('T:') == 0) {

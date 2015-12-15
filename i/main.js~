@@ -196,7 +196,7 @@ $(document).ready(function() {
 		});
 
 	$('#clearJob').on('click', function() {
-		$('#gcodepreview').val('');
+		$('#command').val('');
 
 	});
 
@@ -395,7 +395,7 @@ $(document).ready(function() {
 		$('#sendToLaser').addClass('disabled');
 		$('#mainStatus').html('Status: Lasering');
 		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
-		//$('#gcodepreview').val('');
+		$('#gcodepreview').val('');
 	});
 
 	// Sends single commands to laser (typed into #command)
