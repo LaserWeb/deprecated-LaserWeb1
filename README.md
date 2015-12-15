@@ -11,6 +11,9 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ## Changelog
 
+* 15 Dec 2015: Added Scale, Translate, Flip functions
+* 15 Dec 2015: Added Support for SmoothieBoard / SmoothieWare to Master branch
+* 15 Dec 2015: Added Clear GCode button instead of clearing GCode automatically. Helps if you want to repeat same job a few times. 
 * 19 Nov 2015: Upgraded to latest socket.io and serialport versions (Socket.io 1.3.7 and SerialPort 2.0.5) since there are precompiled binaries for Windows - no more recompile required
 * 18 Nov 2015: Upgraded to Bootstrap 3.3.5 and changed to a responsive layout
 * 17 Nov 2015: Integrated Millcrum.com libraries to provide DXF, SVG and MILLCRUM support 
