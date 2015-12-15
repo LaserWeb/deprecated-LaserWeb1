@@ -22,7 +22,8 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/laserweb.PNG)
 ![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/controlmodal.PNG)
-![Screenshot 15 Dec 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/Scale Widget.PNG)
+![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/Scale Widget.png)
+
 
 
 More information can be found at http://xyzbots.com (soon)  and http://www.openhardware.co.za
