@@ -1,11 +1,5 @@
 var scene = null;
 var object = null;
-var cylinder = null;
-var axes = null;
-var axesgrp = null;
-var helper = null;
-
-
 var added = false;
 
 
