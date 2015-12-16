@@ -244,6 +244,7 @@ $(document).ready(function() {
 		$('#sendCommand').removeClass('disabled');	
 		$('#sendToLaser').removeClass('disabled');
 		
+		
    	 });
 	
 	// Send to laser button - start the job
@@ -270,6 +271,16 @@ $(document).ready(function() {
 	});
 
 
+	$('#bounding').on('click', function() {
+		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
+		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
+		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMAX').val()+' F2000\nG90' });
+		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMAX').val()+' F2000\nG90' });
+		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
+		// socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeedXY').val()+'\nG90' });
+	});
+
+
 	// Gcode Rotate from http://ideegeniali.altervista.org/progetti/?p=gcoderotator
 	function processRot() {
 
@@ -284,7 +295,7 @@ $(document).ready(function() {
 	    b = a;
 	    xstart = (a + ' ').toUpperCase().indexOf('X');
 	    if ((a + ' ').toUpperCase().lastIndexOf('X') != xstart) { xstart = -1 };
-	    xend   = (a + ' ').toUpperCase().indexOf(' ',xstart);
+	    xend   = (a + ' ').toUpperCase().indexOf(' ',xstart); 
 	    ystart = (a + ' ').toUpperCase().indexOf('Y');
 	    if ((a + ' ').toUpperCase().lastIndexOf('Y') != ystart) { ystart = -1 };
 	    yend   = (a + ' ').toUpperCase().indexOf(' ',ystart);
@@ -311,12 +322,21 @@ $(document).ready(function() {
 	    }    
 	    s += b + '\n';
 	  }
-	  //if (errori != '') { alert("Found errors\nPRODUCED CODE IS USELESS\nDon't use this code on the machine\nErrors at lines#\n"+errori);}
-	  //else { alert("No errors found!\nI hope this means GCode program converted OK!\nRemember: i take no responsibility and give no warranty this script will work as intended.\nUse at your own risk!"); }
+	  if (errori != '') 
+		{ 
+			$('.bottom-left').notify({
+				message: { text: 'WARNING: Rotation had errors. Please Check...' },
+				type: 'danger'
+			}).show(); 
+		} else { 
+			$('.bottom-left').notify({
+				message: { text: 'Rotation Succeeded. Please Check before cutting...' },
+				type: 'success'
+			}).show(); 
+		}
 	theOutput=document.getElementById("gcodepreview");
 	theOutput.value=s;
-	processNoNeg();
-	
+		
 	}
 
 	// *** Rectangular Polar Coordinates Conversion ***
@@ -417,8 +437,21 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[I|i].+[0-9|.]+/g,function(m){return translate("I",transX,m)});
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
-		//textarea.value=outputstring;
-	}
+
+		 if (theOutput == '') 
+			{ 
+				$('.bottom-left').notify({
+					message: { text: 'WARNING: -Fix 0,0- had errors. Please Check...' },
+					type: 'danger'
+				}).show(); 
+			} else { 
+				$('.bottom-left').notify({
+					message: { text: 'Succeeded. Please Check before cutting...' },
+					type: 'success'
+				}).show(); 
+			}
+			//textarea.value=outputstring;
+		}
 
 	function process180()
 	{
@@ -453,6 +486,20 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 		//textarea.value=outputstring;
+		if (theOutput == '') 
+			{ 
+				$('.bottom-left').notify({
+					message: { text: 'WARNING: Mirror had errors. Please Check...' },
+					type: 'danger'
+				}).show(); 
+			} else { 
+				$('.bottom-left').notify({
+					message: { text: 'Mirror Succeeded. Please Check before cutting...' },
+					type: 'success'
+				}).show(); 
+			}
+			//textarea.value=outputstring;
+		
 	}
 
 	function processScale()
@@ -479,6 +526,21 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 		//textarea.value=outputstring;
+		if (theOutput == '') 
+			{ 
+				$('.bottom-left').notify({
+					message: { text: 'WARNING: Scaling had errors. Please Check...' },
+					type: 'danger'
+				}).show(); 
+			} else { 
+				$('.bottom-left').notify({
+					message: { text: 'Scaling Succeeded. Please Check before cutting...' },
+					type: 'success'
+				}).show(); 
+			
+			//textarea.value=outputstring;
+		}
+
 	}
 
 	function processTranslate()
@@ -503,6 +565,21 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 		//textarea.value=outputstring;
+		if (theOutput == '') 
+			{ 
+				$('.bottom-left').notify({
+					message: { text: 'WARNING: Positional Translation had errors. Please Check...' },
+					type: 'danger'
+				}).show(); 
+			} else { 
+				$('.bottom-left').notify({
+					message: { text: 'Translation Succeeded. Please Check before cutting...' },
+					type: 'success'
+				}).show(); 
+			
+			//textarea.value=outputstring;
+		}
+
 	}
 
 	function fd(number)
@@ -541,6 +618,7 @@ $(document).ready(function() {
 		document.getElementById('YTRANS').value = '0';
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
+		
 	});
 
 	$('#flip').on('click', function() {
@@ -550,21 +628,22 @@ $(document).ready(function() {
 		document.getElementById('YTRANS').value = '0';
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
+		openGCodeFromText();
 	});
 
 	$('#rotate').on('click', function() {
+
 		processRot();
-		processNoNeg();
 		document.getElementById('scaleFactor').value = '100';
 		document.getElementById('XTRANS').value = '0';
 		document.getElementById('YTRANS').value = '0';
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
-		$('#noneg').click();
 	});
 
 
 	$('#noneg').on('click', function() {
+		console.log('Fixing 0x0 Offset to not be Negative.');
 		processNoNeg();
 		document.getElementById('scaleFactor').value = '100';
 		document.getElementById('XTRANS').value = '0';
@@ -742,6 +821,9 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
+	$("#machineControl").draggable({
+		handle: ".modal-header"
+	});
 
 	
 
@@ -768,6 +850,7 @@ $(document).ready(function() {
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
 		// Activate GCode Tab
 		$('#gcC').click();
+		
 			
 	});
 
@@ -801,6 +884,7 @@ $(document).ready(function() {
 				document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>GCode File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+				
 			}
 		});
 
@@ -877,7 +961,6 @@ $(document).ready(function() {
 				document.getElementById('gcodepreview').value = '';
 				
 				$('#cutParams').modal('toggle');
-				
 				$('#mcC').click();
 				document.getElementById('fileName').value = fileName;								
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');

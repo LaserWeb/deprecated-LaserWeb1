@@ -1058,6 +1058,8 @@ function createObjectFromGCode(gcode) {
 			document.getElementById('BBYDIM').value = dY;
 			document.getElementById('BBXMIN').value = bbbox2.min.x;
 			document.getElementById('BBYMIN').value = bbbox2.min.y;
+			document.getElementById('BBXMAX').value = bbbox2.max.x;
+			document.getElementById('BBYMAX').value = bbbox2.max.y;
 			
 				
             // store meta data in userData of object3d for later use like in animation

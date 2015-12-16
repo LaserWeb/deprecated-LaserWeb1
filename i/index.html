@@ -1,6 +1,6 @@
 <!--
 
-    LaserMarlinWeb - A Web Based Lasercutters running Marlin
+    LaserWeb - A Web Based Lasercutters running Marlin or Smoothieware
     Copyright (C) 2015 Andrew Hodel & Peter van der Walt
 
     THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
@@ -33,7 +33,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>LaserWeb - A fully featured Web UI for Lasercutters running Marlin</title>
+<title>LaserWeb - A fully featured Web UI for Lasercutters running Marlin or Smoothieware</title>
 
  <!-- Socket and UI -->
 	<script src="/socket.io/socket.io.js"></script>
@@ -112,7 +112,7 @@
 			<p>
 			<!-- Material Setup -->
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 100px;">Material Thickness</span>
+				<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-arrows-v fa-lg" style="margin-right: 20px;"></i>Material Thickness:</span>
 				<div class="input-group spinnerthickness">
 					<input type="text" class="form-control" value="3" id="thickness">
 					<div class="input-group-btn-vertical">
@@ -189,15 +189,13 @@ Send to Laser</button></div>
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg"" style="margin-right: 3px;"></i>Resize</a></div>						
 						
 					</div>
-				</div>
-
-				<span class="input-group-addon"  style="width: 60px;">Rotation:</span>
-				<div class="input-group">
+					
+					<span class="input-group-addon"  style="margin-left: 30px;">Rotation:</span>
 					<input type="text" class="form-control" value="0" id="rotAngle" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">&deg;</span>
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg"" style="margin-right: 3px;"></i>Rotate</a></div>/div>						
-						
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg"" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>						
 
 					</div>
 				</div>
@@ -215,6 +213,8 @@ Send to Laser</button></div>
 					<input type="hidden" value="" id="BBYDIM">
 					<input type="hidden" value="" id="BBXMIN">
 					<input type="hidden" value="" id="BBYMIN">
+					<input type="hidden" value="" id="BBXMAX">
+					<input type="hidden" value="" id="BBYMAX">
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="translate"><i class="fa fa-arrows fa-lg"" style="margin-right: 3px;"></i>Move</a></div>
 
@@ -233,7 +233,7 @@ Send to Laser</button></div>
         <div class="col-md-3 panel-transparent">
           <!-- Port Selection -->
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  ><i class="fa fa-plug" style="margin-right: 10px;"></i>Port</span>
+				<span class="input-group-addon"  ><i class="fa fa-plug" style="margin-right: 10px;"></i>Port:</span>
 				<select id="choosePort" class="form-control">
 					<option val="no">Select a serial port</option>
 				</select>
@@ -247,7 +247,7 @@ Send to Laser</button></div>
 
 			<!-- Button to open Jogging and Machine Control Widget -->
 			<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-cogs fa-lg"" style="margin-right: 20px;"></i>Machine Control</a>
-<BR><a class="btn btn-success" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="webcambutton"><i class="fa fa-camera fa-lg"" style="margin-right: 20px;"></i>Webcam</a>
+			<br><a class="btn btn-success" style="width: 100%; height: 36px; padding-bottom: 5px; display: none;"  id="webcambutton"><i class="fa fa-video-camera fa-lg"" style="margin-right: 20px;"></i>Webcam</a>
 
 			<hr style="clear: both;" />
 
@@ -257,7 +257,8 @@ Send to Laser</button></div>
 					<span class="input-group-addon"  style="width: 60px;"><i class="fa fa-terminal fa-lg"></i>
 </span><input type="text" class="form-control" id="command">
 					<span class="input-group-btn">
-						<button id="sendCommand" class="btn btn-danger disabled" type="button">Send</button>
+						<button id="sendCommand" class="btn btn-danger disabled" type="button"><i class="fa fa-play" style="margin-right: 10px;"></i>
+Send</button>
 					</span>
 				</div><!-- /input-group -->
 				<hr style="clear: both;" />
@@ -682,7 +683,7 @@ Send to Laser</button></div>
 	  
 	<div style="display: none; margin-top: 10px; width: 100%; height: 100%px; float: left; clear: both;" id="webcam">
 		<a id="wcLink" target="_blank" href="#"><img id="wcImg" width="320" height="240" /></a>
-	</div -->
+	</div>
 
 
 	  
