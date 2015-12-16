@@ -1054,8 +1054,10 @@ function createObjectFromGCode(gcode) {
 			$('#console').append('<span style="color: #060606;"><b>Max Dimensions<br> X:</b> '+bbbox2.max.x+' <b>Y:</b> '+bbbox2.max.y+' <b>Z:</b> '+bbbox2.max.z+'</span><br>');
 			$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-			document.getElementById('BBXMAX').value = dX;
-			document.getElementById('BBYMAX').value = dY;
+			document.getElementById('BBXDIM').value = dX;
+			document.getElementById('BBYDIM').value = dY;
+			document.getElementById('BBXMIN').value = bbbox2.min.x;
+			document.getElementById('BBYMIN').value = bbbox2.min.y;
 			
 				
             // store meta data in userData of object3d for later use like in animation

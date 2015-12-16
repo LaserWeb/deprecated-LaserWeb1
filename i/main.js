@@ -149,6 +149,7 @@ $(document).ready(function() {
 		$('#wcImg').attr('src', webroot+':'+data.webcamPort+'/?action=stream');
 		$('#wcLink').attr('href', webroot+':'+data.webcamPort+'/javascript_simple.html');
 		$('#webcam').show();
+		$('#webcambutton').show();
 	}
 	
 	});
@@ -216,11 +217,12 @@ $(document).ready(function() {
 		// if paused let user clear the command queue
 		socket.emit('clearQ', 1);
 		$('#sendToLaser').removeClass('disabled');
+		$('#pause').removeClass('disabled');
 		// must clear queue first, then unpause (click) because unpause does a sendFirstQ on server
 		$('#pause').click();
 	});
 	
-		$('#pause').on('click', function() {
+	$('#pause').on('click', function() {
 		if ($('#pause').html() == 'Pause') {
 			// pause queue on server
 			socket.emit('pause', 1);
@@ -232,6 +234,133 @@ $(document).ready(function() {
 			$('#clearQ').addClass('disabled');
 		}
 	});
+
+
+	// Enable sendToLaser button, if we receive gcode in #gcodepreview 
+	$("#gcodepreview").change(function () {
+		openGCodeFromText();
+		$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
+        $('#openMachineControl').removeClass('disabled');
+		$('#sendCommand').removeClass('disabled');	
+		$('#sendToLaser').removeClass('disabled');
+		
+   	 });
+	
+	// Send to laser button - start the job
+	$('#sendToLaser').on('click', function() {
+		socket.emit('clearQ', 1);
+		socket.emit('pause', 0);
+		$('#sendToLaser').addClass('disabled');
+		$('#pause').removeClass('disabled');
+		$('#mainStatus').html('Status: Lasering');
+		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
+		//$('#gcodepreview').val('');
+	});
+
+	// Sends single commands to laser (typed into #command)
+	$('#sendCommand').on('click', function() {
+		socket.emit('gcodeLine', { line: $('#command').val() });
+		$('#command').val('');
+	});
+	
+	$('#command').keyup(function(event){
+		if(event.keyCode == 13){
+			$('#sendCommand').click();
+		}
+	});
+
+
+	// Gcode Rotate from http://ideegeniali.altervista.org/progetti/?p=gcoderotator
+	function processRot() {
+
+	 var gcode=document.getElementById("gcodepreview").value.split('\n');
+	  var a,b,x,y,xstart,xend,ystart,yend;
+	  var xy = new Array(2);
+	  var errori = '';
+	  var s = '';
+	  //f.AreaOutput.value='';
+	  for (var i=0; gcode.length>i; i++) {
+	    a = gcode[i];
+	    b = a;
+	    xstart = (a + ' ').toUpperCase().indexOf('X');
+	    if ((a + ' ').toUpperCase().lastIndexOf('X') != xstart) { xstart = -1 };
+	    xend   = (a + ' ').toUpperCase().indexOf(' ',xstart);
+	    ystart = (a + ' ').toUpperCase().indexOf('Y');
+	    if ((a + ' ').toUpperCase().lastIndexOf('Y') != ystart) { ystart = -1 };
+	    yend   = (a + ' ').toUpperCase().indexOf(' ',ystart);
+	    
+	    if ((xstart == -1) && (ystart == -1)) {
+	      ;
+	    } else if ((xstart == -1) && (ystart != -1)) {
+	      errori += (i+1)+'  ';
+	    } else if ((xstart != -1) && (ystart == -1)) {
+	      errori += (i+1)+'  ';
+	    } else {
+	      x  = parseFloat(a.substring(xstart+1,xend));
+	      y  = parseFloat(a.substring(ystart+1,yend));
+	      xy = Convert(x,y);
+	      x  = xy[0];
+	      y  = xy[1];
+	      x  = Math.round(x*1000)/1000;
+	      y  = Math.round(y*1000)/1000;
+	      if (ystart > xstart) {
+		b=a.substring(0,xstart+1)+x+a.substring(xend,ystart+1)+y+a.substring(yend,a.length);
+	      } else {
+		b=a.substring(0,ystart+1)+y+a.substring(yend,xstart+1)+x+a.substring(xend,a.length);      
+	      }
+	    }    
+	    s += b + '\n';
+	  }
+	  //if (errori != '') { alert("Found errors\nPRODUCED CODE IS USELESS\nDon't use this code on the machine\nErrors at lines#\n"+errori);}
+	  //else { alert("No errors found!\nI hope this means GCode program converted OK!\nRemember: i take no responsibility and give no warranty this script will work as intended.\nUse at your own risk!"); }
+	theOutput=document.getElementById("gcodepreview");
+	theOutput.value=s;
+	processNoNeg();
+	
+	}
+
+	// *** Rectangular Polar Coordinates Conversion ***
+
+	function module(x,y) {
+	  return (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)));
+	}
+
+	function arg(x,y) {
+	  return (Math.atan2(y,x));
+	}
+
+	function coorx(m,a) {
+	  return (m * Math.cos(a));
+	}
+
+	function coory(m,a) {
+	  return (m * Math.sin(a));
+	}
+
+	function Convert(OldX,OldY) {
+	  var x=OldX;
+	  var y=OldY;
+	  x-=parseFloat(0);
+	  y-=parseFloat(0);
+	  
+	  var mod_=module(x,y);
+	 	  
+	 // Rotation Value
+	  var arg_=arg(x,y);
+	      var rotvalue=document.getElementById("rotAngle").value;
+	      arg_ = arg_ + (rotvalue*Math.PI/180);
+	 
+	  
+
+	  x=coorx(mod_,arg_);
+	  y=coory(mod_,arg_);  
+
+	  
+	  var out = new Array(2);
+	  out[0] = x;
+	  out[1] = y;
+	  return out;
+	}
 
 
 	// Gcode Scaling and Translate: from http://eng-serve.com/cnc/gcode_scale.html -->
@@ -266,6 +395,31 @@ $(document).ready(function() {
 		return newValue; //"Goo["+match+"]";
 	}
 
+	function processNoNeg()	
+	{
+		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
+
+		theInput=document.getElementById("gcodepreview").value;
+		theOutput=document.getElementById("gcodepreview");
+		//theInput=theInput.replace(/[X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+/g,function(m){return replacechar(m)});
+
+		transX=document.getElementById("BBXMIN").value * -1;
+		transY=document.getElementById("BBYMIN").value * -1;
+		//transZ=document.getElementById("ZTRANS").value;
+		transZ=0
+
+		theInput=theInput.replace(/[X|x]\s*-?[0-9|.]+/g,function(m){return translate("X",transX,m)});
+		theInput=theInput.replace(/[Y|y]\s*-?[0-9|.]+/g,function(m){return translate("Y",transY,m)});
+		theInput=theInput.replace(/[Z|z]\s*-?[0-9|.]+/g,function(m){return translate("Z",transZ,m)});
+
+
+		// I and J are always relative so no need to translate right?
+		//theInput=theInput.replace(/[I|i].+[0-9|.]+/g,function(m){return translate("I",transX,m)});
+		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
+		theOutput.value=theInput;
+		//textarea.value=outputstring;
+	}
+
 	function process180()
 	{
 		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
@@ -274,7 +428,7 @@ $(document).ready(function() {
 		theOutput=document.getElementById("gcodepreview");
 		//theInput=theInput.replace(/[X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+/g,function(m){return replacechar(m)});
 		scaleX= -1;
-		scaleY= -1;
+		scaleY= 1;
 		//scaleZ=document.getElementById("ZSCALE").value;
 		scaleZ=1
 
@@ -284,13 +438,13 @@ $(document).ready(function() {
 		theInput=theInput.replace(/[I|i]\s*-?[0-9|.]+/g,function(m){return scale("I",scaleX,m)});
 		theInput=theInput.replace(/[J|j]\s*-?[0-9|.]+/g,function(m){return scale("J",scaleY,m)});
 
-		transX=document.getElementById("BBXMAX").value;
-		transY=document.getElementById("BBYMAX").value;
+		transX=document.getElementById("BBXDIM").value;
+		//transY=document.getElementById("BBYDIM").value;
 		//transZ=document.getElementById("ZTRANS").value;
 		transZ=0
 
 		theInput=theInput.replace(/[X|x]\s*-?[0-9|.]+/g,function(m){return translate("X",transX,m)});
-		theInput=theInput.replace(/[Y|y]\s*-?[0-9|.]+/g,function(m){return translate("Y",transY,m)});
+		//theInput=theInput.replace(/[Y|y]\s*-?[0-9|.]+/g,function(m){return translate("Y",transY,m)});
 		theInput=theInput.replace(/[Z|z]\s*-?[0-9|.]+/g,function(m){return translate("Z",transZ,m)});
 
 
@@ -391,6 +545,27 @@ $(document).ready(function() {
 
 	$('#flip').on('click', function() {
 		process180();
+		document.getElementById('scaleFactor').value = '100';
+		document.getElementById('XTRANS').value = '0';
+		document.getElementById('YTRANS').value = '0';
+		document.getElementById('ZTRANS').value = '0';
+		openGCodeFromText();
+	});
+
+	$('#rotate').on('click', function() {
+		processRot();
+		processNoNeg();
+		document.getElementById('scaleFactor').value = '100';
+		document.getElementById('XTRANS').value = '0';
+		document.getElementById('YTRANS').value = '0';
+		document.getElementById('ZTRANS').value = '0';
+		openGCodeFromText();
+		$('#noneg').click();
+	});
+
+
+	$('#noneg').on('click', function() {
+		processNoNeg();
 		document.getElementById('scaleFactor').value = '100';
 		document.getElementById('XTRANS').value = '0';
 		document.getElementById('YTRANS').value = '0';
@@ -558,36 +733,20 @@ $(document).ready(function() {
 		$('#machineControl').modal('toggle');
 	});
 
-
-	
-	// Enable sendToLaser button, if we receive gcode in #gcodepreview 
-	$("#gcodepreview").change(function () {
-		openGCodeFromText();
-		$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
-        $('#openMachineControl').removeClass('disabled');
-		$('#sendCommand').removeClass('disabled');	
-		$('#sendToLaser').removeClass('disabled');
-    });
-	
-	// Send to laser button - start the job
-	$('#sendToLaser').on('click', function() {
-		$('#sendToLaser').addClass('disabled');
-		$('#mainStatus').html('Status: Lasering');
-		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
-		//$('#gcodepreview').val('');
+	// Toggle Modal for Webcam Widget
+	$('#webcambutton').on('click', function() {
+		$('#webcamwidget').modal('toggle');
 	});
 
-	// Sends single commands to laser (typed into #command)
-	$('#sendCommand').on('click', function() {
-		socket.emit('gcodeLine', { line: $('#command').val() });
-		$('#command').val('');
+	$("#webcamwidget").draggable({
+		handle: ".modal-header"
 	});
+
+	$("#machineControl").draggable({
+		handle: ".modal-header"
+	});
+
 	
-	$('#command').keyup(function(event){
-		if(event.keyCode == 13){
-			$('#sendCommand').click();
-		}
-	});
 
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
@@ -636,6 +795,7 @@ $(document).ready(function() {
 				$('#gcC').click();
 				openGCodeFromText();
 				gCodeToSend = this.result;
+				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
@@ -722,7 +882,7 @@ $(document).ready(function() {
 				$('#cutParams').modal('toggle');
 				
 				$('#mcC').click();
-								
+				document.getElementById('fileName').value = fileName;								
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
@@ -793,7 +953,7 @@ $(document).ready(function() {
 			$('#cutParams').modal('toggle');
 			
 			$('#mcC').click();
-			
+			document.getElementById('fileName').value = fileName;
 			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
@@ -823,6 +983,8 @@ $(document).ready(function() {
 			
 			gCodeToSend = document.getElementById('gcodepreview').value;
 			
+			document.getElementById('fileName').value = fileName;
+
 			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
@@ -834,6 +996,44 @@ $(document).ready(function() {
 						
 		}
 	});
+
+	// Handle File Save Button
+
+	$('#saveGcode').on('click', function() {
+		var textToWrite = document.getElementById("gcodepreview").value;
+		var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+		var fileNameToSaveAsExt = document.getElementById("fileName").value;
+		var fileNameToSaveAs = fileNameToSaveAsExt.replace(/\.[^/.]+$/, "")
+		var fileNameToSaveAs = fileNameToSaveAs + '-LaserWeb.gcode';
+
+		var downloadLink = document.createElement("a");
+		downloadLink.download = fileNameToSaveAs;
+		downloadLink.innerHTML = "Download File";
+		if (window.webkitURL != null)
+		{
+			// Chrome allows the link to be clicked
+			// without actually adding it to the DOM.
+			downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+		}
+		else
+		{
+			// Firefox requires the link to be added to the DOM
+			// before it can be clicked.
+			downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+			downloadLink.onclick = destroyClickedElement;
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+		}
+
+		downloadLink.click();
+
+	});
+
+
+	function destroyClickedElement(event)
+	{
+		document.body.removeChild(event.target);
+	}
 
 	// Handle feedback data from the machine:  Marlin
 	// Position [data =  X:100.00 Y:110.00 Z:10.00 E:0.00]

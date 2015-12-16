@@ -111,7 +111,7 @@ body {
     overflow: hidden;
 }
 
-
-.modal-backdrop {
-    display: none !important;
+.modal-dialog{
+    margin-right: 0;
+    margin-left: 0;
 }
