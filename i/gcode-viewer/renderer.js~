@@ -48,12 +48,17 @@ function createScene(element) {
 	
     render();
 
-    // fix controls if window is resized.
-    $(window).on('resize', function() {
-        controls.screen.width = window.innerWidth;
-        controls.screen.height = window.innerHeight - 2;
-	
-    });
+// fix controls if window is resized.
+  $(window).on('resize', function() {
+    renderer.setSize(element.width(), element.height());
+    camera.aspect = element.width() / element.height();
+    camera.updateProjectionMatrix();
+    controls.screen.width = window.innerWidth;
+    controls.screen.height = window.innerHeight;
+  });
+
+    
+   
 	
 	
     return scene;

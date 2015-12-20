@@ -75,6 +75,23 @@
 
 <div id="renderArea"></div> <!-- Note - background div - see CSS -->
 
+<!-- Right click context Menu -->
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+	<li><a tabindex="-1" href="#">Transform:</a></li>
+	<li class="divider"></li>
+	<li><a tabindex="-1" href="#" id="scale05x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x &#189; </a></li>
+	<li><a tabindex="-1" href="#" id="scale2x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x 2</a></li>
+	<li><a tabindex="-1" href="#" id="scale5x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x 5</a></li>
+	<li><a tabindex="-1" href="#" id="scale10x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x 10</a></li>
+	<li class="divider"></li>
+	<li><a tabindex="-1" href="#" id="rotate90"><i class="fa fa-refresh fa-lg" style="margin-right: 8px;"></i>Rotate 90&deg;</a></li>
+	<li class="divider"></li>
+	<li><a tabindex="-1" href="#" onclick="controls.reset();"><i class="fa fa-street-view fa-lg"></i> Reset 3D View</a></li>
+</ul>
+
+
+
+
  <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -186,7 +203,7 @@ Send to Laser</button></div>
 					<input type="text" class="form-control" value="100" id="scaleFactor" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">%</span>
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg"" style="margin-right: 3px;"></i>Resize</a></div>						
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Resize</a></div>						
 						
 					</div>
 					
@@ -194,7 +211,7 @@ Send to Laser</button></div>
 					<input type="text" class="form-control" value="0" id="rotAngle" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">&deg;</span>
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg"" style="margin-right: 3px;"></i>Rotate</a></div>/div>						
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>/div>						
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg"" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>						
 
 					</div>
@@ -224,7 +241,6 @@ Send to Laser</button></div>
 					</div>
 				</div>
 			</div>
-
 
        		
 

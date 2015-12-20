@@ -55,6 +55,7 @@ function createScene(element) {
     camera.updateProjectionMatrix();
     controls.screen.width = window.innerWidth;
     controls.screen.height = window.innerHeight;
+    controls.reset();
   });
 
     
