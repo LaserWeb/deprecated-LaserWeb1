@@ -1205,8 +1205,6 @@ $(document).ready(function() {
 		}
 	});
 
-	
-
 });
 
 

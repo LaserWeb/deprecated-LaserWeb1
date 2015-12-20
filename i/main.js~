@@ -1205,7 +1205,9 @@ $(document).ready(function() {
 		}
 	});
 
-	
+  var canvas = $("canvas"); // getting the canvas element
+canvas.width  = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
 
 });
 
