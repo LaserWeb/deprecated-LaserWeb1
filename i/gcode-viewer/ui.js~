@@ -161,7 +161,6 @@ function openGCodeFromText() {
             $(this).unbind(event);
         });
     }
-processNoNeg();
 }
 
 function makeSprite(scene, rendererType, vals) {
@@ -216,4 +215,6 @@ function makeSprite(scene, rendererType, vals) {
 
             //scene.add(textObject);
             return textObject;
-			}
+}
+
+

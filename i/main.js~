@@ -446,7 +446,7 @@ $(document).ready(function() {
 				}).show(); 
 			} else { 
 				$('.bottom-left').notify({
-					message: { text: 'Succeeded. Please Check before cutting...' },
+					message: { text: 'Fixed Negative Coordinates.  Please Check before cutting...' },
 					type: 'success'
 				}).show(); 
 			}
@@ -1206,8 +1206,7 @@ $(document).ready(function() {
 	});
 
 	
-	
-	
+
 });
 
 

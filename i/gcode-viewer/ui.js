@@ -215,4 +215,6 @@ function makeSprite(scene, rendererType, vals) {
 
             //scene.add(textObject);
             return textObject;
-			}
+}
+
+
