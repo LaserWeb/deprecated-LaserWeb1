@@ -11,6 +11,9 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ## Changelog
 
+* 20 Dec 2015: Added a right-click context menu to 3D viewer
+* 20 Dec 2015: Fixed Window resize didnt fix viewport bug
+* 16 Dec 2015: Added Webcam Widget
 * 15 Dec 2015: Added Scale, Translate, Flip functions
 * 15 Dec 2015: Added Support for SmoothieBoard / SmoothieWare to Master branch
 * 15 Dec 2015: Added Clear GCode button instead of clearing GCode automatically. Helps if you want to repeat same job a few times. 
