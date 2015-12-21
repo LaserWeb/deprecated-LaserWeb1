@@ -83,6 +83,15 @@ Procedure courtery of @quillford : https://github.com/openhardwarecoza/LaserWeb/
 npm install serialport socket.io node-static```
 6. Finally enter ```nodejs server.js```
 
+## Ubuntu MJPG_Streamer Install
+1.  Open a terminal
+2.  Enter the following command
+```sudo apt-get install build-essential libjpeg-dev imagemagick subversion libv4l-dev checkinstall```
+3.  Enter ```svn co svn://svn.code.sf.net/p/mjpg-streamer/code/ mjpg-streamer```
+4.  Enter ``` cd mjpg-streamer/mjpg-streamer ; make```
+5.  Enter ```sudo make install```
+6.  Run MJPG_Streamer with a USB Wbcam: ```mjpg_streamer -i "/usr/local/lib/input_uvc.so -d /dev/video0 -y  -r 320x240 -f 15" -o "/usr/local/lib/output_http.so -w /usr/local/www"```
+
 ## Raspberry Pi 2 (Jessie)
 
 Procedure courtery of @LordFennec : https://github.com/openhardwarecoza/LaserWeb/pull/3
