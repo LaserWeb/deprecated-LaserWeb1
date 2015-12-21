@@ -146,7 +146,31 @@ $(document).ready(function() {
 			$('#firmwareDet').removeClass('btn-danger');
 			$('#firmwareDet').addClass('btn-success');
 			$('#firmwareDet').html(firmware);
+
+			if (firmware.indexOf('Lasaur') == 0) {
+				console.log('Enabling Lasersaur Features');
+				$('#door_status_btn').show();
+				$('#chiller_status_btn').show();
+				$('#limit_status_btn').show();
+				$('#zeroWork').hide();
+				$('#motorsOff').hide();
+				$('#FanGrp').hide();
+				$('#xhomelabel').html(""); 
+				$('#yhomelabel').html(""); 
+				$('#zhomelabel').html(""); 
+				$('#AirGrp').show();
+			}
+			if (firmware.indexOf('Lasaur') == -1) {
+				console.log('Enabling Marlin/Smoothie Features');
+				$('#AirGrp').hide();
+				$('#zeroWork').show();
+				$('#motorsOff').show();
+				$('#FanGrp').show();
+
+			};
+
 		}
+
 		// Enable Webcam if found
 		if (data.showWebCam == true) {
 			// show the webcam and link
@@ -852,19 +876,35 @@ $(document).ready(function() {
 	});
 
 	$('#homeX').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G28 X0' });
+		if (firmware.indexOf('Lasaur') == 0) {		
+			socket.emit('gcodeLine', { line: 'G30' });
+		} else {
+			socket.emit('gcodeLine', { line: 'G28 X0' });
+		}
 	});
 	
 	$('#homeY').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G28 Y0' });
+		if (firmware.indexOf('Lasaur') == 0) {		
+			socket.emit('gcodeLine', { line: 'G30' });
+		} else {
+			socket.emit('gcodeLine', { line: 'G28 Y0' });
+		}
 	});
 
 	$('#homeZ').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G28 Z0' });
+		if (firmware.indexOf('Lasaur') == 0) {		
+			socket.emit('gcodeLine', { line: 'G30' });
+		} else {
+			socket.emit('gcodeLine', { line: 'G28 Z0' });
+		}
 	});
 
 	$('#homeAll').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G28' });
+		if (firmware.indexOf('Lasaur') == 0) {		
+			socket.emit('gcodeLine', { line: 'G30' });
+		} else {
+			socket.emit('gcodeLine', { line: 'G28' });
+		}
 	});
 
 	$('#zeroWork').on('click', function() {
@@ -1220,14 +1260,6 @@ $(document).ready(function() {
 	}
 
 
-	// Handle Firmware Version
-	socket.on('firmware', function(firmware) {
-			console.log(firmware);
-			//data = data.replace(/:/g,' ');
-			//var posArray = data.split(/(\s+)/);
-			//$('#mX').html('X: '+posArray[2]);
-	});
-
 	// Handle feedback data from the machine:  Marlin
 	// Position [data =  X:100.00 Y:110.00 Z:10.00 E:0.00]
 	socket.on('posStatusM', function(data) {
@@ -1245,7 +1277,7 @@ $(document).ready(function() {
 			cylinder.position.z = (parseInt(posArray[6],10) + 20);
 	});
 
-	// Handle feedback data from the machine:  Smoothie
+	// Handle position feedback data from the machine:  Smoothie
 	// Position [data =  ok C: X:190.000 Y:10.000 Z:1.000 A:190.000 B:10.000 C:1.000  E:0.000 ]
 	socket.on('posStatusS', function(data) {
 			data = data.replace(/:/g,' ');
@@ -1274,14 +1306,80 @@ $(document).ready(function() {
 			$('#mX').html('X: '+posArray[2]);
 			$('#mY').html('Y: '+posArray[4]);
 			$('#mZ').html('Z: -.--');
-			//cylinder.position.x = (parseInt(posArray[4],10) - (laserxmax /2));
-			//cylinder.position.y = (parseInt(posArray[6],10) - (laserymax /2));
+			cylinder.position.x = (parseInt(posArray[2],10) - (laserxmax /2));
+			cylinder.position.y = (parseInt(posArray[4],10) - (laserymax /2));
 			//cylinder.position.z = (parseInt(posArray[8],10) + 20);
+			if (data.indexOf('C') != -1) {
+			$('#chiller_status_btn').addClass('btn-danger');
+			$('#chiller_status_btn').removeClass('btn-success');
+			$('#chiller_status_btn').html("Chiller Failed!"); }
+			if (data.indexOf('C') == -1) {
+			$('#chiller_status_btn').removeClass('btn-danger');
+			$('#chiller_status_btn').addClass('btn-success');
+			$('#chiller_status_btn').html("Chiller Active"); }
+			if (data.indexOf('D') != -1) {
+			$('#door_status_btn').addClass('btn-danger');
+			$('#door_status_btn').removeClass('btn-success');
+			$('#door_status_btn').html("Door Open!"); }
+			if (data.indexOf('D') == -1) {
+			$('#door_status_btn').removeClass('btn-danger');
+			$('#door_status_btn').addClass('btn-success');
+			$('#door_status_btn').html("Doors Engaged"); }
+			if (data.indexOf('L') != -1) {
+			$('#limit_status_btn').addClass('btn-danger');
+			$('#limit_status_btn').removeClass('btn-success');
+			$('#limit_status_btn').html("Limit Triggered!"); }
+			if (data.indexOf('L') == -1) {
+			$('#limit_status_btn').removeClass('btn-danger');
+			$('#limit_status_btn').addClass('btn-success');
+			$('#limit_status_btn').html("Limits OK"); }
+			if (data.indexOf('U') != -1) {
+				$('.bottom-left').notify({
+					message: { text: 'Unknown GCODE' },
+					type: 'warning'
+				}).show(); 
+			}
+
+			if (data.indexOf('N') != -1) {
+				$('.bottom-left').notify({
+					message: { text: 'Bad Number Format' },
+					type: 'warning'
+				}).show(); 
+			}
+
+			if (data.indexOf('E') != -1) {
+				$('.bottom-left').notify({
+					message: { text: 'Expected Command Letter' },
+					type: 'warning'
+				}).show(); 
+			}
+			
+			if (data.indexOf('B') != -1) {
+				$('.bottom-left').notify({
+					message: { text: 'FW: Buffer Overflow!' },
+					type: 'warning'
+				}).show(); 
+			}
+			
+			if (data.indexOf('T') != -1) {
+				$('.bottom-left').notify({
+					message: { text: 'Transmission Error' },
+					type: 'warning'
+				}).show(); 
+			}
+			
+			if (data.indexOf('R') != -1) {
+				$('.bottom-left').notify({
+					message: { text: 'Serial Stop Request' },
+					type: 'warning'
+				}).show(); 
+			}
+			
 	});
 	
 	
 	
-	// Endstop [data = echo:endstops hit:  Y:154.93]
+	// Endstop [data = echo:endstops hit:  Y:154.93] (marlin)
 	socket.on('endstopAlarm', function(data) {
 			console.log("Endstop Hit!");
 			data = data.replace(/:/g,' ');
@@ -1295,7 +1393,7 @@ $(document).ready(function() {
 			}).show(); 
 	});
 	
-	// Unknown Command [data = echo:Unknown command: "X26.0480 Y29.1405 R7.4125"   unknownGcode]
+	// Unknown Command [data = echo:Unknown command: "X26.0480 Y29.1405 R7.4125"   unknownGcode] (marlin)
 	socket.on('unknownGcode', function(data) {
 			var gcArray = data.split(/:/);   
 			// NB MIGHT MAKE IT PAUSE WHEN THIS HAPPENS, A WRONG COMMAND MIGHT ANYWAY MEAN A RUINED JOB
@@ -1307,7 +1405,7 @@ $(document).ready(function() {
 			}).show(); 
 	});
 	
-	// temperature [data = T:24.31 /0 @:0 B:24.31 /0 @:0]  // Not in use in UI at the moment but I want to use Marlin's temp sensing at some point to check nozzle or water temp etc on the laser
+	// temperature [data = T:24.31 /0 @:0 B:24.31 /0 @:0]  // Not in use in UI at the moment but I want to use Marlin's temp sensing at some point to check nozzle or water temp etc on the laser (marlin)
 	socket.on('tempStatus', function(data) {
 		if (data.indexOf('ok') == 0) {
 			// this is a normal temp status

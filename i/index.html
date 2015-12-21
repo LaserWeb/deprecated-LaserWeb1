@@ -103,8 +103,10 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-
-<li><button type="button" class="btn btn-danger" style="margin: 10px;" id="firmwareDet">Not Connected</button></li>
+		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="limit_status_btn">Endstops</button></li>
+		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
+                <li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>
+		<li><button type="button" class="btn btn-danger" style="margin: 10px; " id="firmwareDet">Not Connected</button></li>
 
           </ul>
         </div>
@@ -379,14 +381,14 @@ Send</button>
 									
 								</path>
 								<use x="3" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
-								<text x="25" y="20" class="home"> X </text>
+								<text x="25" y="20" class="home" id="xhomelabel"> X </text>
 							</g>
 							<g id="homeY">
 								<path class="std" d="M230 57.50 h10 v-57.5 h-57.5 v10 a 125,125 0 0,1 47.5 47.5 z" fill="SteelBlue">
 									
 								</path>
 								<use x="217" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
-								<text x="202" y="20" class="home"> Y </text>
+								<text x="202" y="20" class="home" id="yhomelabel"> Y </text>
 							</g>
 
 							<g id="homeZ">
@@ -394,7 +396,7 @@ Send</button>
 									
 								</path>
 								<use x="217" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
-								<text x="202" y="232" class="home"> Z </text>
+								<text x="202" y="232" class="home" id="zhomelabel"> Z </text>
 							</g>
 
 							<g id="Jog100" fill="#c0c0c0" class="std">
@@ -603,8 +605,16 @@ Send</button>
 			
 			 	<button type="button" class="btn btn-secondary btn-success" style="width: 100%;" id="zeroWork"><i class="fa fa-dot-circle-o fa-lg"" style="margin-right: 20px;"></i>Zero Machine (G92)</button>	
 				<button type="button" class="btn btn-secondary btn-warning" style="width: 100%;" id="motorsOff"><i class="fa fa-power-off fa-lg"" style="margin-right: 20px;"></i>Motors Off (M84)</button>	
-				<br>
-				<div class="btn-group input-group  btn-group-justified" role="group" aria-label="Fan Control">
+			 	
+
+		<div class="btn-group input-group  btn-group-justified" id="AirGrp" style="display: none;">
+			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-power fa-lg"></i>Air Assist</button></div>
+			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOn">On</button></div>
+			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOff">Off</button></div>
+		</div>
+
+						<br>
+				<div class="btn-group input-group  btn-group-justified" role="group" id="FanGrp" aria-label="Fan Control">
 					<span class="input-group-addon">Fan</span>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fanOff">0%</button></div>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan25">25%</button></div>
