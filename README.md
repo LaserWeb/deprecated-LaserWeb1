@@ -13,6 +13,7 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ## Changelog
 
+* 21 Dec 2015: Added Lasersaur Support - Autodetect which firmware is loaded on the machine, and adapts Gcode dialect, UI elements, etc to suit the features of the attached machine
 * 20 Dec 2015: Added a right-click context menu to 3D viewer
 * 20 Dec 2015: Fixed Window resize didnt fix viewport bug
 * 16 Dec 2015: Added Webcam Widget
