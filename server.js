@@ -98,17 +98,23 @@ serialport.list(function (err, ports) {
 		sp[i].handle.on("open", function() {
 
 			console.log('connected to '+sp[i].port+' at '+config.serialBaudRate);
+			sp[i].handle.write("?\n"); // Lets check if its LasaurGrbl?
+			sp[i].handle.write("M115\n"); // Lets check if its Marlin?
+			sp[i].handle.write("version\n"); // Lets check if its Smoothieware?
 
 			// line from serial port
 			sp[i].handle.on("data", function (data) {
 				serialData(data, i);
 			});
 
-			// loop for status every 5 seconds
-			
-		setInterval(function() {
-				sp[i].handle.write("M114\n");
-			}, 1000);
+		// -- Moved to Serial Data to autodetect Firmware
+		// loop for status every 5 seconds
+		//setInterval(function() {
+		//		//sp[i].handle.write("M114\n"); //for Marlin/Smoothie
+		//		//sp[i].handle.write("?\n"); //for LasaurGrbl
+		//		sp[i].handle.write("?\n"); //for LasaurGrbl
+		//
+		//	}, 1000);
 
 
 		});
@@ -128,6 +134,44 @@ function serialData(data, port) {
 	// new line of data terminated with \n
 	//console.log('got newline from serial: '+data);
 
+
+	// Try to determine Firmware in use and set up queryloop
+	if (data.indexOf('#') == 0) { // Found LasaurGrbl
+		setInterval(function() {
+			sp[port].handle.write("?\n"); //for LasaurGrbl
+		}, 1000);
+		var firmwareVersion = data.split(/(\s+)/);
+		var lasaurGrblVersion = firmwareVersion[2]+' '+firmwareVersion[4];
+		var firmware = lasaurGrblVersion;
+		console.log('Firmware Detected:  '+firmware);
+		config.firmware = firmware;
+	}
+
+
+	if (data.indexOf('Marlin') != -1) {
+		setInterval(function() {
+			sp[port].handle.write("M114\n"); //for Marlin
+		}, 1000);
+		var firmwareVersion = data.split(/(:+)/);
+		var firmware = firmwareVersion[2];
+		console.log('Firmware Detected:  '+firmware);
+		config.firmware = firmware;
+	}
+
+	if (data.indexOf('LPC1769') != -1) {
+		setInterval(function() {
+			sp[port].handle.write("M114\n"); //for Smoothie
+		}, 1000);
+		data = data.replace(/:/g,',');
+		var firmwareVersion = data.split(/(,+)/);
+		var smoothieVersion = 'Smoothie'+firmwareVersion[14]+''+firmwareVersion[2];
+		var firmware = smoothieVersion;
+		console.log('Firmware Detected:  '+firmware);
+		config.firmware = firmware;
+	}
+
+	// End of Queryloop
+
 	// handle M105
 	if (data.indexOf('ok T:') == 0 || data.indexOf('T:') == 0) {
 		emitToPortSockets(port, 'tempStatus', data);
@@ -144,7 +188,14 @@ function serialData(data, port) {
 
 	// handle M114 (Smoothie)  
 	if (data.indexOf('ok C: X:') == 0 || data.indexOf('C: X:') == 0) {
-		emitToPortSockets(port, 'posStatusS', data);
+		emitToPortSockets(port, 'posStatusL', data);
+		sp[port].lastSerialReadLine = data;
+		return;
+	}
+
+	// handle ? (LasaurGrbl)  (like M114 but also contains feedback data on chiller, endstops, etc in one line. See http://www.lasersaur.com/manual/gcode
+	if (data.indexOf('V') !=-1 && data.indexOf('X') !=-1) {
+		emitToPortSockets(port, 'posStatusL', data);
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
@@ -171,7 +222,9 @@ function serialData(data, port) {
 
 	data = ConvChar(data);
 
-	if (data.indexOf('ok') == 0) {
+
+	
+	if (data.indexOf('ok') == 0 || data == "")  { // data == "" relates to supporting LaserSaur - monitor if it causes bugs on other firmwares.  Refer to https://groups.google.com/forum/#!topic/lasersaur/_6wTYNJgGyI
 
 		// run another line from the q
 		sendFirstQ(port);

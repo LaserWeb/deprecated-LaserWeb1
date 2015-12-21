@@ -104,7 +104,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
 
-<li><button type="button" class="btn btn-danger" style="margin: 10px;" id="firmwareDet">Not Connected</button></li>
+<li><button type="button" class="btn btn-danger disabled" style="margin: 10px;" id="firmwareDet">Not Connected</button></li>
 
           </ul>
         </div>

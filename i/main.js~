@@ -142,7 +142,7 @@ $(document).ready(function() {
 		laserymax = data.ymax
 		var firmware = data.firmware
 		console.log(firmware);
-		if (firmware) {
+		if (firmware != "") {
 			$('#firmwareDet').removeClass('btn-danger');
 			$('#firmwareDet').addClass('btn-success');
 			$('#firmwareDet').html(firmware);
