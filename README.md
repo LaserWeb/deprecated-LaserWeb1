@@ -1,7 +1,7 @@
 ## About
 
 LaserWeb is a fully function Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
-
+m
 If you would like to help with paying the prototyping costs, you can shoot me a donation on Paypal if you wish:
 https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJSWU 
 
@@ -13,6 +13,8 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ## Changelog
 
+* 22 Dec 2015: Added capability to run various controllers off one PC, all with different firmwares. Switching in the browser's dropdown between serial ports, changes the UI to match the firmware in use on that port!  Groundbreaking!
+* 22 Dec 2015: Added Grbl Support
 * 21 Dec 2015: Added Lasersaur Support - Autodetect which firmware is loaded on the machine, and adapts Gcode dialect, UI elements, etc to suit the features of the attached machine
 * 20 Dec 2015: Added a right-click context menu to 3D viewer
 * 20 Dec 2015: Fixed Window resize didnt fix viewport bug
@@ -51,7 +53,10 @@ If you would like to include this code in a project which is not licensed under 
 
 ## Serial baud rate
 
-Your Marlin based lasercutter should be configured to use a baud rate of 115200, you can set that in Configuration.h for Marlin.  You can also modify the LaserWeb config.js to change it's speed.
+Your Marlin/Smoothie/Grbl based lasercutter should be configured to use a baud rate of 115200, you can set that in Configuration.h for Marlin.  
+If you are running a default Lasersaur, its default baud rate is 57600.  I would advise changing that in firmware and recompiling (edit config.c in ./src/ and use Lasaurapp to build and upload)
+
+You can also modify the LaserWeb config.js to change the baud speed to match your machine
 
 
 ## Installation Instructions
