@@ -77,10 +77,10 @@
 
 <!-- Right click context Menu -->
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
-	<li><a tabindex="-1" href="#" id="scale05x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x &#189; </a></li>
-	<li><a tabindex="-1" href="#" id="scale2x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x 2</a></li>
-	<li><a tabindex="-1" href="#" id="scale5x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x 5</a></li>
-	<li><a tabindex="-1" href="#" id="scale10x"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 8px;"></i>Scale x 10</a></li>
+	<li><a tabindex="-1" href="#" id="scale05x"><i class="fa fa-compress fa-lg" style="margin-right: 8px;"></i>Scale x &#189; </a></li>
+	<li><a tabindex="-1" href="#" id="scale2x"><i class="fa fa-expand fa-lg" style="margin-right: 8px;"></i>Scale x 2</a></li>
+	<li><a tabindex="-1" href="#" id="scale5x"><i class="fa fa-expand fa-lg" style="margin-right: 8px;"></i>Scale x 5</a></li>
+	<li><a tabindex="-1" href="#" id="scale10x"><i class="fa fa-expand fa-lg" style="margin-right: 8px;"></i>Scale x 10</a></li>
 	<li class="divider"></li>
 	<li><a tabindex="-1" href="#" id="rotate90"><i class="fa fa-refresh fa-lg" style="margin-right: 8px;"></i>Rotate 90&deg;</a></li>
 	<li class="divider"></li>
@@ -103,6 +103,10 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+		<li><button type="button" class="btn btn-default" style="margin: 10px; display: none;" id="sendReset">RESET (ctrl-x)</button></li>
+		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendUnlock">unlock ($X)</button></li>
+		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblHelp">help ($)</button></li>
+		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblSettings">settings ($$)</button></li>		
 		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="limit_status_btn">Endstops</button></li>
 		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
                 <li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>

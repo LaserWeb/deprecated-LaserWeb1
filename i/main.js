@@ -140,36 +140,7 @@ $(document).ready(function() {
 		//console.log(data);
 		laserxmax = data.xmax
 		laserymax = data.ymax
-		var firmware = data.firmware
-		console.log(firmware);
-		if (firmware) {
-			$('#firmwareDet').removeClass('btn-danger');
-			$('#firmwareDet').addClass('btn-success');
-			$('#firmwareDet').html(firmware);
-
-			if (firmware.indexOf('Lasaur') == 0) {
-				console.log('Enabling Lasersaur Features');
-				$('#door_status_btn').show();
-				$('#chiller_status_btn').show();
-				$('#limit_status_btn').show();
-				$('#zeroWork').hide();
-				$('#motorsOff').hide();
-				$('#FanGrp').hide();
-				$('#xhomelabel').html(""); 
-				$('#yhomelabel').html(""); 
-				$('#zhomelabel').html(""); 
-				$('#AirGrp').show();
-			}
-			if (firmware.indexOf('Lasaur') == -1) {
-				console.log('Enabling Marlin/Smoothie Features');
-				$('#AirGrp').hide();
-				$('#zeroWork').show();
-				$('#motorsOff').show();
-				$('#FanGrp').show();
-
-			};
-
-		}
+		
 
 		// Enable Webcam if found
 		if (data.showWebCam == true) {
@@ -935,6 +906,27 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'M107' }); 
 	});
 
+	// Firmware Specific Buttons
+	
+	// Grbl
+
+	$('#sendReset').on('click', function() {
+		socket.emit('doReset', 1);
+	});
+
+	$('#sendUnlock').on('click', function() {
+		socket.emit('gcodeLine', { line: '$X' });
+	});
+
+
+	$('#sendGrblHelp').on('click', function() {
+		socket.emit('gcodeLine', { line: '$' });
+	});
+
+	$('#sendGrblSettings').on('click', function() {
+		socket.emit('gcodeLine', { line: '$$' });
+	});
+
 	
 	// Tabs for the CGode/Millcrum text edit blocks
 	$('#mcC').on('click', function() {
@@ -1377,6 +1369,22 @@ $(document).ready(function() {
 			
 	});
 	
+	// Handle feedback from the machine: Grbl
+
+	socket.on('machineStatus', function (data) {
+		//$('#mStatus').html(data.status);
+		//$('#mX').html('X: '+data.mpos[0]);
+		//$('#mY').html('Y: '+data.mpos[1]);
+		//$('#mZ').html('Z: '+data.mpos[2]);
+		$('#mX').html('X: '+data.wpos[0]);
+		$('#mY').html('Y: '+data.wpos[1]);
+		$('#mZ').html('Z: '+data.wpos[2]);
+		cylinder.position.x = (parseInt(data.wpos[0],10) - (laserxmax /2));
+		cylinder.position.y = (parseInt(data.wpos[1],10) - (laserymax /2));
+		cylinder.position.z = (parseInt(data.wpos[2],10) + 20);
+		//console.log(data);
+	});
+
 	
 	
 	// Endstop [data = echo:endstops hit:  Y:154.93] (marlin)
@@ -1433,6 +1441,71 @@ $(document).ready(function() {
 		}
 	});
 
+
+
+	
+	socket.on('firmware', function(data) {
+		var firmware = data
+		//console.log(firmware);
+		if (firmware) {
+			$('#firmwareDet').removeClass('btn-danger');
+			$('#firmwareDet').addClass('btn-success');
+			$('#firmwareDet').html(firmware);
+
+			if (firmware.indexOf('Lasaur') == 0) {
+				//console.log('Enabling Lasersaur Features');
+				$('#console').append('<p class="pf" style="color: red;">Enabling Lasersaur Features</p>');
+				$('#door_status_btn').show();
+				$('#chiller_status_btn').show();
+				$('#limit_status_btn').show();
+				$('#zeroWork').hide();
+				$('#motorsOff').hide();
+				$('#FanGrp').hide();
+				$('#xhomelabel').html(""); 
+				$('#yhomelabel').html(""); 
+				$('#zhomelabel').html(""); 
+				$('#AirGrp').show();
+			}
+
+		if (firmware.indexOf('Grbl') == 0) {
+				//console.log('Enabling Grbl Features');
+				$('#console').append('<p class="pf" style="color: red;">Enabling Grbl Features</p>');
+				$('#sendReset').show();
+				$('#sendUnlock').show();
+				$('#sendGrblHelp').show();
+				$('#sendGrblSettings').show();
+				$('#door_status_btn').hide();
+				$('#chiller_status_btn').hide();
+				$('#limit_status_btn').hide();
+				$('#zeroWork').hide();
+				$('#motorsOff').hide();
+				$('#FanGrp').hide();
+				$('#xhomelabel').html(""); 
+				$('#yhomelabel').html(""); 
+				$('#zhomelabel').html(""); 
+				$('#AirGrp').show();
+			}
+			
+			
+		if (firmware.indexOf('Lasaur') == -1 && firmware.indexOf('Grbl') != 0) {
+				$('#sendReset').hide();
+				$('#sendUnlock').hide();
+				$('#sendGrblHelp').hide();
+				$('#sendGrblSettings').hide();
+				$('#door_status_btn').hide();
+				$('#chiller_status_btn').hide();
+				$('#limit_status_btn').hide();
+				//console.log('Enabling Marlin/Smoothie Features');
+				$('#console').append('<p class="pf" style="color: red;">Enabling Marlin/Smoothie Features</p>');
+				$('#AirGrp').hide();
+				$('#zeroWork').show();
+				$('#motorsOff').show();
+				$('#FanGrp').show();
+
+			};
+
+		}
+	});
 });
 
 

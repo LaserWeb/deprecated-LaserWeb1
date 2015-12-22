@@ -85,6 +85,7 @@ serialport.list(function (err, ports) {
 
 		sp[i] = {};
 		sp[i].port = ports[i].comName;
+		sp[i].firmware = ""
 		sp[i].q = [];
 		sp[i].qCurrentMax = 0;
 		sp[i].lastSerialWrite = [];
@@ -132,7 +133,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	//console.log('got newline from serial: '+data);
+	console.log('Port '+port+' got newline from serial: '+data);
 
 
 	// Try to determine Firmware in use and set up queryloop
@@ -144,9 +145,22 @@ function serialData(data, port) {
 		var lasaurGrblVersion = firmwareVersion[2]+' '+firmwareVersion[4];
 		var firmware = lasaurGrblVersion;
 		console.log('Firmware Detected:  '+firmware);
-		socket.emit('firmware', firmware);
+		sp[port].firmware = firmware;
+		
 	}
 
+	if (data.indexOf('Grbl') == 0) { // Found Grbl
+		setInterval(function() {
+			sp[port].handle.write("?\n"); //for LasaurGrbl
+		}, 1000);
+		var firmwareVersion = data.split(/(\s+)/);
+		console.log(firmwareVersion)
+		var lasaurGrblVersion = firmwareVersion[0]+' '+firmwareVersion[2];
+		var firmware = lasaurGrblVersion;
+		console.log('Firmware Detected:  '+firmware);
+		sp[port].firmware = firmware;
+		
+	}
 
 	if (data.indexOf('Marlin') != -1) {
 		setInterval(function() {
@@ -155,7 +169,22 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(:+)/);
 		var firmware = firmwareVersion[2];
 		console.log('Firmware Detected:  '+firmware);
-		socket.emit('firmware', firmware);
+		sp[port].firmware = firmware;
+		
+	}
+
+	if (data.indexOf('Repetier') != -1) {
+		setInterval(function() {
+			sp[port].handle.write("M114\n"); //for Repetier
+		}, 1000);
+		data = data.replace(/_/g,' ');		
+		data = data.replace(/:/g,' ');		
+		var firmwareVersion = data.split(/(\s+)/);
+		console.log(firmwareVersion)
+		var firmware = firmwareVersion[4]+' '+firmwareVersion[6];
+		console.log('Firmware Detected:  '+firmware);
+		sp[port].firmware = firmware;
+
 	}
 
 	if (data.indexOf('LPC1769') != -1) {
@@ -167,8 +196,11 @@ function serialData(data, port) {
 		var smoothieVersion = 'Smoothie'+firmwareVersion[14]+''+firmwareVersion[2];
 		var firmware = smoothieVersion;
 		console.log('Firmware Detected:  '+firmware);
-		socket.emit('firmware', firmware);
+		sp[port].firmware = firmware;
+		
 	}
+
+
 
 	// End of Queryloop
 
@@ -188,7 +220,7 @@ function serialData(data, port) {
 
 	// handle M114 (Smoothie)  
 	if (data.indexOf('ok C: X:') == 0 || data.indexOf('C: X:') == 0) {
-		emitToPortSockets(port, 'posStatusL', data);
+		emitToPortSockets(port, 'posStatusS', data);
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
@@ -199,6 +231,36 @@ function serialData(data, port) {
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
+
+	if (config.firmware) {	
+		if (config.firmware.indexOf('Lasaur') == 0) {
+		       if (data.indexOf('N') !=-1 || data.indexOf('E') !=-1 || data.indexOf('U') !=-1 || data.indexOf('B') !=-1 || data.indexOf('B') !=-1 || data.indexOf('T') !=-1 || data.indexOf('P') !=-1 || data.indexOf('L') !=-1 || data.indexOf('R') !=-1  || data.indexOf('D') !=-1 || data.indexOf('C') !=-1 || data.indexOf('V') !=-1   ) {
+			emitToPortSockets(port, 'posStatusL', data);
+			sp[port].lastSerialReadLine = data;
+			return;
+			}
+		}
+	}
+
+	// Handle Grbl Feedback
+
+	if (data.indexOf('<') == 0) {
+		// https://github.com/grbl/grbl/wiki/Configuring-Grbl-v0.8#---current-status
+
+		// remove first <
+		var t = data.substr(1);
+
+		// remove last >
+		t = t.substr(0,t.length-2);
+
+		// split on , and :
+		t = t.split(/,|:/);
+
+		emitToPortSockets(port, 'machineStatus', {'status':t[0], 'mpos':[t[2], t[3], t[4]], 'wpos':[t[6], t[7], t[8]]});
+
+		return;
+	}
+	
 
 	
 	// handle Endstop Alarm
@@ -251,6 +313,22 @@ function serialData(data, port) {
 		sp[port].lastSerialWrite.shift();
 
 		console.log('!! (error) from printer');
+
+	} else if (data.indexOf('error') == 0) {
+
+		// error is red
+		emitToPortSockets(port, 'serialRead', {c:1,l:data+});
+
+		// run another line from the q
+		if (sp[port].q.length > 0) {
+			// there are remaining lines in the q
+			// write one
+			sendFirstQ(port);
+		}
+
+		// remove first
+		sp[port].lastSerialWrite.shift();
+
 
 	} else {
 		// other is grey
@@ -308,6 +386,18 @@ io.sockets.on('connection', function (socket) {
 
 	// emit all ports to ui
 	socket.emit('ports', allPorts);
+
+
+	socket.on('doReset', function (data) {
+		// soft reset for grbl, send ctrl-x ascii \030
+		sp[currentSocketPort[socket.id]].handle.write("\030");
+		// reset vars
+		sp[currentSocketPort[socket.id]].q = [];
+		sp[currentSocketPort[socket.id]].qCurrentMax = 0;
+		sp[currentSocketPort[socket.id]].lastSerialWrite = [];
+		sp[currentSocketPort[socket.id]].lastSerialRealLine = '';
+	});
+
 
 
 	socket.on('clearQ', function(data) {
@@ -391,6 +481,9 @@ io.sockets.on('connection', function (socket) {
 
 		console.log('user wants to use port '+data);
 		console.log('switching from '+currentSocketPort[socket.id]);
+		console.log(' Firmware on this board is '+sp[data].firmware);
+
+		socket.emit('firmware', sp[data].firmware);
 
 		if (typeof currentSocketPort[socket.id] != 'undefined') {
 			for (var c=0; c<sp[currentSocketPort[socket.id]].sockets.length; c++) {
