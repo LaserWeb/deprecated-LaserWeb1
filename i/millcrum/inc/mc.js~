@@ -813,11 +813,11 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 					//console.log('line angle '+ang);
 				} else {
 					// line is not long enough, just draw it
-					this.gcode += 'M3\G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\nM5\n';
+					this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 				}
 			} else {
 				// no tabs
-				this.gcode += 'M3\nG1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\nM5\n';
+				this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 			}
 		}
 
