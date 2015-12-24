@@ -64,7 +64,7 @@ var fileServer = new static.Server('./i');
 
 function handler (req, res) {
 
-	//console.log('url request: '+req.url);
+		//console.log(chalk.gray('url request: '+req.url));
 
 	fileServer.serve(req, res, function (err, result) {
 		if (err) {
@@ -84,6 +84,11 @@ var allPorts = [];
 
 serialport.list(function (err, ports) {
 
+  if (fs.existsSync('/dev/ttyAMA0')) {
+  		ports.push({comName:'/dev/ttyAMA0',manufacturer: Broadcom,pnpId: 'raspberryPi__GPIO'});
+  		console.log('adding /dev/ttyAMA0 because it is enabled in config.js, you may need to enable it in the os - http://www.hobbytronics.co.uk/raspberry-pi-serial-port');
+  	}
+
 	allPorts = ports;
 
 	for (var i=0; i<ports.length; i++) {
@@ -91,7 +96,7 @@ serialport.list(function (err, ports) {
 
 		sp[i] = {};
 		sp[i].port = ports[i].comName;
-		sp[i].firmware = ""
+    sp[i].firmware = ""
 		sp[i].q = [];
 		sp[i].qCurrentMax = 0;
 		sp[i].lastSerialWrite = [];
@@ -118,28 +123,27 @@ serialport.list(function (err, ports) {
 			sp[i].handle.on("data", function (data) {
 				serialData(data, i);
 			});
-
-		// -- Moved to Serial Data to autodetect Firmware
-		// loop for status every 5 seconds
-		//setInterval(function() {
-		//		//sp[i].handle.write("M114\n"); //for Marlin/Smoothie
-		//		//sp[i].handle.write("?\n"); //for LasaurGrbl
-		//		sp[i].handle.write("?\n"); //for LasaurGrbl
-		//
-		//	}, 1000);
-
-
 		});
 
 		sp[i].handle.on('error', function (error) {
 			var errMsg = 'Cannot open';
+      var errMsg2 = 'Error Input/output';
 			if (error.message.slice(0, errMsg.length) === errMsg) {
 				console.error(
 					chalk.red('Could not connect to device:'),
 					chalk.blue(sp[i].port)
 				);
-			} else {
-				throw error
+      } else if (error.message.slice(0, errMsg2.length) === errMsg2 ) {
+				console.error(
+					chalk.red('Port not responding:'), // Most likely /dev/ttyS* on ubuntu (;
+					chalk.blue(sp[i].port),
+          chalk.green(' - skipping')
+				);
+      } else {
+        console.error(
+          chalk.red('SerialPort Failure:'),
+          chalk.blue(sp[i].port));
+        throw error
 			}
 		});
 
@@ -168,9 +172,14 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(\s+)/);
 		var lasaurGrblVersion = firmwareVersion[2]+' '+firmwareVersion[4];
 		var firmware = lasaurGrblVersion;
-		console.log('Firmware Detected:  '+firmware);
+		//	console.log(chalk.green('Firmware Detected:  '+firmware));
+    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware),
+      chalk.yellow(' on port '),
+      chalk.blue(sp[port].port)
+      );
 		sp[port].firmware = firmware;
-		
+
 	}
 
 	if (data.indexOf('Grbl') == 0) { // Found Grbl
@@ -178,12 +187,15 @@ function serialData(data, port) {
 			sp[port].handle.write("?\n"); //for LasaurGrbl
 		}, 1000);
 		var firmwareVersion = data.split(/(\s+)/);
-		console.log(firmwareVersion)
 		var lasaurGrblVersion = firmwareVersion[0]+' '+firmwareVersion[2];
 		var firmware = lasaurGrblVersion;
-		console.log('Firmware Detected:  '+firmware);
+    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware),
+      chalk.yellow(' on port '),
+      chalk.blue(sp[port].port)
+      );
 		sp[port].firmware = firmware;
-		
+
 	}
 
 	if (data.indexOf('Marlin') != -1) {
@@ -192,21 +204,28 @@ function serialData(data, port) {
 		}, 1000);
 		var firmwareVersion = data.split(/(:+)/);
 		var firmware = firmwareVersion[2];
-		console.log('Firmware Detected:  '+firmware);
+    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware),
+      chalk.yellow(' on port '),
+      chalk.blue(sp[port].port)
+      );
 		sp[port].firmware = firmware;
-		
+
 	}
 
 	if (data.indexOf('Repetier') != -1) {
 		setInterval(function() {
 			sp[port].handle.write("M114\n"); //for Repetier
 		}, 1000);
-		data = data.replace(/_/g,' ');		
-		data = data.replace(/:/g,' ');		
+		data = data.replace(/_/g,' ');
+		data = data.replace(/:/g,' ');
 		var firmwareVersion = data.split(/(\s+)/);
-		console.log(firmwareVersion)
 		var firmware = firmwareVersion[4]+' '+firmwareVersion[6];
-		console.log('Firmware Detected:  '+firmware);
+    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware),
+      chalk.yellow(' on port '),
+      chalk.blue(sp[port].port)
+      );
 		sp[port].firmware = firmware;
 
 	}
@@ -219,9 +238,13 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(,+)/);
 		var smoothieVersion = 'Smoothie'+firmwareVersion[14]+''+firmwareVersion[2];
 		var firmware = smoothieVersion;
-		console.log('Firmware Detected:  '+firmware);
+    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware),
+      chalk.yellow(' on port '),
+      chalk.blue(sp[port].port)
+      );
 		sp[port].firmware = firmware;
-		
+
 	}
 
 
@@ -234,7 +257,7 @@ function serialData(data, port) {
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
-	
+
 	// handle M114 (Marlin)
 	if (data.indexOf('X:') == 0 || data.indexOf('ok X:') == 0) {
 		emitToPortSockets(port, 'posStatusM', data);
@@ -242,7 +265,7 @@ function serialData(data, port) {
 		return;
 	}
 
-	// handle M114 (Smoothie)  
+	// handle M114 (Smoothie)
 	if (data.indexOf('ok C: X:') == 0 || data.indexOf('C: X:') == 0) {
 		emitToPortSockets(port, 'posStatusS', data);
 		sp[port].lastSerialReadLine = data;
@@ -256,7 +279,7 @@ function serialData(data, port) {
 		return;
 	}
 
-	if (config.firmware) {	
+	if (config.firmware) {
 		if (config.firmware.indexOf('Lasaur') == 0) {
 		       if (data.indexOf('N') !=-1 || data.indexOf('E') !=-1 || data.indexOf('U') !=-1 || data.indexOf('B') !=-1 || data.indexOf('B') !=-1 || data.indexOf('T') !=-1 || data.indexOf('P') !=-1 || data.indexOf('L') !=-1 || data.indexOf('R') !=-1  || data.indexOf('D') !=-1 || data.indexOf('C') !=-1 || data.indexOf('V') !=-1   ) {
 			emitToPortSockets(port, 'posStatusL', data);
@@ -284,23 +307,23 @@ function serialData(data, port) {
 
 		return;
 	}
-	
 
-	
+
+
 	// handle Endstop Alarm
 	if (data.indexOf('echo:endstops hit:') == 0) {
 	emitToPortSockets(port, 'endstopAlarm', data);
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
-	
+
 	// handle unknown GCode
 	if (data.indexOf('echo:Unknown command:') == 0) {
 	emitToPortSockets(port, 'unknownGcode', data);
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
-	
+
 	if (queuePause == 1) {
 		// pause queue
 		return;
@@ -309,7 +332,7 @@ function serialData(data, port) {
 	data = ConvChar(data);
 
 
-	
+
 	if (data.indexOf('ok') == 0 || data == "")  { // data == "" relates to supporting LaserSaur - monitor if it causes bugs on other firmwares.  Refer to https://groups.google.com/forum/#!topic/lasersaur/_6wTYNJgGyI
 
 		// run another line from the q
@@ -326,7 +349,7 @@ function serialData(data, port) {
 		// resend last
 		sp[port].handle.write(sp[port].lastSerialWrite[-1]);
 
-		console.log('rs (resend) from printer, resending');
+		console.log(chalk.red('rs (resend) from printer, resending'));
 
 	} else if (data.indexOf('!!') == 0) {
 
@@ -336,7 +359,7 @@ function serialData(data, port) {
 		// remove first
 		sp[port].lastSerialWrite.shift();
 
-		console.log('!! (error) from printer');
+		console.log(chalk.red('!! (error) from printer'));
 
 	} else if (data.indexOf('error') == 0) {
 
@@ -391,7 +414,7 @@ function sendFirstQ(port) {
 		sendFirstQ(port);
 		return;
 	}
-	//console.log('sending '+t+' ### '+sp[port].q.length+' current q length');
+	//console.log(chalk.green('sending '+t+' ### '+sp[port].q.length+' current q length'));
 	// loop through all registered port clients
 	for (var i=0; i<sp[port].sockets.length; i++) {
 		sp[port].sockets[i].emit('serialRead', {c:3,l:'SEND: '+t});
@@ -404,7 +427,7 @@ var queuePause = 0;
 io.sockets.on('connection', function (socket) {
 
 	socket.on('firstLoad', function(data) {
-		
+
 		socket.emit('config', config);
 	});
 
@@ -434,10 +457,10 @@ io.sockets.on('connection', function (socket) {
 	socket.on('pause', function(data) {
 		// pause queue
 		if (data == 1) {
-			console.log('pausing queue');
+			console.log(chalk.yellow('pausing queue'));
 			queuePause = 1;
 		} else {
-			console.log('unpausing queue');
+			console.log(chalk.yellow('unpausing queue'));
 			queuePause = 0;
 			sendFirstQ(currentSocketPort[socket.id]);
 		}
@@ -503,9 +526,9 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('usePort', function (data) {
 
-		console.log('user wants to use port '+data);
-		console.log('switching from '+currentSocketPort[socket.id]);
-		console.log(' Firmware on this board is '+sp[data].firmware);
+		console.log(chalk.green('user wants to use port '+data));
+		console.log(chalk.gray('switching from '+currentSocketPort[socket.id]));
+		console.log(chalk.green(' Firmware on this board is '+sp[data].firmware));
 
 		socket.emit('firmware', sp[data].firmware);
 
@@ -524,7 +547,7 @@ io.sockets.on('connection', function (socket) {
 		} else {
 			socket.emit('serverError', 'that serial port does not exist');
 		}
-		
+
 	});
 
 });
