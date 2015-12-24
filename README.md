@@ -13,6 +13,7 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ## Changelog
 
+* 23 Dec 2015: @danawoodman contributed code to handle serial port errors elegantly, allow overriding config using environment variables, and add some editor/gitignore to help the developers
 * 22 Dec 2015: Added capability to run various controllers off one PC, all with different firmwares. Switching in the browser's dropdown between serial ports, changes the UI to match the firmware in use on that port!  Groundbreaking!
 * 22 Dec 2015: Added Grbl Support
 * 21 Dec 2015: Added Lasersaur Support - Autodetect which firmware is loaded on the machine, and adapts Gcode dialect, UI elements, etc to suit the features of the attached machine
