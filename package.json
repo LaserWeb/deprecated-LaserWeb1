@@ -1,7 +1,8 @@
 {
-  "name": "reprapweb",
+  "name": "laserweb",
   "description": "a fully featured web ui for reprap and other 3d printers",
   "dependencies": {
+    "chalk": "1.1.1"
     "dotenv": "1.2.0",
     "node-static": "0.7.x",
     "serialport": "2.0.x",
