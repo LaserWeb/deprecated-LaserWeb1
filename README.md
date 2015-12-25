@@ -19,8 +19,9 @@ Then every day, run ```./update.sh ```
 
 ## Changelog
 
-* 25 Dec 2015:  Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code 
-* 24 Dec 2015:  Added error handling for /dev/ttyS ports on linux, @Cinezaster contributed a fix for package.json, @oxydum contributed better mc.js code for Grbl lasers
+* 25 Dec 2015: Added per-layer (DXF) and per-path (SVG) Laser Power and Feedrate settings to the DXF/SVG Importing code
+* 25 Dec 2015: Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code 
+* 24 Dec 2015: Added error handling for /dev/ttyS ports on linux, @Cinezaster contributed a fix for package.json, @oxydum contributed better mc.js code for Grbl lasers
 * 23 Dec 2015: @danawoodman contributed code to handle serial port errors elegantly, allow overriding config using environment variables, and add some editor/gitignore to help the developers
 * 22 Dec 2015: Added capability to run various controllers off one PC, all with different firmwares. Switching in the browser's dropdown between serial ports, changes the UI to match the firmware in use on that port!  Groundbreaking!
 * 22 Dec 2015: Added Grbl Support
