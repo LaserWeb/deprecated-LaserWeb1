@@ -1135,14 +1135,15 @@ $(document).ready(function() {
 
 
 
-
-
+			$('#generate').hide();
+			$('#dxfparamstomc').show();
+			$('#svgparamstomc').hide();
 			$('#cutParams').modal('toggle');
 
 	});
 
 			//});
-	$('#paramstomc').on('click', function() {  // DXF job Params to MC
+	$('#dxfparamstomc').on('click', function() {  // DXF job Params to MC
 
 
 				console.log(layers);
@@ -1181,6 +1182,10 @@ $(document).ready(function() {
 
 	// open .svg (File Open Function)
 	osvg.addEventListener('change', function(e) {
+
+		$('#svgparamstomc').show();
+		$('#dxfparamstomc').hide();
+
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
 		var r = new FileReader();
@@ -1188,8 +1193,11 @@ $(document).ready(function() {
 		r.onload = function(e) {
 
 			var fileName = fileInputSVG.value.replace("C:\\fakepath\\", "");
-			var svg = new Svg();
+			svg = new Svg();
 			svg.process(r.result);
+			pwr = {};
+			cutSpeed = {};
+			row = [];
 
 			console.log('\n\nall paths',svg.paths);
 			console.log('svg units '+svg.units);
@@ -1214,39 +1222,58 @@ $(document).ready(function() {
 			// then flipping the y
 
 			// millcrum code holder
-			var s = '// Setup SVG Job';
+			s = '// Setup SVG Job';
 			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 			s += '// set the surface dimensions for the viewer, svg import specified '+svg.units+'\nmc.surface('+svg.width+','+svg.height+');\n\n\n';
 
-			// now loop through the paths and write them to mc code
+
 			for (var c=0; c<svg.paths.length; c++) {
-				s += 'var polygon'+c+' = {type:\'polygon\',name:\'polygon'+c+'\',points:['
-				for (var p=0; p<svg.paths[c].length; p++) {
-					svg.paths[c][p][1] = svg.height-svg.paths[c][p][1];
-					s += '['+svg.paths[c][p][0]+','+svg.paths[c][p][1]+'],';
+				$('#layers > tbody:last-child').append('<tr><td>Path'+[c]+'</td><td><input class=simplebox name=sp'+[c]+' id=sp'+[c]+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+[c]+' id=pwr'+[c]+' value=100>&nbsp;%</td></tr>');
 				}
-				s += ']};\n';
-				s += 'mc.cut(\'centerOnPath\', polygon'+c+', '+$('#thickness').val()+', 100, [0,0]);\n\n'
-			}
 
-			s += 'mc.get();\n\n';
-
-			// load the new millcrum code
-			document.getElementById('millcrumCode').value = s;
-			document.getElementById('gcodepreview').value = '';
+			$('#generate').hide();
+			$('#dxfparamstomc').hide();
+			$('#svgparamstomc').show();
 			$('#cutParams').modal('toggle');
+
+		}
+
+});
+
+	$('#svgparamstomc').on('click', function() {  // DXF job Params to MC
+
+		// now loop through the paths and write them to mc code
+		for (var c=0; c<svg.paths.length; c++) {
+			pwr[c] = $('#pwr'+[c]).val();
+			cutSpeed[c] = $('#sp'+[c]).val();
+			s += 'var polygon'+c+' = {type:\'polygon\',name:\'polygon'+c+'\',points:['
+			for (var p=0; p<svg.paths[c].length; p++) {
+				svg.paths[c][p][1] = svg.height-svg.paths[c][p][1];
+				s += '['+svg.paths[c][p][0]+','+svg.paths[c][p][1]+'],';
+			}
+			s += ']};\n';
+			s += 'mc.cut(\'centerOnPath\', polygon'+c+', '+$('#thickness').val()+','+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
+
+		}
+
+		s += 'mc.get();\n\n';
+
+		// load the new millcrum code
+		document.getElementById('millcrumCode').value = s;
+		document.getElementById('gcodepreview').value = '';
 
 			$('#mcC').click();
 			document.getElementById('fileName').value = fileName;
 			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 			$('#sendToLaser').removeClass('disabled');
+			generate.click();
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
 			document.getElementById('fileInputSVG').value = '';
 			document.getElementById('fileInputMILL').value = '';
 			$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-					}
+
 	});
 
 	// open .millcrum (File Open Function)
