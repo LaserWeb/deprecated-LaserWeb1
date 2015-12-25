@@ -1034,13 +1034,15 @@ $(document).ready(function() {
 	odxf.addEventListener('change', function(e) {
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: DXF</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
+		$("#layersbody").empty();
 		var r = new FileReader();
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
 
 			var fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
-			var dxf = new Dxf();
-			var pwr = {};
+			dxf = new Dxf();
+			pwr = {};
+			cutSpeed = {};
 
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1067,7 +1069,7 @@ $(document).ready(function() {
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			}
 
-				var s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
+				s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
 				s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 				s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
 
@@ -1099,13 +1101,33 @@ $(document).ready(function() {
 
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
-					pwr[c] = 100
-					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+','+pwr[c]+', [0,0]);\n\n';
-					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td></td><td></td></tr>');
+					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
 				}
 				for (var c=0; c<dxf.lines.length; c++) {
-					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+','+pwr[c]+', [0,0]);\n\n';
-					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td></td><td></td></tr>');
+					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
+				}
+
+			}
+
+
+
+
+
+			$('#cutParams').modal('toggle');
+
+	});
+
+			//});
+	$('#paramstomc').on('click', function() {  // DXF job Params to MC
+
+				// for each line/polyline, do:
+				for (var c=0; c<dxf.polylines.length; c++) {
+					pwr[c] = $('#pwr'+c).val()
+					cutSpeed[c] = $('#sp'+c).val()
+					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', '+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
+				}
+				for (var c=0; c<dxf.lines.length; c++) {
+					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+','+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
 				}
 
 				s += '\nmc.get();\n';
@@ -1114,18 +1136,18 @@ $(document).ready(function() {
 				document.getElementById('millcrumCode').value = s;
 				document.getElementById('gcodepreview').value = '';
 
-				$('#cutParams').modal('toggle');
 				$('#mcC').click();
 				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
+				generate.click();
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
 				document.getElementById('fileInputSVG').value = '';
 				document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-			}
+
 
 	});
 
@@ -1176,7 +1198,7 @@ $(document).ready(function() {
 					s += '['+svg.paths[c][p][0]+','+svg.paths[c][p][1]+'],';
 				}
 				s += ']};\n';
-				s += 'mc.cut(\'centerOnPath\', polygon'+c+', '+$('#thickness').val()+', [0,0]);\n\n'
+				s += 'mc.cut(\'centerOnPath\', polygon'+c+', '+$('#thickness').val()+', 100, [0,0]);\n\n'
 			}
 
 			s += 'mc.get();\n\n';

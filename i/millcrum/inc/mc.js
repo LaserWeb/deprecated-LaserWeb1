@@ -323,7 +323,7 @@ Millcrum.prototype.generateOffsetPath = function(type, basePath, offsetDistance)
 
 };
 
-Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, config) {
+Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , startPos, config) {
 
 	if (typeof(depth) == 'undefined') {
 		// default depth of a cut is the tool defined passDepth
@@ -336,13 +336,12 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, con
 	}
 
 
-		if (typeof(laserPower) == 'undefined') {
+	if (typeof(laserPower) == 'undefined') {
 			// default start position is X0 Y0
 			var laserPwr = ''
-		} else {
+	} else {
 			var laserPwr = laserPower;
-			console.log(laserPower)
-		}
+	}
 
 	if (typeof(config) != 'object') {
 
@@ -375,19 +374,22 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, con
 		}
 	}
 
-	console.log('generating cut operation:');
-	console.log('##tool##');
-	console.log(this.tool);
-	console.log('##cutType##');
-	console.log(cutType);
-	console.log('##obj.type##');
-	console.log(obj.type);
-	console.log('##depth##');
-	console.log(depth);
-	console.log('##startPos##');
-	console.log(startPos);
-	console.log('##laserPower##');
-	console.log(laserPwr);
+	//console.log('generating cut operation:');
+	//console.log('##tool##');
+	//console.log(this.tool);
+	//console.log('##cutType##');
+	//console.log(cutType);
+	//console.log('##obj.type##');
+	//console.log(obj.type);
+	//console.log('##depth##');
+	//console.log(depth);
+	//console.log('##startPos##');
+	//console.log(startPos);
+	//console.log('##laserPower##');
+	//console.log(laserPwr);
+	//console.log('##cutSpeed##');
+	//console.log(cutSpeed);
+
 
 	var basePath = [];
 
@@ -755,7 +757,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, con
 			if (c == toolPath.length-1) {
 				// this is the last point in the toolPath we can just add it
 				// regardless of the current Z
-				this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+				this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 
 			// now we need to check if this Z layer would need to account for tabs
 			// in the event that the tabHeight is greater than tool.passDepth,
@@ -799,25 +801,25 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, con
 
 					// now that we have the line angle, we can create each of the tabs
 					// first we need to add the first point to gcode
-					this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+					this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 					this.gcode += '\n; START TABS\n';
 					var npt = toolPath[c];
 					for (var r=0; r<numTabs; r++) {
 						// then for each tab
 						// add another point at the current point +tabPaddingPerSpace
 						npt = this.newPointFromDistanceAndAngle(npt,ang,tabPaddingPerSpace);
-						this.gcode += 'G1 F'+this.tool.cut+' X'+npt[0]+' Y'+npt[1]+'\n';
+						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+'\n';
 						// then we raise the z height by config.tabHeight
 						this.gcode += 'G1 Z'+(zPos+config.tabHeight)+'\n';
 						// then add another point at the current point +tabWidth
 						npt = this.newPointFromDistanceAndAngle(npt,ang,config.tabWidth);
-						this.gcode += 'G1 F'+this.tool.cut+' X'+npt[0]+' Y'+npt[1]+'\n';
+						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+'\n';
 						// then lower the z height back to zPos at plunge speed
 						this.gcode += 'G1 F'+this.tool.plunge+' Z'+zPos+'\n';
 						// then add another point at the current point +tabPaddingPerSpace
 						// with the cut speed
 						npt = this.newPointFromDistanceAndAngle(npt,ang,tabPaddingPerSpace);
-						this.gcode += 'G1 F'+this.tool.cut+' X'+npt[0]+' Y'+npt[1]+'\n';
+						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+'\n';
 					}
 					this.gcode += '; END TABS\n\n';
 
@@ -825,11 +827,11 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, con
 					//console.log('line angle '+ang);
 				} else {
 					// line is not long enough, just draw it
-					this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+					this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 				}
 			} else {
 				// no tabs
-				this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+				this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 			}
 		}
 
