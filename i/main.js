@@ -1103,11 +1103,9 @@ $(document).ready(function() {
 				//console.log(dxf);
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
-
 					row[c] = dxf.polylines[c].layer
 				}
 				for (var c=0; c<dxf.lines.length; c++) {
-					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
 					row[c] = dxf.polylines[c].layer
 				}
 
@@ -1130,7 +1128,7 @@ $(document).ready(function() {
 				layers = row.unique();
 				//console.log(layers);
 				for (var c=0; c<layers.length; c++) {
-					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
+					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input class=simplebox name=sp'+c+' id=sp'+c+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+c+' id=pwr'+c+' value=100>&nbsp;%</td></tr>');
 				}
 
 			}
@@ -1148,9 +1146,6 @@ $(document).ready(function() {
 
 
 				console.log(layers);
-				for (var c=0; c<layers.length; c++) {
-					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
-				}
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
 					var lay = layers.indexOf(dxf.polylines[c].layer);
