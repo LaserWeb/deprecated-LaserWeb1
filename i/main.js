@@ -39,7 +39,6 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
-
 $(document).ready(function() {
 
 	$('#thickness').change(function() {
@@ -1043,6 +1042,7 @@ $(document).ready(function() {
 			dxf = new Dxf();
 			pwr = {};
 			cutSpeed = {};
+			row = [];
 
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1099,12 +1099,38 @@ $(document).ready(function() {
 					s += ']};\n';
 				}
 
+
+				//console.log(dxf);
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
-					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
+
+					row[c] = dxf.polylines[c].layer
 				}
 				for (var c=0; c<dxf.lines.length; c++) {
 					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
+					row[c] = dxf.polylines[c].layer
+				}
+
+
+				Array.prototype.unique = function()
+				{
+					var n = {},r=[];
+					for(var i = 0; i < this.length; i++)
+					{
+						if (!n[this[i]])
+						{
+							n[this[i]] = true;
+							r.push(this[i]);
+						}
+					}
+					return r;
+				}
+
+				layers = [];
+				layers = row.unique();
+				//console.log(layers);
+				for (var c=0; c<layers.length; c++) {
+					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
 				}
 
 			}
@@ -1120,10 +1146,17 @@ $(document).ready(function() {
 			//});
 	$('#paramstomc').on('click', function() {  // DXF job Params to MC
 
+
+				console.log(layers);
+				for (var c=0; c<layers.length; c++) {
+					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input name=sp'+c+' id=sp'+c+' value=3200></td><td><input name=pwr'+c+' id=pwr'+c+' value=100></td></tr>');
+				}
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
-					pwr[c] = $('#pwr'+c).val()
-					cutSpeed[c] = $('#sp'+c).val()
+					var lay = layers.indexOf(dxf.polylines[c].layer);
+					console.log(lay);
+					pwr[c] = $('#pwr'+lay).val();
+					cutSpeed[c] = $('#sp'+lay).val();
 					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', '+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
 				}
 				for (var c=0; c<dxf.lines.length; c++) {
