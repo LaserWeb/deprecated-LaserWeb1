@@ -1040,6 +1040,7 @@ $(document).ready(function() {
 
 			var fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
 			var dxf = new Dxf();
+			var pwr = {};
 
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1066,7 +1067,7 @@ $(document).ready(function() {
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			}
 
-				var s = '// setup a new Millcrum object with that tool';
+				var s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
 				s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 				s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
 
@@ -1098,11 +1099,12 @@ $(document).ready(function() {
 
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
-					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					pwr[c] = 100
+					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+','+pwr[c]+', [0,0]);\n\n';
 					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td></td><td></td></tr>');
 				}
 				for (var c=0; c<dxf.lines.length; c++) {
-					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+','+pwr[c]+', [0,0]);\n\n';
 					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td></td><td></td></tr>');
 				}
 

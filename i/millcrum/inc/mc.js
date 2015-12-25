@@ -167,7 +167,7 @@ Millcrum.prototype.generateArc = function(startDeg,endDeg,r,toolDiameter) {
 
 };
 
-Millcrum.prototype.generateOffsetPath = function(type, basePath, offsetDistance) { 
+Millcrum.prototype.generateOffsetPath = function(type, basePath, offsetDistance) {
 	// generates an offset path from basePath
 	// type of either inside or outside
 	// offsetDistance determines how far away it is
@@ -323,7 +323,7 @@ Millcrum.prototype.generateOffsetPath = function(type, basePath, offsetDistance)
 
 };
 
-Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
+Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, startPos, config) {
 
 	if (typeof(depth) == 'undefined') {
 		// default depth of a cut is the tool defined passDepth
@@ -334,6 +334,15 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 		// default start position is X0 Y0
 		startPos = [0,0];
 	}
+
+
+		if (typeof(laserPower) == 'undefined') {
+			// default start position is X0 Y0
+			var laserPwr = ''
+		} else {
+			var laserPwr = laserPower;
+			console.log(laserPower)
+		}
 
 	if (typeof(config) != 'object') {
 
@@ -366,17 +375,19 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 		}
 	}
 
-	//console.log('generating cut operation:');
-	//console.log('##tool##');
-	//console.log(this.tool);
-	//console.log('##cutType##');
-	//console.log(cutType);
-	//console.log('##obj.type##');
-	//console.log(obj.type);
-	//console.log('##depth##');
-	//console.log(depth);
-	//console.log('##startPos##');
-	//console.log(startPos);
+	console.log('generating cut operation:');
+	console.log('##tool##');
+	console.log(this.tool);
+	console.log('##cutType##');
+	console.log(cutType);
+	console.log('##obj.type##');
+	console.log(obj.type);
+	console.log('##depth##');
+	console.log(depth);
+	console.log('##startPos##');
+	console.log(startPos);
+	console.log('##laserPower##');
+	console.log(laserPwr);
 
 	var basePath = [];
 
@@ -485,7 +496,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 
 				//console.log('first point in the arcPath is:');
 				//console.log(arcPath[0]);
- 
+
 				// now we need to get the offset so we can move the arc to the correct place
 				// that is done by getting the difference between the previous point
 				// and arcPath[0] (first point in arc)
@@ -730,13 +741,13 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 			// this is a full pass, go down another this.tool.passDepth
 			zPos = zPos-this.tool.passDepth;
 		}
-			
+
 		// comment for pass
-		this.gcode += '\n; PASS #'+z+' AT '+zPos+' DEPTH\n'; 
+		this.gcode += '\n; PASS #'+z+' AT '+zPos+' DEPTH\n';
 
 		// generate Z movement at this.tool.plunge speed
 		this.gcode += 'G1 F'+this.tool.plunge+' Z'+zPos+'\n';
-		this.gcode += 'M03\n';
+		this.gcode += 'M03 S'+laserPwr+'\n';
 
 		// loop through each point in the path
 		for (c=0; c<toolPath.length; c++) {
@@ -872,6 +883,6 @@ Millcrum.prototype.get = function() {
 
 	//console.log(this.gcode);
 	document.getElementById('gcodepreview').value = this.gcode;
-	
+
 
 };
