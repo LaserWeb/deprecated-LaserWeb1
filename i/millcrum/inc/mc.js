@@ -736,6 +736,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 
 		// generate Z movement at this.tool.plunge speed
 		this.gcode += 'G1 F'+this.tool.plunge+' Z'+zPos+'\n';
+		this.gcode += 'M03\n';
 
 		// loop through each point in the path
 		for (c=0; c<toolPath.length; c++) {
@@ -743,7 +744,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 			if (c == toolPath.length-1) {
 				// this is the last point in the toolPath we can just add it
 				// regardless of the current Z
-				this.gcode += 'M3\nG1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\nM5\n';
+				this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 
 			// now we need to check if this Z layer would need to account for tabs
 			// in the event that the tabHeight is greater than tool.passDepth,
@@ -813,17 +814,18 @@ Millcrum.prototype.cut = function(cutType, obj, depth, startPos, config) {
 					//console.log('line angle '+ang);
 				} else {
 					// line is not long enough, just draw it
-					this.gcode += 'M3\G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\nM5\n';
+					this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 				}
 			} else {
 				// no tabs
-				this.gcode += 'M3\nG1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\nM5\n';
+				this.gcode += 'G1 F'+this.tool.cut+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
 			}
 		}
 
 	}
 
 	// now move back to zClearance
+	this.gcode += 'M05\n';
 	this.gcode += '\n; PATH FINISHED FOR "'+obj.name+'" '+obj.type+' WITH '+cutType+' CUT, MOVING BACK TO this.tool.zClearance\n';
 	this.gcode += 'G0 F'+this.tool.rapid+' Z'+this.tool.zClearance+'\n';
 
@@ -857,6 +859,7 @@ Millcrum.prototype.get = function() {
 	// set absolute mode
 	s += '\n; SETTING ABSOLUTE POSITIONING\n';
 	s += 'G90\n';
+	this.gcode += 'M02\n';
 
 	this.gcode = s + this.gcode;
 
