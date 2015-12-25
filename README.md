@@ -11,6 +11,12 @@ https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJS
 
 This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
+## Update!  NB 
+NB:  See the Changelog below, almost DAILY there is new code coming out. 
+Before running, execute ```cd  LaserWeb; chmod +x update.sh; ./update.sh```
+Then every day, run ```./update.sh ```
+
+
 ## Changelog
 
 * 25 Dec 2015:  Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code 
