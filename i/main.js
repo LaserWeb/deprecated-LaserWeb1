@@ -61,7 +61,7 @@ $(document).ready(function() {
 	$('.spinnerZ .btn:last-of-type').on('click', function() {
 		$('.spinnerZ input').val( parseInt($('.spinnerZ input').val(), 10) - 10);
 	});
-	
+
 	// Spinner for Rapids speed
 	$('.spinnermove .btn:first-of-type').on('click', function() {
 		$('.spinnermove input').val( parseInt($('.spinnermove input').val(), 10) + 100);
@@ -77,7 +77,7 @@ $(document).ready(function() {
 	$('.spinnercut .btn:last-of-type').on('click', function() {
 		$('.spinnercut input').val( parseInt($('.spinnercut input').val(), 10) - 100);
 	});
-	  
+
 	// Spinner for Thickness
 	$('.spinnerthickness .btn:first-of-type').on('click', function() {
 		$('.spinnerthickness input').val( parseInt($('.spinnerthickness input').val(), 10) + 1);
@@ -85,7 +85,7 @@ $(document).ready(function() {
 	$('.spinnerthickness .btn:last-of-type').on('click', function() {
 		$('.spinnerthickness input').val( parseInt($('.spinnerthickness input').val(), 10) - 1);
 	});
-	  
+
 	// Spinner for Thickness per pass (Z-down)
 	$('.spinnerperpass .btn:first-of-type').on('click', function() {
 		$('.spinnerperpass input').val( parseInt($('.spinnerperpass input').val(), 10) + 1);
@@ -93,11 +93,11 @@ $(document).ready(function() {
 	$('.spinnerperpass .btn:last-of-type').on('click', function() {
 		$('.spinnerperpass input').val( parseInt($('.spinnerperpass input').val(), 10) - 1);
 	});
-  
+
 	// Application Inits
 	var socket = io.connect(''); // socket.io init
 	var gCodeToSend = null; // if uploaded file is gcode
-			
+
 	// Millcrum
 	var ogcode = document.getElementById('fileInputGcode');
 	var odxf = document.getElementById('fileInputDXF');
@@ -106,7 +106,7 @@ $(document).ready(function() {
 	var millcrumCode = document.getElementById('millcrumCode');
 	var toSaveGcode = '';
 	var generate = document.getElementById('generate');
-	
+
 	// Tell server.js we have started
 	socket.emit('firstLoad', 1);
 
@@ -122,17 +122,21 @@ $(document).ready(function() {
 		for (var i=0; i<data.length; i++) {
 			$('#choosePort').append('<option value="'+i+'">'+data[i].comName+':  '+data[i].manufacturer+'</option>');
 		}
-		if (data.length == 1) {
+		$("#choosePort option:contains(undefined)").remove();  // Remove ttyS ports from UI
+    var length = $('#choosePort > option').length;
+		// If only one port, automatically connect to it
+		if (length == 2) {
 			// select first and only
 			$('#choosePort').val('0');
 			$('#choosePort').change();
 		}
+
 	});
 
 	// Enable the machine control buttons once a port is selected
 	$("#choosePort").change(function () {
         $('#openMachineControl').removeClass('disabled');
-		$('#sendCommand').removeClass('disabled');	
+		$('#sendCommand').removeClass('disabled');
     });
 
 	// obtain config options from server
@@ -140,7 +144,7 @@ $(document).ready(function() {
 		//console.log(data);
 		laserxmax = data.xmax
 		laserymax = data.ymax
-		
+
 
 		// Enable Webcam if found
 		if (data.showWebCam == true) {
@@ -152,7 +156,7 @@ $(document).ready(function() {
 			$('#webcam').show();
 			$('#webcambutton').show();
 		}
-	
+
 	});
 
 	// Serial / Queue / Management stuff
@@ -180,7 +184,7 @@ $(document).ready(function() {
 		$('#console').append('<p class="pf" style="color: '+col+';">'+data.l+'</p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
-	
+
 	$('#choosePort').on('change', function() {
 		// select port
 		socket.emit('usePort', $('#choosePort').val());
@@ -222,7 +226,7 @@ $(document).ready(function() {
 		// must clear queue first, then unpause (click) because unpause does a sendFirstQ on server
 		$('#pause').click();
 	});
-	
+
 	$('#pause').on('click', function() {
 		if ($('#pause').html() == 'Pause') {
 			// pause queue on server
@@ -237,17 +241,17 @@ $(document).ready(function() {
 	});
 
 
-	// Enable sendToLaser button, if we receive gcode in #gcodepreview 
+	// Enable sendToLaser button, if we receive gcode in #gcodepreview
 	$("#gcodepreview").change(function () {
 		openGCodeFromText();
 		$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
         $('#openMachineControl').removeClass('disabled');
-		$('#sendCommand').removeClass('disabled');	
+		$('#sendCommand').removeClass('disabled');
 		$('#sendToLaser').removeClass('disabled');
-		
-		
+
+
    	 });
-	
+
 	// Send to laser button - start the job
 	$('#sendToLaser').on('click', function() {
 		socket.emit('clearQ', 1);
@@ -264,7 +268,7 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: $('#command').val() });
 		$('#command').val('');
 	});
-	
+
 	$('#command').keyup(function(event){
 		if(event.keyCode == 13){
 			$('#sendCommand').click();
@@ -279,7 +283,7 @@ $(document).ready(function() {
 		    $(this).on("contextmenu", function (e) {
 		        // return native menu if pressing control
 		        if (e.ctrlKey) return;
-		        
+
 		        //open menu
 		        var $menu = $(settings.menuSelector)
 		            .data("invokedOn", $(e.target))
@@ -292,13 +296,13 @@ $(document).ready(function() {
 		            .off('click')
 		            .on('click', 'a', function (e) {
 		                $menu.hide();
-		        
+
 		                var $invokedOn = $menu.data("invokedOn");
 		                var $selectedMenu = $(e.target);
-		                
+
 		                settings.menuSelected.call(this, $invokedOn, $selectedMenu);
 		            });
-		        
+
 		        return false;
 		    });
 
@@ -307,19 +311,19 @@ $(document).ready(function() {
 		        $(settings.menuSelector).hide();
 		    });
 		});
-		
+
 		function getMenuPosition(mouse, direction, scrollDir) {
 		    var win = $(window)[direction](),
 		        scroll = $(window)[scrollDir](),
 		        menu = $(settings.menuSelector)[direction](),
 		        position = mouse + scroll;
-		                
+
 		    // opening menu would pass the side of the page
-		    if (mouse + menu > win && menu < mouse) 
+		    if (mouse + menu > win && menu < mouse)
 		        position -= menu;
-		    
+
 		    return position;
-		}    
+		}
 
 	    };
 
@@ -359,11 +363,11 @@ $(document).ready(function() {
 	    b = a;
 	    xstart = (a + ' ').toUpperCase().indexOf('X');
 	    if ((a + ' ').toUpperCase().lastIndexOf('X') != xstart) { xstart = -1 };
-	    xend   = (a + ' ').toUpperCase().indexOf(' ',xstart); 
+	    xend   = (a + ' ').toUpperCase().indexOf(' ',xstart);
 	    ystart = (a + ' ').toUpperCase().indexOf('Y');
 	    if ((a + ' ').toUpperCase().lastIndexOf('Y') != ystart) { ystart = -1 };
 	    yend   = (a + ' ').toUpperCase().indexOf(' ',ystart);
-	    
+
 	    if ((xstart == -1) && (ystart == -1)) {
 	      ;
 	    } else if ((xstart == -1) && (ystart != -1)) {
@@ -381,26 +385,26 @@ $(document).ready(function() {
 	      if (ystart > xstart) {
 		b=a.substring(0,xstart+1)+x+a.substring(xend,ystart+1)+y+a.substring(yend,a.length);
 	      } else {
-		b=a.substring(0,ystart+1)+y+a.substring(yend,xstart+1)+x+a.substring(xend,a.length);      
+		b=a.substring(0,ystart+1)+y+a.substring(yend,xstart+1)+x+a.substring(xend,a.length);
 	      }
-	    }    
+	    }
 	    s += b + '\n';
 	  }
-	  if (errori != '') 
-		{ 
+	  if (errori != '')
+		{
 			$('.bottom-left').notify({
 				message: { text: 'WARNING: Rotation had errors. Please Check...' },
 				type: 'danger'
-			}).show(); 
-		} else { 
+			}).show();
+		} else {
 			$('.bottom-left').notify({
 				message: { text: 'Rotation Succeeded. Please Check before cutting...' },
 				type: 'success'
-			}).show(); 
+			}).show();
 		}
 	theOutput=document.getElementById("gcodepreview");
 	theOutput.value=s;
-		
+
 	}
 
 	// *** Rectangular Polar Coordinates Conversion ***
@@ -426,20 +430,20 @@ $(document).ready(function() {
 	  var y=OldY;
 	  x-=parseFloat(0);
 	  y-=parseFloat(0);
-	  
+
 	  var mod_=module(x,y);
-	 	  
+
 	 // Rotation Value
 	  var arg_=arg(x,y);
 	      var rotvalue=document.getElementById("rotAngle").value;
 	      arg_ = arg_ + (rotvalue*Math.PI/180);
-	 
-	  
+
+
 
 	  x=coorx(mod_,arg_);
-	  y=coory(mod_,arg_);  
+	  y=coory(mod_,arg_);
 
-	  
+
 	  var out = new Array(2);
 	  out[0] = x;
 	  out[1] = y;
@@ -479,7 +483,7 @@ $(document).ready(function() {
 		return newValue; //"Goo["+match+"]";
 	}
 
-	function processNoNeg()	
+	function processNoNeg()
 	{
 		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
 
@@ -502,17 +506,17 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 
-		 if (theOutput == '') 
-			{ 
+		 if (theOutput == '')
+			{
 				$('.bottom-left').notify({
 					message: { text: 'WARNING: -Fix 0,0- had errors. Please Check...' },
 					type: 'danger'
-				}).show(); 
-			} else { 
+				}).show();
+			} else {
 				$('.bottom-left').notify({
 					message: { text: 'Fixed Negative Coordinates.  Please Check before cutting...' },
 					type: 'success'
-				}).show(); 
+				}).show();
 			}
 			//textarea.value=outputstring;
 		}
@@ -550,20 +554,20 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 		//textarea.value=outputstring;
-		if (theOutput == '') 
-			{ 
+		if (theOutput == '')
+			{
 				$('.bottom-left').notify({
 					message: { text: 'WARNING: Mirror had errors. Please Check...' },
 					type: 'danger'
-				}).show(); 
-			} else { 
+				}).show();
+			} else {
 				$('.bottom-left').notify({
 					message: { text: 'Mirror Succeeded. Please Check before cutting...' },
 					type: 'success'
-				}).show(); 
+				}).show();
 			}
 			//textarea.value=outputstring;
-		
+
 	}
 
 	function processScale()
@@ -590,18 +594,18 @@ $(document).ready(function() {
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 		//textarea.value=outputstring;
-		if (theOutput == '') 
-			{ 
+		if (theOutput == '')
+			{
 				$('.bottom-left').notify({
 					message: { text: 'WARNING: Scaling had errors. Please Check...' },
 					type: 'danger'
-				}).show(); 
-			} else { 
+				}).show();
+			} else {
 				$('.bottom-left').notify({
 					message: { text: 'Scaling Succeeded. Please Check before cutting...' },
 					type: 'success'
-				}).show(); 
-			
+				}).show();
+
 			//textarea.value=outputstring;
 		}
 
@@ -623,24 +627,24 @@ $(document).ready(function() {
 		theInput=theInput.replace(/[X|x]\s*-?[0-9|.]+/g,function(m){return translate("X",transX,m)});
 		theInput=theInput.replace(/[Y|y]\s*-?[0-9|.]+/g,function(m){return translate("Y",transY,m)});
 		theInput=theInput.replace(/[Z|z]\s*-?[0-9|.]+/g,function(m){return translate("Z",transZ,m)});
-	
+
 		// I and J are always relative so no need to translate right?
 		//theInput=theInput.replace(/[I|i].+[0-9|.]+/g,function(m){return translate("I",transX,m)});
 		//theInput=theInput.replace(/[J|j].+[0-9|.]+/g,function(m){return translate("J",transY,m)});
 		theOutput.value=theInput;
 		//textarea.value=outputstring;
-		if (theOutput == '') 
-			{ 
+		if (theOutput == '')
+			{
 				$('.bottom-left').notify({
 					message: { text: 'WARNING: Positional Translation had errors. Please Check...' },
 					type: 'danger'
-				}).show(); 
-			} else { 
+				}).show();
+			} else {
 				$('.bottom-left').notify({
 					message: { text: 'Translation Succeeded. Please Check before cutting...' },
 					type: 'success'
-				}).show(); 
-			
+				}).show();
+
 			//textarea.value=outputstring;
 		}
 
@@ -650,7 +654,7 @@ $(document).ready(function() {
 	{
 		return number_format(number,6,".","");
 	}
-	function number_format( number, decimals, dec_point, thousands_sep ) 
+	function number_format( number, decimals, dec_point, thousands_sep )
 	{
 	      // http://kevin.vanzonneveld.net
 	      // + original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
@@ -682,7 +686,7 @@ $(document).ready(function() {
 		document.getElementById('YTRANS').value = '0';
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
-		
+
 	});
 
 	$('#flip').on('click', function() {
@@ -755,13 +759,13 @@ $(document).ready(function() {
 	// End of Scaling Function
 
 
-	
+
 	// Jog and machine control Buttons
 	$('#xM01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
-	
+
 	$('#xM').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
@@ -773,7 +777,7 @@ $(document).ready(function() {
 	$('#xMCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-	
+
 	$('#xP01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
@@ -793,7 +797,7 @@ $(document).ready(function() {
 	$('#yP01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-	
+
 	$('#yP').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
@@ -805,7 +809,7 @@ $(document).ready(function() {
 	$('#yPCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-	
+
 	$('#yM01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
@@ -821,7 +825,7 @@ $(document).ready(function() {
 	$('#yMCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-	
+
 	$('#zP01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
@@ -847,15 +851,15 @@ $(document).ready(function() {
 	});
 
 	$('#homeX').on('click', function() {
-		if (firmware.indexOf('Lasaur') == 0) {		
+		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
 		} else {
 			socket.emit('gcodeLine', { line: 'G28 X0' });
 		}
 	});
-	
+
 	$('#homeY').on('click', function() {
-		if (firmware.indexOf('Lasaur') == 0) {		
+		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
 		} else {
 			socket.emit('gcodeLine', { line: 'G28 Y0' });
@@ -863,7 +867,7 @@ $(document).ready(function() {
 	});
 
 	$('#homeZ').on('click', function() {
-		if (firmware.indexOf('Lasaur') == 0) {		
+		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
 		} else {
 			socket.emit('gcodeLine', { line: 'G28 Z0' });
@@ -871,7 +875,7 @@ $(document).ready(function() {
 	});
 
 	$('#homeAll').on('click', function() {
-		if (firmware.indexOf('Lasaur') == 0) {		
+		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
 		} else {
 			socket.emit('gcodeLine', { line: 'G28' });
@@ -879,35 +883,35 @@ $(document).ready(function() {
 	});
 
 	$('#zeroWork').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G92 X0 Y0 Z0' }); 
+		socket.emit('gcodeLine', { line: 'G92 X0 Y0 Z0' });
 	});
-	
+
 	$('#motorsOff').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M84' }); 
+		socket.emit('gcodeLine', { line: 'M84' });
 	});
 
 	$('#fan25').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M106 S64' }); 
+		socket.emit('gcodeLine', { line: 'M106 S64' });
 	});
-	
+
 	$('#fan50').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M106 S128' }); 
+		socket.emit('gcodeLine', { line: 'M106 S128' });
 	});
-	
+
 	$('#fan75').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M106 S192' }); 
+		socket.emit('gcodeLine', { line: 'M106 S192' });
 	});
-	
+
 	$('#fan100').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M106 S255' }); 
+		socket.emit('gcodeLine', { line: 'M106 S255' });
 	});
-		
+
 	$('#fanOff').on('click', function() {
-		socket.emit('gcodeLine', { line: 'M107' }); 
+		socket.emit('gcodeLine', { line: 'M107' });
 	});
 
 	// Firmware Specific Buttons
-	
+
 	// Grbl
 
 	$('#sendReset').on('click', function() {
@@ -927,7 +931,7 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: '$$' });
 	});
 
-	
+
 	// Tabs for the CGode/Millcrum text edit blocks
 	$('#mcC').on('click', function() {
 		$('#mcA').addClass('active');
@@ -961,15 +965,15 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
-	
+
 
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
 
 	console.log("Creating Millcrum");
-	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:'+$('#perpass').val()+',step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';	
+	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:'+$('#perpass').val()+',step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';
 	var mcCode = mcheader + document.getElementById('millcrumCode').value
-	
+
 		// This sends the mc JS vars to mc.js and creates GCode
 		try {
 			eval(mcCode);
@@ -978,20 +982,20 @@ $(document).ready(function() {
 			console.log(e+'Millcrum Code Error:');
 		}
 
-		// Generate Gcode view and setup job for sending	
+		// Generate Gcode view and setup job for sending
 		document.getElementById('millcrumCode').value = mcCode;
 		openGCodeFromText();
 		gCodeToSend = document.getElementById('gcodepreview').value;
 				$('#console').append('<p class="pf" style="color: #000000;"><b>Incoming file Converted to GCode...</b></p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 		// Activate GCode Tab
 		$('#gcC').click();
-		
-			
+
+
 	});
 
 	// Handle File Open buttons
-	
+
 	// open .gcode (File Open Function)
 	ogcode.addEventListener('change', function(e) {
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: GCODE</b></u></span><br>');
@@ -1019,13 +1023,13 @@ $(document).ready(function() {
 				document.getElementById('fileInputSVG').value = '';
 				document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>GCode File Upload Complete...</b></p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
-				
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
 			}
 		});
 
-	
-	
+
+
 	// open .dxf  (File Open Function)
 	odxf.addEventListener('change', function(e) {
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: DXF</b></u></span><br>');
@@ -1033,13 +1037,13 @@ $(document).ready(function() {
 		var r = new FileReader();
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
-	
+
 			var fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
 			var dxf = new Dxf();
-					
+
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-			
+
 			dxf.parseDxf(r.result);
 
 			var errStr = '';
@@ -1060,8 +1064,8 @@ $(document).ready(function() {
 				console.log('DXF Errors:'+errStr);
 				$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-			} 
-				
+			}
+
 				var s = '// setup a new Millcrum object with that tool';
 				s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 				s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
@@ -1095,10 +1099,10 @@ $(document).ready(function() {
 				// load the new millcrum code
 				document.getElementById('millcrumCode').value = s;
 				document.getElementById('gcodepreview').value = '';
-				
+
 				$('#cutParams').modal('toggle');
 				$('#mcC').click();
-				document.getElementById('fileName').value = fileName;								
+				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
@@ -1106,9 +1110,9 @@ $(document).ready(function() {
 				document.getElementById('fileInputSVG').value = '';
 				document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			}
-		
+
 	});
 
 	// open .svg (File Open Function)
@@ -1133,7 +1137,7 @@ $(document).ready(function() {
 				}
 				console.log('SVG Errors:'+errStr);
 				$('#console').append('<br>Parsing SVG:<br><p class="pf" style="color: #c95500;"><b><u>SVG Errors:</u></b><br>'+errStr+'</p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());			
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 				//doAlert(errStr, 'SVG Errors:');
 			}
 
@@ -1167,7 +1171,7 @@ $(document).ready(function() {
 			document.getElementById('millcrumCode').value = s;
 			document.getElementById('gcodepreview').value = '';
 			$('#cutParams').modal('toggle');
-			
+
 			$('#mcC').click();
 			document.getElementById('fileName').value = fileName;
 			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
@@ -1177,7 +1181,7 @@ $(document).ready(function() {
 			document.getElementById('fileInputSVG').value = '';
 			document.getElementById('fileInputMILL').value = '';
 			$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 					}
 	});
 
@@ -1194,11 +1198,11 @@ $(document).ready(function() {
 			document.getElementById('millcrumCode').value = this.result;
 			$('#mcC').click();
 			generate.click();
-			
+
 			$('#gcC').click();
-			
+
 			gCodeToSend = document.getElementById('gcodepreview').value;
-			
+
 			document.getElementById('fileName').value = fileName;
 
 			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
@@ -1208,8 +1212,8 @@ $(document).ready(function() {
 			document.getElementById('fileInputSVG').value = '';
 			document.getElementById('fileInputMILL').value = '';
 			$('#console').append('<p class="pf" style="color: #000000;"><b>MILLCRUM File Upload Complete...</b></p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
-						
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
 		}
 	});
 
@@ -1329,46 +1333,46 @@ $(document).ready(function() {
 				$('.bottom-left').notify({
 					message: { text: 'Unknown GCODE' },
 					type: 'warning'
-				}).show(); 
+				}).show();
 			}
 
 			if (data.indexOf('N') != -1) {
 				$('.bottom-left').notify({
 					message: { text: 'Bad Number Format' },
 					type: 'warning'
-				}).show(); 
+				}).show();
 			}
 
 			if (data.indexOf('E') != -1) {
 				$('.bottom-left').notify({
 					message: { text: 'Expected Command Letter' },
 					type: 'warning'
-				}).show(); 
+				}).show();
 			}
-			
+
 			if (data.indexOf('B') != -1) {
 				$('.bottom-left').notify({
 					message: { text: 'FW: Buffer Overflow!' },
 					type: 'warning'
-				}).show(); 
+				}).show();
 			}
-			
+
 			if (data.indexOf('T') != -1) {
 				$('.bottom-left').notify({
 					message: { text: 'Transmission Error' },
 					type: 'warning'
-				}).show(); 
+				}).show();
 			}
-			
+
 			if (data.indexOf('R') != -1) {
 				$('.bottom-left').notify({
 					message: { text: 'Serial Stop Request' },
 					type: 'warning'
-				}).show(); 
+				}).show();
 			}
-			
+
 	});
-	
+
 	// Handle feedback from the machine: Grbl
 
 	socket.on('machineStatus', function (data) {
@@ -1385,8 +1389,8 @@ $(document).ready(function() {
 		//console.log(data);
 	});
 
-	
-	
+
+
 	// Endstop [data = echo:endstops hit:  Y:154.93] (marlin)
 	socket.on('endstopAlarm', function(data) {
 			console.log("Endstop Hit!");
@@ -1394,25 +1398,25 @@ $(document).ready(function() {
 			var esArray = data.split(/(\s+)/);
 			//console.log(esArray);  // ["echo", " ", "endstops", " ", "hit", "   ", "X", " ", "71.61"]
 			$('#console').append('<p class="pf" style="color: red;">'+esArray[6]+' Axis Endstop Hit</p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());			
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			$('.bottom-left').notify({
 				message: { text: 'WARNING: '+esArray[6]+' Axis Endstop Hit' },
 				type: 'danger'
-			}).show(); 
+			}).show();
 	});
-	
+
 	// Unknown Command [data = echo:Unknown command: "X26.0480 Y29.1405 R7.4125"   unknownGcode] (marlin)
 	socket.on('unknownGcode', function(data) {
-			var gcArray = data.split(/:/);   
+			var gcArray = data.split(/:/);
 			// NB MIGHT MAKE IT PAUSE WHEN THIS HAPPENS, A WRONG COMMAND MIGHT ANYWAY MEAN A RUINED JOB
 			$('#console').append('<p class="pf" style="color: red;">Unknown GCode:  '+gcArray[2]+'</p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());		
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			$('.bottom-left').notify({
 				message: { text: 'Unknown GCODE: '+gcArray[2] },
 				type: 'warning'
-			}).show(); 
+			}).show();
 	});
-	
+
 	// temperature [data = T:24.31 /0 @:0 B:24.31 /0 @:0]  // Not in use in UI at the moment but I want to use Marlin's temp sensing at some point to check nozzle or water temp etc on the laser (marlin)
 	socket.on('tempStatus', function(data) {
 		if (data.indexOf('ok') == 0) {
@@ -1443,7 +1447,7 @@ $(document).ready(function() {
 
 
 
-	
+
 	socket.on('firmware', function(data) {
 		var firmware = data
 		//console.log(firmware);
@@ -1461,9 +1465,9 @@ $(document).ready(function() {
 				$('#zeroWork').hide();
 				$('#motorsOff').hide();
 				$('#FanGrp').hide();
-				$('#xhomelabel').html(""); 
-				$('#yhomelabel').html(""); 
-				$('#zhomelabel').html(""); 
+				$('#xhomelabel').html("");
+				$('#yhomelabel').html("");
+				$('#zhomelabel').html("");
 				$('#AirGrp').show();
 			}
 
@@ -1480,13 +1484,13 @@ $(document).ready(function() {
 				$('#zeroWork').hide();
 				$('#motorsOff').hide();
 				$('#FanGrp').hide();
-				$('#xhomelabel').html(""); 
-				$('#yhomelabel').html(""); 
-				$('#zhomelabel').html(""); 
+				$('#xhomelabel').html("");
+				$('#yhomelabel').html("");
+				$('#zhomelabel').html("");
 				$('#AirGrp').show();
 			}
-			
-			
+
+
 		if (firmware.indexOf('Lasaur') == -1 && firmware.indexOf('Grbl') != 0) {
 				$('#sendReset').hide();
 				$('#sendUnlock').hide();
@@ -1507,6 +1511,3 @@ $(document).ready(function() {
 		}
 	});
 });
-
-
-   

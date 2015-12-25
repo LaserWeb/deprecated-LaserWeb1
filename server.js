@@ -44,7 +44,7 @@ config.showWebCam = false;
 
 http.get('http://127.0.0.1:8080', function(res) {
 	// valid response, enable webcam
-	console.log(chalk.gray('Enabling webcam'));
+	console.log(chalk.green('Enabling webcam Widget'));
 	config.showWebCam = true;
 }).on('socket', function(socket) {
 	// 2 second timeout on this socket
@@ -54,8 +54,9 @@ http.get('http://127.0.0.1:8080', function(res) {
 	});
 }).on('error', function(e) {
 	console.error(
-		chalk.red('Error connecting to webcam'),
-		chalk.gray(e.message)
+		chalk.red('Error connecting to webcam:'),
+		chalk.gray(e.message),
+    chalk.red('- Disabling Webcam Widget')
 	);
 });
 
@@ -96,6 +97,7 @@ serialport.list(function (err, ports) {
 
 		sp[i] = {};
 		sp[i].port = ports[i].comName;
+    sp[i].manufacturer = ports[i].manufacturer;
     sp[i].firmware = ""
 		sp[i].q = [];
 		sp[i].qCurrentMax = 0;
@@ -108,13 +110,12 @@ serialport.list(function (err, ports) {
 		sp[i].sockets = [];
 
 		sp[i].handle.on("open", function() {
-
-			console.log(
-				chalk.green('Connected to'),
-				chalk.blue(sp[i].port),
-				chalk.green('at'),
-				chalk.blue(config.serialBaudRate)
-			);
+			//console.log(
+			//	chalk.green('Connecting to'),
+			//	chalk.blue(sp[i].port),
+		  //	chalk.green('at'),
+			//	chalk.blue(config.serialBaudRate)
+			//);
 			sp[i].handle.write("?\n"); // Lets check if its LasaurGrbl?
 			sp[i].handle.write("M115\n"); // Lets check if its Marlin?
 			sp[i].handle.write("version\n"); // Lets check if its Smoothieware?
@@ -134,11 +135,11 @@ serialport.list(function (err, ports) {
 					chalk.blue(sp[i].port)
 				);
       } else if (error.message.slice(0, errMsg2.length) === errMsg2 ) {
-				console.error(
-					chalk.red('Port not responding:'), // Most likely /dev/ttyS* on ubuntu (;
-					chalk.blue(sp[i].port),
-          chalk.green(' - skipping (Usually just a built in hardware port, or similar)')
-				);
+				//console.error(
+				//	chalk.red('Skipped:'), // Most likely /dev/ttyS* on ubuntu (;
+				//	chalk.blue(sp[i].port),
+        //  chalk.green(' - No response from port')
+				//);
       } else {
         console.error(
           chalk.red('SerialPort Failure:'),
@@ -173,10 +174,11 @@ function serialData(data, port) {
 		var lasaurGrblVersion = firmwareVersion[2]+' '+firmwareVersion[4];
 		var firmware = lasaurGrblVersion;
 		//	console.log(chalk.green('Firmware Detected:  '+firmware));
-    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
-      chalk.blue(firmware),
-      chalk.yellow(' on port '),
-      chalk.blue(sp[port].port)
+    console.log(chalk.red('Found device: '),
+      chalk.green(sp[port].manufacturer),
+      chalk.blue(sp[port].port),
+      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
@@ -189,10 +191,11 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(\s+)/);
 		var lasaurGrblVersion = firmwareVersion[0]+' '+firmwareVersion[2];
 		var firmware = lasaurGrblVersion;
-    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
-      chalk.blue(firmware),
-      chalk.yellow(' on port '),
-      chalk.blue(sp[port].port)
+    console.log(chalk.red('Found device: '),
+      chalk.green(sp[port].manufacturer),
+      chalk.blue(sp[port].port),
+      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
@@ -204,10 +207,11 @@ function serialData(data, port) {
 		}, 1000);
 		var firmwareVersion = data.split(/(:+)/);
 		var firmware = firmwareVersion[2];
-    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
-      chalk.blue(firmware),
-      chalk.yellow(' on port '),
-      chalk.blue(sp[port].port)
+    console.log(chalk.red('Found device: '),
+      chalk.green(sp[port].manufacturer),
+      chalk.blue(sp[port].port),
+      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
@@ -221,10 +225,11 @@ function serialData(data, port) {
 		data = data.replace(/:/g,' ');
 		var firmwareVersion = data.split(/(\s+)/);
 		var firmware = firmwareVersion[4]+' '+firmwareVersion[6];
-    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
-      chalk.blue(firmware),
-      chalk.yellow(' on port '),
-      chalk.blue(sp[port].port)
+    console.log(chalk.red('Found device: '),
+      chalk.green(sp[port].manufacturer),
+      chalk.blue(sp[port].port),
+      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
@@ -238,10 +243,11 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(,+)/);
 		var smoothieVersion = 'Smoothie'+firmwareVersion[14]+''+firmwareVersion[2];
 		var firmware = smoothieVersion;
-    console.log(chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
-      chalk.blue(firmware),
-      chalk.yellow(' on port '),
-      chalk.blue(sp[port].port)
+    console.log(chalk.red('Found device: '),
+      chalk.green(sp[port].manufacturer),
+      chalk.blue(sp[port].port),
+      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
@@ -526,11 +532,17 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('usePort', function (data) {
 
-		console.log(chalk.green('user wants to use port '+data));
-		console.log(chalk.gray('switching from '+currentSocketPort[socket.id]));
-		console.log(chalk.green(' Firmware on this board is '+sp[data].firmware));
+		console.log(
+      //chalk.yellow('switching from '),
+      //chalk.blue(currentSocketPort[socket.id]),
+      chalk.yellow('Now interacting with '),
+      //chalk.blue(data),
+      chalk.blue(sp[data].port),
+		  chalk.yellow(' running '),
+      chalk.blue(sp[data].firmware)
+    );
 
-		socket.emit('firmware', sp[data].firmware);
+  	socket.emit('firmware', sp[data].firmware);
 
 		if (typeof currentSocketPort[socket.id] != 'undefined') {
 			for (var c=0; c<sp[currentSocketPort[socket.id]].sockets.length; c++) {
