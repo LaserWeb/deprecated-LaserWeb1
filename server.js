@@ -137,7 +137,7 @@ serialport.list(function (err, ports) {
 				console.error(
 					chalk.red('Port not responding:'), // Most likely /dev/ttyS* on ubuntu (;
 					chalk.blue(sp[i].port),
-          chalk.green(' - skipping')
+          chalk.green(' - skipping (Usually just a built in hardware port, or similar)')
 				);
       } else {
         console.error(

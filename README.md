@@ -1,7 +1,7 @@
 ## About
 
-LaserWeb is a fully function Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
-m
+LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
+
 If you would like to help with paying the prototyping costs, you can shoot me a donation on Paypal if you wish:
 https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJSWU 
 
@@ -13,6 +13,8 @@ This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
 ## Changelog
 
+* 25 Dec 2015:  Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code 
+* 24 Dec 2015:  Added error handling for /dev/ttyS ports on linux, @Cinezaster contributed a fix for package.json, @oxydum contributed better mc.js code for Grbl lasers
 * 23 Dec 2015: @danawoodman contributed code to handle serial port errors elegantly, allow overriding config using environment variables, and add some editor/gitignore to help the developers
 * 22 Dec 2015: Added capability to run various controllers off one PC, all with different firmwares. Switching in the browser's dropdown between serial ports, changes the UI to match the firmware in use on that port!  Groundbreaking!
 * 22 Dec 2015: Added Grbl Support
