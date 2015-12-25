@@ -55,7 +55,7 @@
 	<script type="text/javascript" src="millcrum/inc/mc.js"></script>
 	<script type="text/javascript" src="millcrum/inc/dxf.js"></script>
 	<script type="text/javascript" src="millcrum/inc/svg.js"></script>
-	
+
 	<link rel="stylesheet" href="jquery-ui.css" />
 	<link rel="stylesheet" href="bootstrap.min.css" />
 	<link rel="stylesheet" href="bootstrap-theme.min.css" />
@@ -106,7 +106,7 @@
 		<li><button type="button" class="btn btn-default" style="margin: 10px; display: none;" id="sendReset">RESET (ctrl-x)</button></li>
 		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendUnlock">unlock ($X)</button></li>
 		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblHelp">help ($)</button></li>
-		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblSettings">settings ($$)</button></li>		
+		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblSettings">settings ($$)</button></li>
 		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="limit_status_btn">Endstops</button></li>
 		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
                 <li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>
@@ -170,10 +170,10 @@
 			</div>
 
 			<hr style="clear: both;" />
-			
+
 			<!-- Job Control Buttons -->
 				<div class="btn-group input-group  btn-group-justified">
-				<!-- div class="btn-group" role="group"><button type="button" id="clearJob" class="btn btn-default">Clear GCODE</button></div -->			
+				<!-- div class="btn-group" role="group"><button type="button" id="clearJob" class="btn btn-default">Clear GCODE</button></div -->
 				<div class="btn-group" role="group"><button type="button" id="pause" class="btn btn-default disabled">Pause</button></div>
 				<div class="btn-group" role="group"><button type="button" id="clearQ" class="btn btn-default disabled">Clear Q</button></div>
 
@@ -182,16 +182,16 @@ Send to Laser</button></div>
 			</div>
 				<input type="hidden" value="GCODE" id="fileName">
 				<hr style="clear: both;" />
-			<div class="btn btn-danger" onclick="controls.reset();"><i class="fa fa-street-view fa-lg"></i>Reset 3D View</div>	
-			
+			<div class="btn btn-danger" onclick="controls.reset();"><i class="fa fa-street-view fa-lg"></i>Reset 3D View</div>
+
 			<!-- Div for popup Notifications -->
 			<div class='notifications bottom-left'></div>
 
-			
 
 
 
-			
+
+
 			<!-- Credits in bottom of left column -->
 			<p style="color: #aaa; font-size: .8em; margin-top: 20px;">
 			<a href="http://xyzbots.com">&copy; XYZBots 2015</a>
@@ -201,22 +201,22 @@ Send to Laser</button></div>
         <div class="col-md-6 panel-transparent">
 
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				
+
 				<span class="input-group-addon"  style="width: 100px;">Scale:</span>
 				<div class="input-group">
 					<input type="text" class="form-control" value="100" id="scaleFactor" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">%</span>
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Resize</a></div>						
-						
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Resize</a></div>
+
 					</div>
-					
+
 					<span class="input-group-addon"  style="margin-left: 30px;">Rotation:</span>
 					<input type="text" class="form-control" value="0" id="rotAngle" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">&deg;</span>
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>/div>						
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg"" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>						
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>/div>
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg"" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>
 
 					</div>
 				</div>
@@ -246,9 +246,9 @@ Send to Laser</button></div>
 				</div>
 			</div>
 
-       		
 
-		
+
+
        </div>
         <div class="col-md-3 panel-transparent">
           <!-- Port Selection -->
@@ -299,7 +299,7 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Machine Control</h4>
       </div>
       <div class="modal-body">
-      
+
 		<!-- Pronterface Jog Widget -->
 				  <svg width="320" height="260" xmlns="http://www.w3.org/2000/svg" version="1.1">
 
@@ -350,13 +350,13 @@ Send</button>
 						stroke-width: 1;
 						filter: url(#f1);
 						}
-					
+
 					rect.std {
 						stroke: black;
 						stroke-width: 1;
 						filter: url(#f1);
 					}
-						
+
 					]]></style>
 
 						<filter id="f1" x="-1" y="-1" width="300%" height="300%">
@@ -375,21 +375,21 @@ Send</button>
 						<symbol id="JogRose" viewBox="20 -10 260 260">
 							<g id="homeAll">
 								<path class="std" d="M10 182.5 h-10 v57.5 h57.5 v-10 a 125,125 0 0,1 -47.5 -47.5 Z" fill="#f0f0f0">
-									
+
 								</path>
 								<use x="3" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
 							</g>
 
 							<g id="homeX">
 								<path class="std" d="M10 57.50 h-10 v-57.5 h57.5 v10 a 125,125 0 0,0 -47.5 47.5 Z" fill="Khaki">
-									
+
 								</path>
 								<use x="3" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="25" y="20" class="home" id="xhomelabel"> X </text>
 							</g>
 							<g id="homeY">
 								<path class="std" d="M230 57.50 h10 v-57.5 h-57.5 v10 a 125,125 0 0,1 47.5 47.5 z" fill="SteelBlue">
-									
+
 								</path>
 								<use x="217" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="202" y="20" class="home" id="yhomelabel"> Y </text>
@@ -397,7 +397,7 @@ Send</button>
 
 							<g id="homeZ">
 								<path class="std" d="M230 182.5 h10 v57.5 h-57.5 v-10 a 125,125 0 0,0 47.5 -47.5 z" fill="DarkSeaGreen">
-									
+
 								</path>
 								<use x="217" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="202" y="232" class="home" id="zhomelabel"> Z </text>
@@ -406,22 +406,22 @@ Send</button>
 							<g id="Jog100" fill="#c0c0c0" class="std">
 								<g id="yPCen" transform="translate(120 120)">
 									<path class="std" d="M-60 -67.07 L-75.93,-83 A112.5,112.5 0 0,1 75,-83 L60,-67.07 A90,90 0 0,0 -60.00,-67.07 z">
-						
+
 									</path>
 								</g>
 								<g id="xPCen" transform="translate(120 120)">
 									<path class="std" d="M67.07,-60 L83,-75.93 A112.5,112.5 0 0,1 83,75.93 L67.07,60 A90,90 0 0,0 67.07,-60">
-										
+
 									</path>
 								</g>
 								<g id="yMCen" transform="translate(120 120)">
 									<path class="std" d="M-60,67.07 L-75.93,83 A112.5,112.5 0 0,0 75,83 L60,67.07 A90,90 0 0,1 -60.00,67.07 z">
-										
+
 									</path>
 								</g>
 								<g id="xMCen" transform="translate(120 120)">
 									<path class="std" d="M-67.07,-60 L-83,-75.93 A112.5,112.5 0 0,0 -83,75.93 L-67.07,60 A90,90 0 0,1 -67.07,-60 z">
-										
+
 									</path>
 								</g>
 							</g>
@@ -429,22 +429,22 @@ Send</button>
 
 								<g id="yPTen" transform="translate(120 120)">
 									<path class="std" d="M-44.06 -51.13 L-60,-67.07 A90,90 0 0,1 60,-67 L44.06,-51.13 A67.5,67.5 0 0,0 -44.06,-51.13 z">
-										
+
 									</path>
 								</g>
 								<g id="xPTen" transform="translate(120 120)">
 									<path class="std" d="M51.13 44.06 L67.07,60 A90,90 0 0,0 67.07,-60 L51.13,-44.06 A67.5,67.5 0 0,1 51.13,44.06 z">
-										
+
 									</path>
 								</g>
 								<g id="yMTen" transform="translate(120 120)">
 									<path class="std" d="M-44.06 51.13 L-60,67.07 A90,90 0 0,0 60,67 L44.06,51.13 A67.5,67.5 0 0,1 -44.06,51.13 z">
-										
+
 									</path>
 								</g>
 								<g id="xMTen" transform="translate(120 120)">
 									<path class="std" d="M-51.13 44.06 L-67.07,60 A90,90 0 0,1 -67.07,-60 L-51.13,-44.06 A67.5,67.5 0 0,0 -51.13,44.06 z">
-										
+
 									</path>
 								</g>
 							</g>
@@ -452,22 +452,22 @@ Send</button>
 							<g id="Jog1" fill="#e0e0e0">
 								<g id="yP" transform="translate(120 120)">
 									<path class="std" d="M-28.09 -35.16 L-44.06,-51.13 A67.5,67.5 0 0,1 44.06,-51.13 L28.09,-35.16 A45,45 0 0,0 -28.09,-35.16 z">
-										
+
 									</path>
 								</g>
 								<g id="xP" transform="translate(120 120)">
 									<path class="std" d="M35.16 -28.09 L51.13,-44.06 A67.5,67.05 0 0,1 51.13,44.06 L35.16,28.09 A45,45 0 0,0 35.16,-28.09 z">
-										
+
 									</path>
 								</g>
 								<g id="yM" transform="translate(120 120)">
 									<path class="std" d="M-28.09 35.16 L-44.06,51.13 A67.5,67.5 0 0,0 44.06,51.13 L28.09,35.16 A45,45 0 0,1 -28.09,35.16 z">
-										
+
 									</path>
 								</g>
 								<g id="xM" transform="translate(120 120)">
 									<path class="std" d="M-35.16 -28.09 L-51.13,-44.06 A67.5,67.05 0 0,0 -51.13,44.06 L-35.16,28.09 A45,45 0 0,1 -35.16,-28.09 z">
-										
+
 									</path>
 								</g>
 							</g>
@@ -475,22 +475,22 @@ Send</button>
 							<g id="Jog0_1" fill="#f0f0f0">
 								<g id="yP01" transform="translate(120 120)">
 									<path class="std" d="M-28.09 -35.16 A45,45 0 0,1 29.09,-35.16 L0,-7.07 z">
-										
+
 									</path>
 								</g>
 								<g id="xP01" transform="translate(120 120)">
 									<path class="std" d="M35.16 -28.09 A45,45 0 0,1 35.16,28.09 L7.07,0 z">
-										
+
 									</path>
 								</g>
 								<g id="yM01" transform="translate(120 120)">
 									<path class="std" d="M-28.09 35.16 A45,45 0 0,0 29.09,35.16 L0,7.07 z">
-										
+
 									</path>
 								</g>
 								<g id="xM01" transform="translate(120 120)">
 									<path class="std" d="M-35.16 -28.09 A45,45 0 0,0 -35.16,28.09 L-7.07,0 z">
-										
+
 									</path>
 								</g>
 							</g>
@@ -535,38 +535,38 @@ Send</button>
 							</g>
 							<g id="zPTen" fill="#d0d0d0">
 								<rect class="std" x="0" y="32" width="40" height="30">
-									
+
 								</rect>
 								<circle class="scl" cx="20" cy="47" r="13"/>
 								<text class="scl" x="9" y="53" font-size="18"> 10 </text>
 							</g>
 							<g id="zP" fill="#e0e0e0">
 								<rect class="std" x="0" y="62" width="40" height="26">
-									
+
 								</rect>
 								<circle class="scl" cx="20" cy="75" r="11"/>
 								<text class="scl" x="15" y="81.5" font-size="18"> 1 </text>
 							</g>
 							<g id="zP01" fill="#f0f0f0">
 								<rect class="std" x="0" y="88" width="40" height="24">
-									
+
 								</rect>
 								<circle class="scl" cx="20" cy="100" r="9.5"/>
 								<text class="scl" x="13" y="103.5" font-size="10"> 0.1 </text>
 							</g>
 							<g id="zMTen" fill="#d0d0d0">
 								<rect class="std" x="0" y="178" width="40" height="30">
-									
+
 								</rect>
 							</g>
 							<g id="zM" fill="#e0e0e0" >
 								<rect class="std" x="0" y="152" width="40" height="26">
-									
+
 								</rect>
 							</g>
 							<g id="zM01" fill="#f0f0f0" >
 								<rect class="std" x="0" y="128" width="40" height="24">
-									
+
 								</rect>
 							</g>
 							<g id="ZSpace" fill="#000000">
@@ -584,7 +584,7 @@ Send</button>
 					<use x="0" y="0" xlink:href="#PrinterCtl"/>
 
 				  </svg>
-				
+
 				<div class="btn-group input-group  btn-group-justified" style="margin-bottom:10px; width: 100%;">
 				  <span class="input-group-addon"  style="width: 130px;">Feedrate (XY)</span>
 				  <div class="input-group spinnerXY">
@@ -605,11 +605,11 @@ Send</button>
 					</div>
 				   </div>
 				</div>
-			
-			
-			 	<button type="button" class="btn btn-secondary btn-success" style="width: 100%;" id="zeroWork"><i class="fa fa-dot-circle-o fa-lg"" style="margin-right: 20px;"></i>Zero Machine (G92)</button>	
-				<button type="button" class="btn btn-secondary btn-warning" style="width: 100%;" id="motorsOff"><i class="fa fa-power-off fa-lg"" style="margin-right: 20px;"></i>Motors Off (M84)</button>	
-			 	
+
+
+			 	<button type="button" class="btn btn-secondary btn-success" style="width: 100%;" id="zeroWork"><i class="fa fa-dot-circle-o fa-lg"" style="margin-right: 20px;"></i>Zero Machine (G92)</button>
+				<button type="button" class="btn btn-secondary btn-warning" style="width: 100%;" id="motorsOff"><i class="fa fa-power-off fa-lg"" style="margin-right: 20px;"></i>Motors Off (M84)</button>
+
 
 		<div class="btn-group input-group  btn-group-justified" id="AirGrp" style="display: none;">
 			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-power fa-lg"></i>Air Assist</button></div>
@@ -626,15 +626,15 @@ Send</button>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan75">75%</button></div>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan100">100%</button></div>
 				</div>
-				
-				
-				
-			
-				
+
+
+
+
+
 	  </div>
       <div class="modal-footer">
         <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button // Commented out - using $('#sliceModal').modal('toggle'); in main.js to close once sliced-->
-        
+
       </div>
     </div>
   </div>
@@ -650,22 +650,53 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Cutting Parameters</h4>
       </div>
       <div class="modal-body">
-	  
-		<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 200px;">Cut Feedrate</span>
-				<div class="input-group spinnercut">
-					<input type="text" class="form-control" value="1000" id="cutSpeed">
-					<div class="input-group-btn-vertical">
-						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+
+
+				<table class="table table-bordered table-hover table-striped" id="layers">
+ 					<caption>Configure parameters per layer</caption>
+ 					<thead>
+  				<tr>
+						<th>Path</th>
+						<th>Layer</th>
+          	<th>Speed</th>
+          	<th>% Power</th>
+          </tr>
+ 			</thead>
+ 			<tbody>
+
+			</tbody>
+		</table>
+
+
+		<!-- tr>
+			<td>LASERWEB</td>
+			<td>
+				<div class="input-group" style="margin-bottom:10px; width: 100%;">
+						<div class="input-group spinnercut">
+							<input type="text" class="form-control" value="1000" id="cutSpeed">
+							<div class="input-group-btn-vertical">
+								<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+								<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+							</div>
+						</div>
+						<span class="input-group-addon"  style="width: 60px;">mm/min</span>
+				</div></td>
+			<td>
+				<div class="input-group" style="margin-bottom:10px; width: 100%;">
+					<div class="input-group spinnermove">
+						<input type="text" class="form-control" value="3000" id="rapidSpeed">
+						<div class="input-group-btn-vertical">
+							<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+							<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+						</div>
 					</div>
+					<span class="input-group-addon"  style="width: 60px;">%</span>
 				</div>
-				<span class="input-group-addon"  style="width: 60px;">mm/min</span>
-		</div>
-	  
+			</td>
+		</tr -->
+
 	    <div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 200px;">Rapid Feedrate</span>
-				<div class="input-group spinnermove">
+				<span class="input-group-addon" style="width: 200px;">Rapid Feedrate</span><div class="input-group spinnermove">
 					<input type="text" class="form-control" value="3000" id="rapidSpeed">
 					<div class="input-group-btn-vertical">
 						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
@@ -674,7 +705,7 @@ Send</button>
 				</div>
 				<span class="input-group-addon"  style="width: 60px;">mm/min</span>
 		</div>
-		
+
 		<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon"  style="width: 200px;">Z-Down per pass</span>
 				<div class="input-group spinnerperpass">
@@ -687,7 +718,7 @@ Send</button>
 				<span class="input-group-addon"  style="width: 60px;">mm</span>
 		</div>
 
-	  
+
 	  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button>
@@ -708,13 +739,13 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Webcam</h4>
       </div>
       <div class="modal-body">
-	  
+
 	<div style="display: none; margin-top: 10px; width: 100%; height: 100%px; float: left; clear: both;" id="webcam">
 		<a id="wcLink" target="_blank" href="#"><img id="wcImg" width="320" height="240" /></a>
 	</div>
 
 
-	  
+
 	  </div>
       <div class="modal-footer">
         <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
@@ -727,7 +758,7 @@ Send</button>
 
 <!-- Load an empty viewer grid -->
 <script>
-$(document).ready(function(){ 
+$(document).ready(function(){
 	$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');
 	$('#mainStatus').html('Status: Upload a file, or paste GCode / Millcrum, into the relevant Orange Box');
 	$('#sendToLaser').addClass('disabled');
@@ -735,6 +766,6 @@ $(document).ready(function(){
 })
 </script>
 
-	
+
 </body>
 </html>

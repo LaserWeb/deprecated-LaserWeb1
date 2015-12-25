@@ -1096,11 +1096,14 @@ $(document).ready(function() {
 					s += ']};\n';
 				}
 
+				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
 					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td></td><td></td></tr>');
 				}
 				for (var c=0; c<dxf.lines.length; c++) {
 					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					$('#layers > tbody:last-child').append('<tr><td>polyline'+c+'</td><td>'+dxf.polylines[c].layer+'</td><td></td><td></td></tr>');
 				}
 
 				s += '\nmc.get();\n';
