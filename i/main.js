@@ -1082,7 +1082,8 @@ $(document).ready(function() {
 						s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
 					}
 
-					s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					//s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					s += ']};\n';
 				}
 
 				// convert lines to millcrum
@@ -1091,7 +1092,15 @@ $(document).ready(function() {
 					s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
 					s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
 
-					s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					//s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+					s += ']};\n';
+				}
+
+				for (var c=0; c<dxf.polylines.length; c++) {
+					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+				}
+				for (var c=0; c<dxf.lines.length; c++) {
+					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 				}
 
 				s += '\nmc.get();\n';
