@@ -19,6 +19,7 @@ Then every day, run ```./update.sh ```
 
 ## Changelog
 
+* 26 Dec 2015: Consider SVG broken for now. Please test DXF etc
 * 25 Dec 2015: Added per-layer (DXF) and per-path (SVG) Laser Power and Feedrate settings to the DXF/SVG Importing code
 * 25 Dec 2015: Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code 
 * 24 Dec 2015: Added error handling for /dev/ttyS ports on linux, @Cinezaster contributed a fix for package.json, @oxydum contributed better mc.js code for Grbl lasers
