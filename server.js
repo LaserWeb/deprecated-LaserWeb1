@@ -39,6 +39,15 @@ var util = require('util');
 var http = require('http');
 var chalk = require('chalk');
 
+console.error(chalk.gray('**************************************************************'));
+console.error(chalk.red('Notice: '));
+console.error(chalk.green('    Remember to update (:   '));
+console.error(chalk.green('Run ./update.sh or git pull '));
+console.error(chalk.green('or check the commit log on  '));
+console.error(chalk.yellow('https://github.com/openhardwarecoza/LaserWeb/commits/master'));
+console.error(chalk.gray('**************************************************************'));
+
+
 // test for webcam
 config.showWebCam = false;
 

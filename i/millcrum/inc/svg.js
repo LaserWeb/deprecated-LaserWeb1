@@ -9,8 +9,8 @@ var Svg = function() {
 Svg.prototype.process = function(r) {
 			// use the DOMParser to parse the svg's xml, it's built into the browser
 			var node = new DOMParser().parseFromString(r, 'image/svg+xml');
-			console.log('svg root',node.children);
-			console.log('number of root children',node.children[0].children.length);
+			//console.log('svg root',node.children);
+			//console.log('number of root children',node.children[0].children.length);
 
 			// the primitive objects in svg are
 			// 'path', 'text', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'image' and 'use'
@@ -61,7 +61,7 @@ Svg.prototype.process = function(r) {
 					// it contains various commands, most notable m - moveto, l - lineto, c - curve and z - useless.
 					var val = svgElements[c].attributes['d'].value;
 
-					console.log('\n\nvalid path: ',val);
+					//console.log('\n\nvalid path: ',val);
 
 					// need to apply any transform from this elements transform attribute
 					// as well as any parent transforms all the way to the root g element
@@ -198,7 +198,7 @@ Svg.prototype.process = function(r) {
 									thisPath.push([args[mm]+finalTranslate[0],args[mm+1]+finalTranslate[1]]);
 									mm++;
 								}
-								
+
 							} else if (currentPart == 'l') {
 								// this is just another point, a line to
 
@@ -333,14 +333,13 @@ Svg.prototype.cubicBezier = function(b) {
 	// get distance to calculate a reasonable number of line segments
 	var dist = dxfLib.distanceFormula(b[0],b[3]);
 	if (this.units == 'in') {
-		// for inches, assume a .25in bit
-		var numLineSegments = Math.round(dist/.25);
+		// for inches, assume a .25in bit with 10 lines segments per diameter
+		var numLineSegments = Math.round(dist/(.25/10));
 	} else {
 		// we are assuming 1px = 1mm for your toolchain, if you are using inches change units to in
-		// going to base it on 1 line segment per 5mm for a 6.35mm bit
-		var numLineSegments = Math.round(dist/5);
+		// going to base it on 10 line segments for a 6.35mm bit
+		var numLineSegments = Math.round(dist/(6.35/10));
 	}
-	
 
 	var distances = [dxfLib.distanceFormula(b[0],b[1]),dxfLib.distanceFormula(b[1],b[2]),dxfLib.distanceFormula(b[2],b[3])];
 	// we need the angle of each of the lines in distances to calculate the new points
