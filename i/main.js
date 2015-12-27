@@ -1038,7 +1038,7 @@ $(document).ready(function() {
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
 
-			var fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
+			fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
 			dxf = new Dxf();
 			pwr = {};
 			cutSpeed = {};
