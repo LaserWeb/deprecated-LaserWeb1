@@ -1139,6 +1139,7 @@ $(document).ready(function() {
 			$('#dxfparamstomc').show();
 			$('#svgparamstomc').hide();
 			$('#cutParams').modal('toggle');
+			document.getElementById('fileName').value = fileName;
 
 	});
 
