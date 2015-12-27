@@ -39,14 +39,26 @@ var util = require('util');
 var http = require('http');
 var chalk = require('chalk');
 
-console.error(chalk.gray('**************************************************************'));
-console.error(chalk.red('Notice: '));
-console.error(chalk.green('    Remember to update (:   '));
-console.error(chalk.green('Run ./update.sh or git pull '));
-console.error(chalk.green('or check the commit log on  '));
-console.error(chalk.yellow('https://github.com/openhardwarecoza/LaserWeb/commits/master'));
-console.error(chalk.gray('**************************************************************'));
+console.error(chalk.green('***************************************************************'));
+console.error(chalk.green('*                        Notice:                              *'));
+console.error(chalk.green('***************************************************************'));
+console.error(chalk.green('*'),chalk.white('    Remember to update (: !!!                              '), chalk.green('*'));
+console.error(chalk.green('* 1.  Run ./update.sh or git pull                             *'));
+console.error(chalk.green('* 2.  or check the commit log on                              *'));
+console.error(chalk.green('*'), chalk.yellow('https://github.com/openhardwarecoza/LaserWeb/commits/master'), chalk.green('*'));
+console.error(chalk.green('***************************************************************'));
 
+
+// Lets add a message so users know where to point their browser
+require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+    console.error(chalk.green('*'),chalk.white('Access the LaserWeb User Interface:                        '), chalk.green('*'));
+    console.error(chalk.green('* 1. Open Chrome                                              *'));
+    console.error(chalk.green('* 2. Go to :                                                  *'));
+    console.error(chalk.green('*'), chalk.yellow('   http://'+add+':'+config.webPort+'/                                  '), chalk.green('*'));
+    console.error(chalk.green('***************************************************************'));
+    console.error(chalk.green(' '));
+    console.error(chalk.green(' '));
+})
 
 // test for webcam
 config.showWebCam = false;

@@ -3,25 +3,26 @@
 LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
 If you would like to help with paying the prototyping costs, you can shoot me a donation on Paypal if you wish:
-https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJSWU 
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJSWU
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJSWU)
 
-## NB NOTE: BROWSER SUPPORT: 
+## NB NOTE: BROWSER SUPPORT:
 
 This is only test/suppoted on Chrome!  NB, for best results, use Chrome
 
-## Update!  NB 
-NB:  See the Changelog below, almost DAILY there is new code coming out. 
+## Update!  NB
+NB:  See the Changelog below, almost DAILY there is new code coming out.
 Before running, execute ```cd  LaserWeb; chmod +x update.sh; ./update.sh```
 Then every day, run ```./update.sh ```
 
 
 ## Changelog
 
-* 26 Dec 2015: Consider SVG broken for now. Please test DXF etc
+* 27 Dec 2015: Added a little more instructions to readme
+* 26 Dec 2015: Consider SVG broken for now. Please test DXF etc  - we may need to switch to a different SVG Library - let me know if you can help
 * 25 Dec 2015: Added per-layer (DXF) and per-path (SVG) Laser Power and Feedrate settings to the DXF/SVG Importing code
-* 25 Dec 2015: Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code 
+* 25 Dec 2015: Merry Christmas!  And merged in @oxydum's Grbl-compatible mc.js code
 * 24 Dec 2015: Added error handling for /dev/ttyS ports on linux, @Cinezaster contributed a fix for package.json, @oxydum contributed better mc.js code for Grbl lasers
 * 23 Dec 2015: @danawoodman contributed code to handle serial port errors elegantly, allow overriding config using environment variables, and add some editor/gitignore to help the developers
 * 22 Dec 2015: Added capability to run various controllers off one PC, all with different firmwares. Switching in the browser's dropdown between serial ports, changes the UI to match the firmware in use on that port!  Groundbreaking!
@@ -32,10 +33,10 @@ Then every day, run ```./update.sh ```
 * 16 Dec 2015: Added Webcam Widget
 * 15 Dec 2015: Added Scale, Translate, Flip functions
 * 15 Dec 2015: Added Support for SmoothieBoard / SmoothieWare to Master branch
-* 15 Dec 2015: Added Clear GCode button instead of clearing GCode automatically. Helps if you want to repeat same job a few times. 
+* 15 Dec 2015: Added Clear GCode button instead of clearing GCode automatically. Helps if you want to repeat same job a few times.
 * 19 Nov 2015: Upgraded to latest socket.io and serialport versions (Socket.io 1.3.7 and SerialPort 2.0.5) since there are precompiled binaries for Windows - no more recompile required
 * 18 Nov 2015: Upgraded to Bootstrap 3.3.5 and changed to a responsive layout
-* 17 Nov 2015: Integrated Millcrum.com libraries to provide DXF, SVG and MILLCRUM support 
+* 17 Nov 2015: Integrated Millcrum.com libraries to provide DXF, SVG and MILLCRUM support
 * 10 Nov 2015: Added FontAwesome icons, moved Jogging to a Modal widget so its out of the way when not in use
 * 8 Nov 2015:  Project started
 
@@ -70,7 +71,7 @@ If you are running a default Lasersaur, its default baud rate is 57600.  I would
 You can also modify the LaserWeb config.js to change the baud speed to match your machine
 
 
-## Installation Instructions
+## Installation Instructions  (NB See Access instructions below the install instructions)
 
 
 ## Windows
@@ -154,11 +155,17 @@ npm install -g forever
 forever start server.js
 ```
 
-## Access
+## Access Instructions
 
-The default port in config.js is 8000, you can change it by editing the file.
+After a successful start, the terminal / command promt should display something like this:
 
-http://hostaddress:8000/
+![Successful start](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/terminal.png)
+
+Once you see that, open a web Browser and go to the URL as shown in the terminal (usually 127.0.0.1:8000,  or the IP address of the device running Laserweb for example http://192.168.0.150:8000 - you can also access this IP from any device on the network)
+
+The default port 8000, you can change it by editing config.js.
+
+Access:  http://hostaddress:8000/
 
 ## Timelapse
 
