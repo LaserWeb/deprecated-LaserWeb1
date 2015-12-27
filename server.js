@@ -244,7 +244,7 @@ function serialData(data, port) {
 
 	}
 
-	if (data.indexOf('LPC1769') != -1) {
+	if (data.indexOf('LPC1769') != -1 || data.indexOf('LPC1768') != -1) {
 		setInterval(function() {
 			sp[port].handle.write("M114\n"); //for Smoothie
 		}, 1000);
