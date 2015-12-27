@@ -70,6 +70,8 @@ If you are running a default Lasersaur, its default baud rate is 57600.  I would
 
 You can also modify the LaserWeb config.js to change the baud speed to match your machine
 
+NB:  MAKE SURE THE BOARD IS PLUGGED IN BEFORE STARTING LASERWEB. LaserWeb connects to all serial ports on startup (not like pronterface where you connect manually) - this allows us to be simultaneously connected to several machines, the dropdown in the UI allows you to switch between them at will (but that switches the interaction / UI -  it does connect/disconnect (; - good since it allows jobs to continue on one machine while you jog/setup another machine)
+
 
 ## Installation Instructions  (NB See Access instructions below the install instructions)
 
@@ -107,7 +109,7 @@ npm install serialport socket.io node-static```
 3.  Enter ```svn co svn://svn.code.sf.net/p/mjpg-streamer/code/ mjpg-streamer```
 4.  Enter ``` cd mjpg-streamer/mjpg-streamer ; make```
 5.  Enter ```sudo make install```
-6.  Run MJPG_Streamer with a USB Wbcam: ```mjpg_streamer -i "/usr/local/lib/input_uvc.so -d /dev/video0 -y  -r 320x240 -f 15" -o "/usr/local/lib/output_http.so -w /usr/local/www"```
+6.  Run MJPG_Streamer with a USB Webcam: ```mjpg_streamer -i "/usr/local/lib/input_uvc.so -d /dev/video0 -y  -r 320x240 -f 15" -o "/usr/local/lib/output_http.so -w /usr/local/www"```
 
 ## Raspberry Pi 2 (Jessie)
 
