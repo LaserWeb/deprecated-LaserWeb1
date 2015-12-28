@@ -1019,8 +1019,8 @@ $(document).ready(function() {
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
-				document.getElementById('fileInputSVG').value = '';
-				document.getElementById('fileInputMILL').value = '';
+				//document.getElementById('fileInputSVG').value = '';
+				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>GCode File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
@@ -1173,14 +1173,35 @@ $(document).ready(function() {
 				generate.click();
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
-				document.getElementById('fileInputSVG').value = '';
-				document.getElementById('fileInputMILL').value = '';
+				//document.getElementById('fileInputSVG').value = '';
+				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
 
 	});
 
+
+	// open Gear Generator (courtesy of http://hessmer.org/gears/InvoluteSpurGearBuilder.html)
+	$('#gearButton').on('click', function() {
+		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
+		$('#sendToLaser').addClass('disabled');
+
+		document.getElementById('fileName').value = fileName;
+		$('#mainStatus').html('Status: Gear Generator loaded ...');
+		$('#sendToLaser').removeClass('disabled');
+		generate.click();
+		document.getElementById('fileInputGcode').value = '';
+		document.getElementById('fileInputDXF').value = '';
+		//document.getElementById('fileInputSVG').value = '';
+		//document.getElementById('fileInputMILL').value = '';
+		$('#console').append('<p class="pf" style="color: #000000;"><b>Gear Generator Complete...</b></p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+});
+
+
+/* // Taking out SVG support  - https://github.com/openhardwarecoza/LaserWeb/issues/27
 	// open .svg (File Open Function)
 	osvg.addEventListener('change', function(e) {
 
@@ -1316,7 +1337,7 @@ $(document).ready(function() {
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
 		}
-	});
+	});*/
 
 	// Handle File Save Button
 
