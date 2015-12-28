@@ -1184,6 +1184,15 @@ $(document).ready(function() {
 	// open .svg (File Open Function)
 	osvg.addEventListener('change', function(e) {
 
+    // Don't like having to do thi :(
+
+		$('.bottom-left').notify({
+			message: { text: 'Note: SVG is buggy at this time.  See https://github.com/openhardwarecoza/LaserWeb/issues/27 -  use DXF or GCODE if possible :(' },
+			type: 'danger'
+		}).show();
+
+		// :(
+
 		$('#svgparamstomc').show();
 		$('#dxfparamstomc').hide();
 
