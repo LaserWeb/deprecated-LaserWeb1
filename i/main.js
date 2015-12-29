@@ -969,7 +969,7 @@ $(document).ready(function() {
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
 
-	console.log("Creating Millcrum");
+	//console.log("Creating Millcrum");
 	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:'+$('#perpass').val()+',step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';
 	var mcCode = mcheader + document.getElementById('millcrumCode').value
 
@@ -1147,11 +1147,11 @@ $(document).ready(function() {
 	$('#dxfparamstomc').on('click', function() {  // DXF job Params to MC
 
 
-				console.log(layers);
+				//console.log(layers);
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
 					var lay = layers.indexOf(dxf.polylines[c].layer);
-					console.log(lay);
+					//console.log(lay);
 					pwr[c] = $('#pwr'+lay).val();
 					cutSpeed[c] = $('#sp'+lay).val();
 					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', '+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
@@ -1186,6 +1186,7 @@ $(document).ready(function() {
 	$('#gearButton').on('click', function() {
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
+		$('#gearGenerator').modal('toggle');
 
 		document.getElementById('fileName').value = fileName;
 		$('#mainStatus').html('Status: Gear Generator loaded ...');

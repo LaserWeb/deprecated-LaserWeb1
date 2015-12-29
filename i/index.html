@@ -63,7 +63,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="screen.css" />
 
-
+	<!-- Gear Generator -->
 
 
 
@@ -198,8 +198,10 @@ Send to Laser</button></div>
 			<a href="http://openhardwarecoza.wordpress.com.com">&copy; openhardwarecoza</a>
 			</p>
 
-        </div>
-        <div class="col-md-6 panel-transparent">
+		</div>
+
+		<!-- Center Column  -->
+		<div class="col-md-6 panel-transparent">
 
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 
@@ -218,9 +220,12 @@ Send to Laser</button></div>
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>/div>
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg"" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>
-
 					</div>
 				</div>
+
+
+
+
 			</div>
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon"  style="width: 100px;">Translate:</span>
@@ -290,6 +295,7 @@ Send</button>
         </div>
       </div>
 	</div>
+<!-- End of main body:  What follows is divs/modals hidden by default. -->
 
 <!-- Jog and Machine Control Widget (Modal) -->
 <div class="modal fade" id="machineControl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -305,16 +311,13 @@ Send</button>
 				  <svg width="320" height="260" xmlns="http://www.w3.org/2000/svg" version="1.1">
 
 					<defs>
-
 						<style type="text/css"><![CDATA[
-
 					text {
 						font-family: helvetica;
 						stroke: black;
 						stroke-width: 1;
 						fill: black;
 					}
-
 					text.home {
 						font-family: helvetica;
 						stroke: black;
@@ -324,7 +327,6 @@ Send</button>
 						font-size: 16;
 						pointer-events: none;
 					}
-
 					text.scl {
 						font-family: helvetica;
 						stroke: white;
@@ -332,7 +334,6 @@ Send</button>
 						fill: white;
 						pointer-events: none;
 						}
-
 					circle.scl {
 						fill: black;
 						fill-opacity: 0.5;
@@ -341,134 +342,107 @@ Send</button>
 						filter: url(#f1);
 						pointer-events: none;
 				   }
-
 					path.home {
 						stroke: black;
 						}
-
 					path.std {
 						stroke: black;
 						stroke-width: 1;
 						filter: url(#f1);
 						}
-
 					rect.std {
 						stroke: black;
 						stroke-width: 1;
 						filter: url(#f1);
 					}
-
 					]]></style>
-
 						<filter id="f1" x="-1" y="-1" width="300%" height="300%">
 							<feOffset result="offOut" in="SourceAlpha" dx="3" dy="3"/>
 							<feGaussianBlur result="blurOut" in="offOut" stdDeviation="4"/>
 							<feBlend in="SourceGraphic" in2="blurOut" mode="normal"/>
 						</filter>
-
 						<symbol id="HomeIcon" viewBox="0 0 20 18" pointer-events="none">
 							<desc>HomeIcon - house</desc>
 							<path class="home" d="M3,18 v-8 l7,-6 l7,6 v8 h-5 v-6 h-4 v6 z" fill="black"/>
 							<path class="home" d="M0,10 l10-8.5 l10,8.5" stroke-width="1.5" fill="none"/>
 							<path class="home" d="M15,3 v2.8 l1,.8 v-3.6 z"/>
 						</symbol>
-
 						<symbol id="JogRose" viewBox="20 -10 260 260">
 							<g id="homeAll">
 								<path class="std" d="M10 182.5 h-10 v57.5 h57.5 v-10 a 125,125 0 0,1 -47.5 -47.5 Z" fill="#f0f0f0">
-
 								</path>
 								<use x="3" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
 							</g>
 
 							<g id="homeX">
 								<path class="std" d="M10 57.50 h-10 v-57.5 h57.5 v10 a 125,125 0 0,0 -47.5 47.5 Z" fill="Khaki">
-
 								</path>
 								<use x="3" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="25" y="20" class="home" id="xhomelabel"> X </text>
 							</g>
 							<g id="homeY">
 								<path class="std" d="M230 57.50 h10 v-57.5 h-57.5 v10 a 125,125 0 0,1 47.5 47.5 z" fill="SteelBlue">
-
 								</path>
 								<use x="217" y="5" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="202" y="20" class="home" id="yhomelabel"> Y </text>
 							</g>
-
 							<g id="homeZ">
 								<path class="std" d="M230 182.5 h10 v57.5 h-57.5 v-10 a 125,125 0 0,0 47.5 -47.5 z" fill="DarkSeaGreen">
-
 								</path>
 								<use x="217" y="217" width="20" height="18" xlink:href="#HomeIcon"/>
 								<text x="202" y="232" class="home" id="zhomelabel"> Z </text>
 							</g>
-
 							<g id="Jog100" fill="#c0c0c0" class="std">
 								<g id="yPCen" transform="translate(120 120)">
 									<path class="std" d="M-60 -67.07 L-75.93,-83 A112.5,112.5 0 0,1 75,-83 L60,-67.07 A90,90 0 0,0 -60.00,-67.07 z">
-
 									</path>
 								</g>
 								<g id="xPCen" transform="translate(120 120)">
 									<path class="std" d="M67.07,-60 L83,-75.93 A112.5,112.5 0 0,1 83,75.93 L67.07,60 A90,90 0 0,0 67.07,-60">
-
 									</path>
 								</g>
 								<g id="yMCen" transform="translate(120 120)">
 									<path class="std" d="M-60,67.07 L-75.93,83 A112.5,112.5 0 0,0 75,83 L60,67.07 A90,90 0 0,1 -60.00,67.07 z">
-
 									</path>
 								</g>
 								<g id="xMCen" transform="translate(120 120)">
 									<path class="std" d="M-67.07,-60 L-83,-75.93 A112.5,112.5 0 0,0 -83,75.93 L-67.07,60 A90,90 0 0,1 -67.07,-60 z">
-
 									</path>
 								</g>
 							</g>
 							<g id="Jog10" fill="#d0d0d0">
-
 								<g id="yPTen" transform="translate(120 120)">
 									<path class="std" d="M-44.06 -51.13 L-60,-67.07 A90,90 0 0,1 60,-67 L44.06,-51.13 A67.5,67.5 0 0,0 -44.06,-51.13 z">
-
 									</path>
 								</g>
 								<g id="xPTen" transform="translate(120 120)">
 									<path class="std" d="M51.13 44.06 L67.07,60 A90,90 0 0,0 67.07,-60 L51.13,-44.06 A67.5,67.5 0 0,1 51.13,44.06 z">
-
 									</path>
 								</g>
 								<g id="yMTen" transform="translate(120 120)">
 									<path class="std" d="M-44.06 51.13 L-60,67.07 A90,90 0 0,0 60,67 L44.06,51.13 A67.5,67.5 0 0,1 -44.06,51.13 z">
-
 									</path>
 								</g>
 								<g id="xMTen" transform="translate(120 120)">
 									<path class="std" d="M-51.13 44.06 L-67.07,60 A90,90 0 0,1 -67.07,-60 L-51.13,-44.06 A67.5,67.5 0 0,0 -51.13,44.06 z">
-
 									</path>
 								</g>
 							</g>
-
 							<g id="Jog1" fill="#e0e0e0">
 								<g id="yP" transform="translate(120 120)">
 									<path class="std" d="M-28.09 -35.16 L-44.06,-51.13 A67.5,67.5 0 0,1 44.06,-51.13 L28.09,-35.16 A45,45 0 0,0 -28.09,-35.16 z">
-
 									</path>
 								</g>
 								<g id="xP" transform="translate(120 120)">
 									<path class="std" d="M35.16 -28.09 L51.13,-44.06 A67.5,67.05 0 0,1 51.13,44.06 L35.16,28.09 A45,45 0 0,0 35.16,-28.09 z">
-
 									</path>
 								</g>
 								<g id="yM" transform="translate(120 120)">
 									<path class="std" d="M-28.09 35.16 L-44.06,51.13 A67.5,67.5 0 0,0 44.06,51.13 L28.09,35.16 A45,45 0 0,1 -28.09,35.16 z">
-
 									</path>
 								</g>
 								<g id="xM" transform="translate(120 120)">
 									<path class="std" d="M-35.16 -28.09 L-51.13,-44.06 A67.5,67.05 0 0,0 -51.13,44.06 L-35.16,28.09 A45,45 0 0,1 -35.16,-28.09 z">
-
 									</path>
 								</g>
 							</g>
@@ -476,22 +450,18 @@ Send</button>
 							<g id="Jog0_1" fill="#f0f0f0">
 								<g id="yP01" transform="translate(120 120)">
 									<path class="std" d="M-28.09 -35.16 A45,45 0 0,1 29.09,-35.16 L0,-7.07 z">
-
 									</path>
 								</g>
 								<g id="xP01" transform="translate(120 120)">
 									<path class="std" d="M35.16 -28.09 A45,45 0 0,1 35.16,28.09 L7.07,0 z">
-
 									</path>
 								</g>
 								<g id="yM01" transform="translate(120 120)">
 									<path class="std" d="M-28.09 35.16 A45,45 0 0,0 29.09,35.16 L0,7.07 z">
-
 									</path>
 								</g>
 								<g id="xM01" transform="translate(120 120)">
 									<path class="std" d="M-35.16 -28.09 A45,45 0 0,0 -35.16,28.09 L-7.07,0 z">
-
 									</path>
 								</g>
 							</g>
@@ -519,9 +489,7 @@ Send</button>
 								<text x="27" y="124"> -X </text>
 								<text x="196" y="124"> +X </text>
 							</g>
-
 						</symbol>
-
 						<symbol id="JogBar" viewBox="20 -10 260 260">
 							<desc>JogBar - Z jogging bar</desc>
 							<g id="+Z" fill="#b0b0b0">
@@ -536,38 +504,32 @@ Send</button>
 							</g>
 							<g id="zPTen" fill="#d0d0d0">
 								<rect class="std" x="0" y="32" width="40" height="30">
-
 								</rect>
 								<circle class="scl" cx="20" cy="47" r="13"/>
 								<text class="scl" x="9" y="53" font-size="18"> 10 </text>
 							</g>
 							<g id="zP" fill="#e0e0e0">
 								<rect class="std" x="0" y="62" width="40" height="26">
-
 								</rect>
 								<circle class="scl" cx="20" cy="75" r="11"/>
 								<text class="scl" x="15" y="81.5" font-size="18"> 1 </text>
 							</g>
 							<g id="zP01" fill="#f0f0f0">
 								<rect class="std" x="0" y="88" width="40" height="24">
-
 								</rect>
 								<circle class="scl" cx="20" cy="100" r="9.5"/>
 								<text class="scl" x="13" y="103.5" font-size="10"> 0.1 </text>
 							</g>
 							<g id="zMTen" fill="#d0d0d0">
 								<rect class="std" x="0" y="178" width="40" height="30">
-
 								</rect>
 							</g>
 							<g id="zM" fill="#e0e0e0" >
 								<rect class="std" x="0" y="152" width="40" height="26">
-
 								</rect>
 							</g>
 							<g id="zM01" fill="#f0f0f0" >
 								<rect class="std" x="0" y="128" width="40" height="24">
-
 								</rect>
 							</g>
 							<g id="ZSpace" fill="#000000">
@@ -579,12 +541,9 @@ Send</button>
 							<use x="0" y="0" xlink:href="#JogRose"/>
 							<use x="260" y="0" xlink:href="#JogBar"/>
 						</symbol>
-
 					</defs>
-
 					<use x="0" y="0" xlink:href="#PrinterCtl"/>
-
-				  </svg>
+				</svg>
 
 				<div class="btn-group input-group  btn-group-justified" style="margin-bottom:10px; width: 100%;">
 				  <span class="input-group-addon"  style="width: 130px;">Feedrate (XY)</span>
@@ -606,19 +565,14 @@ Send</button>
 					</div>
 				   </div>
 				</div>
-
-
 			 	<button type="button" class="btn btn-secondary btn-success" style="width: 100%;" id="zeroWork"><i class="fa fa-dot-circle-o fa-lg"" style="margin-right: 20px;"></i>Zero Machine (G92)</button>
 				<button type="button" class="btn btn-secondary btn-warning" style="width: 100%;" id="motorsOff"><i class="fa fa-power-off fa-lg"" style="margin-right: 20px;"></i>Motors Off (M84)</button>
-
-
-		<div class="btn-group input-group  btn-group-justified" id="AirGrp" style="display: none;">
-			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-power fa-lg"></i>Air Assist</button></div>
-			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOn">On</button></div>
-			<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOff">Off</button></div>
-		</div>
-
-						<br>
+				<div class="btn-group input-group  btn-group-justified" id="AirGrp" style="display: none;">
+					<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-power fa-lg"></i>Air Assist</button></div>
+					<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOn">On</button></div>
+					<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOff">Off</button></div>
+				</div>
+				<br>
 				<div class="btn-group input-group  btn-group-justified" role="group" id="FanGrp" aria-label="Fan Control">
 					<span class="input-group-addon">Fan</span>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fanOff">0%</button></div>
@@ -627,11 +581,6 @@ Send</button>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan75">75%</button></div>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan100">100%</button></div>
 				</div>
-
-
-
-
-
 	  </div>
       <div class="modal-footer">
         <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button // Commented out - using $('#sliceModal').modal('toggle'); in main.js to close once sliced-->
@@ -651,51 +600,19 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Cutting Parameters</h4>
       </div>
       <div class="modal-body">
-
-
 				<table class="table table-bordered table-hover table-striped" id="layers">
  					<caption>Configure parameters per layer</caption>
  					<thead>
-  				<tr>
-						<th>Layer</th>
-          	<th>Speed</th>
-          	<th>% Power</th>
-          </tr>
- 			</thead>
- 			<tbody id="layersbody">
-
-			</tbody>
-		</table>
-
-
-		<!-- tr>
-			<td>LASERWEB</td>
-			<td>
-				<div class="input-group" style="margin-bottom:10px; width: 100%;">
-						<div class="input-group spinnercut">
-							<input type="text" class="form-control" value="1000" id="cutSpeed">
-							<div class="input-group-btn-vertical">
-								<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-								<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
-							</div>
-						</div>
-						<span class="input-group-addon"  style="width: 60px;">mm/min</span>
-				</div></td>
-			<td>
-				<div class="input-group" style="margin-bottom:10px; width: 100%;">
-					<div class="input-group spinnermove">
-						<input type="text" class="form-control" value="3000" id="rapidSpeed">
-						<div class="input-group-btn-vertical">
-							<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-							<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
-						</div>
-					</div>
-					<span class="input-group-addon"  style="width: 60px;">%</span>
-				</div>
-			</td>
-		</tr -->
-
-	    <div class="input-group" style="margin-bottom:10px; width: 100%;">
+		  				<tr>
+								<th>Layer</th>
+		          	<th>Speed</th>
+		          	<th>% Power</th>
+		          </tr>
+		 			</thead>
+ 					<tbody id="layersbody">
+					</tbody>
+				</table>
+	    	<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon" style="width: 200px;">Rapid Feedrate</span><div class="input-group spinnermove">
 					<input type="text" class="form-control" value="3000" id="rapidSpeed">
 					<div class="input-group-btn-vertical">
@@ -704,22 +621,19 @@ Send</button>
 					</div>
 				</div>
 				<span class="input-group-addon"  style="width: 60px;">mm/min</span>
-		</div>
-
-		<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 200px;">Z-Down per pass</span>
-				<div class="input-group spinnerperpass">
-					<input type="text" class="form-control" value="3" id="perpass">
-					<div class="input-group-btn-vertical">
-						<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-						<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
-					</div>
 				</div>
-				<span class="input-group-addon"  style="width: 60px;">mm</span>
-		</div>
-
-
-	  </div>
+				<div class="input-group" style="margin-bottom:10px; width: 100%;">
+						<span class="input-group-addon"  style="width: 200px;">Z-Down per pass</span>
+						<div class="input-group spinnerperpass">
+							<input type="text" class="form-control" value="3" id="perpass">
+							<div class="input-group-btn-vertical">
+								<button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+								<button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+							</div>
+						</div>
+						<span class="input-group-addon"  style="width: 60px;">mm</span>
+				</div>
+			</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="generate" style="display: none;" data-dismiss="modal">Prepare GCODE</button>
 				<button type="button" class="btn btn-default" id="dxfparamstomc" style="display: none;" data-dismiss="modal">Prepare GCODE</button>
@@ -732,6 +646,29 @@ Send</button>
 
 
 
+<!-- gearGenerator Widget (modal) -->
+<div class="modal fade" id="gearGenerator" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Gear Generator</h4>
+      </div>
+      <div class="modal-body">
+				<!-- Content Here -->
+			</div>
+      <div class="modal-footer">
+        <!-- button type="button" class="btn btn-default" id="generate" style="display: none;" data-dismiss="modal">Prepare GCODE</button>
+				<button type="button" class="btn btn-default" id="dxfparamstomc" style="display: none;" data-dismiss="modal">Prepare GCODE</button>
+				<button type="button" class="btn btn-default" id="svgparamstomc" style="display: none;" data-dismiss="modal">Prepare GCODE</button-->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Gear Generator Widget (modal) -->
+
+
+
 <!-- Webcam Widget (modal) -->
 <div class="modal fade" id="webcamwidget" tabindex="-1" role="dialog" aria-labelledby="Webcam" aria-hidden="true">
 <div class="modal-dialog" style="width: 360px;">
@@ -741,13 +678,9 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Webcam</h4>
       </div>
       <div class="modal-body">
-
-	<div style="display: none; margin-top: 10px; width: 100%; height: 100%px; float: left; clear: both;" id="webcam">
-		<a id="wcLink" target="_blank" href="#"><img id="wcImg" width="320" height="240" /></a>
-	</div>
-
-
-
+				<div style="display: none; margin-top: 10px; width: 100%; height: 100%px; float: left; clear: both;" id="webcam">
+					<a id="wcLink" target="_blank" href="#"><img id="wcImg" width="320" height="240" /></a>
+				</div>
 	  </div>
       <div class="modal-footer">
         <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
@@ -756,9 +689,7 @@ Send</button>
 <!-- End of Webcam Widget (modal) -->
 
 
-
-
-<!-- Load an empty viewer grid -->
+<!-- Load an empty 3d GCode viewer grid -->
 <script>
 $(document).ready(function(){
 	$('#fileStatus').html('File Loaded: '+fileInputGcode.value+' as GCODE');

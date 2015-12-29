@@ -23,7 +23,7 @@ Dxf.prototype.addDegrees = function(base,mod) {
                 v = 360-v;
         } else if (v < 0) {
                 v = 360+v;
-        }   
+        }
         return Math.abs(v);
 };
 
@@ -673,7 +673,7 @@ Dxf.prototype.parseDxf = function(d) {
 	var sections = [];
 	var currentSection = [];
 
-	console.log('parsing dxf sections');
+	//console.log('parsing dxf sections');
 
 	// first loop through and find all the sections
 	for (var c = 0; c < l.length; c++) {
