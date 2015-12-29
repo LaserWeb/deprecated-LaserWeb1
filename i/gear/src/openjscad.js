@@ -1,6 +1,9 @@
 OpenJsCad = function() {
 };
 
+var lineincrement = 50
+
+
 OpenJsCad.log = function(txt) {
   var timeInMs = Date.now();
   var prevtime = OpenJsCad.log.prevLogTime;
@@ -27,7 +30,7 @@ OpenJsCad.Viewer = function(containerElm, size, options) {
     // fg and bg colors
     var defaultBgColor = [1, 1, 1];
     var defaultMeshColor = [0.2, 0.2, 0.2];
-    var drawAxes = true;
+    var drawAxes = false;
     var rotateZX = false;
     var rotateXY = false;
 
@@ -54,12 +57,67 @@ OpenJsCad.Viewer = function(containerElm, size, options) {
     this.containerElm_ = containerElm;
 
     this.createScene(drawAxes, axLength);
+    this.createGrid();
     this.createCamera();
     this.parseSizeParams();
     // createRenderer will also call render
     this.createRenderer(options.noWebGL);
     this.animate();
 };
+
+function makeSprite(scene, rendererType, vals) {
+            var canvas = document.createElement('canvas'),
+                context = canvas.getContext('2d'),
+                metrics = null,
+                textHeight = 100,
+                textWidth = 0,
+                actualFontSize = 10;
+            var txt = vals.text;
+            if (vals.size) actualFontSize = vals.size;
+
+            context.font = "normal " + textHeight + "px Arial";
+            metrics = context.measureText(txt);
+            var textWidth = metrics.width;
+
+            canvas.width = textWidth;
+            canvas.height = textHeight;
+            context.font = "normal " + textHeight + "px Arial";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            //context.fillStyle = "#ff0000";
+            context.fillStyle = vals.color;
+
+            context.fillText(txt, textWidth / 2, textHeight / 2);
+
+            var texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+
+            var material = new THREE.SpriteMaterial({
+                map: texture,
+                useScreenCoordinates: false,
+                transparent: true,
+                opacity: 0.6
+            });
+            material.transparent = true;
+            //var textObject = new THREE.Sprite(material);
+            var textObject = new THREE.Object3D();
+            textObject.position.x = vals.x;
+            textObject.position.y = vals.y;
+            textObject.position.z = vals.z;
+            var sprite = new THREE.Sprite(material);
+            textObject.textHeight = actualFontSize;
+            textObject.textWidth = (textWidth / textHeight) * textObject.textHeight;
+            if (rendererType == "2d") {
+                sprite.scale.set(textObject.textWidth / textWidth, textObject.textHeight / textHeight, 1);
+            } else {
+                sprite.scale.set(textWidth / textHeight * actualFontSize, actualFontSize, 1);
+            }
+
+            textObject.add(sprite);
+
+            //scene.add(textObject);
+            return textObject;
+}
 
 OpenJsCad.Viewer.prototype = {
     // adds axes too
@@ -70,6 +128,107 @@ OpenJsCad.Viewer.prototype = {
         this.drawAxes(axLen);
       }
     },
+
+    createGrid: function() {
+      console.log('creating grid');
+
+    if (gridhelper) {
+           scene.remove(gridhelper);
+       }
+   	var gridhelper = new THREE.GridHelperRect(300, 10, 200, 10);
+               gridhelper.setColors(0x0000ff, 0x707070);
+               gridhelper.position.y = 200;
+               gridhelper.position.x = 300;
+               gridhelper.position.z = 0;
+               gridhelper.rotation.x = 90 * Math.PI / 180;
+               gridhelper.material.opacity = 0.15;
+               gridhelper.material.transparent = true;
+               gridhelper.receiveShadow = false;
+               //console.log("helper grid:", helper);
+               //axes.translateX(300 * -1);
+               //axes.translateY(200 * -1);
+               this.grid = gridhelper;
+               //this.sceneAdd(this.grid);
+   			this.scene_.add(gridhelper);
+
+        if (axes) {
+               scene.remove(axes);
+           }
+
+        if (axesgrp) {
+               scene.remove(axesgrp);
+           }
+       var axesgrp = new THREE.Object3D();
+
+       var axes = new THREE.AxisHelper(120);
+
+                   axes.material.transparent = true;
+                   axes.material.opacity = 0.8;
+                   axes.material.depthWrite = false;
+                   axes.position.set(0,0,-0.0001);
+                   //axes.translateX(300 * -1);
+       			       //axes.translateY(200 * -1);
+
+                   this.scene_.add(axes);
+
+       			var x = [];
+       			var y = [];
+       		    for (var i = 0; i < 600 ; i+=lineincrement) {
+
+       				x[i] = makeSprite(this.scene, "webgl", {
+       					x: i,
+       					y: -10,
+       					z: 0,
+       					text: i,
+       					color: "#ff0000"
+       				});
+       				axesgrp.add(x[i]);
+       			}
+
+       			 for (var i = 0; i < 400 ; i+=lineincrement) {
+
+       				y[i] = makeSprite(this.scene, "webgl", {
+       					x: -10,
+       					y: i,
+       					z: 0,
+       					text: i,
+       					color: "#006600"
+       				});
+       				axesgrp.add(y[i]);
+       			}
+       		    // add axes labels
+                   var xlbl = makeSprite(this.scene, "webgl", {
+                       x: 125,
+                       y: 0,
+                       z: 0,
+                       text: "X",
+                       color: "#ff0000"
+                   });
+                   var ylbl = makeSprite(this.scene, "webgl", {
+                       x: 0,
+                       y: 125,
+                       z: 0,
+                       text: "Y",
+                       color: "#006600"
+                   });
+                   var zlbl = makeSprite(this.scene, "webgl", {
+                       x: 0,
+                       y: 0,
+                       z: 125,
+                       text: "Z",
+                       color: "#0000ff"
+                   });
+
+
+                   axesgrp.add(xlbl);
+                   axesgrp.add(ylbl);
+                   axesgrp.add(zlbl);
+
+       			//axesgrp.translateX(300 * -1);
+       			//axesgrp.translateY(200 * -1);
+       			this.scene_.add(axesgrp);
+      },
+
     createCamera: function() {
       //var light = new THREE.PointLight();
       //light.position.set(0, 0, 0);
@@ -81,7 +240,7 @@ OpenJsCad.Viewer.prototype = {
       var camera = new THREE.PerspectiveCamera(this.perspective, 1/1, 0.01, 1000000);
       this.camera_ = camera;
       //camera.add(light);
-      camera.position.set(300,30,0);
+      camera.position.set(-300,-200,0);
       camera.up.set(0, 0, 1);
       camera.lookAt(0, 0, 0);
       this.scene_.add(camera);
@@ -208,6 +367,11 @@ OpenJsCad.Viewer.prototype = {
         this.scene_.add(wireMesh);
         resetZoom && this.resetZoom(res.boundLen);
         this.applyDrawOptions();
+        wireMesh.translateX(300 * -1);
+        wireMesh.translateY(200 * -1);
+        //colorMeshes.translateX(300 * -1);
+        //colorMeshes.translateY(200 * -1);
+
     },
     applyDrawOptions: function() {
         this.getUserMeshes('faces').forEach(function(faceMesh) {
