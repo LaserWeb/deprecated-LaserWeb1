@@ -15,9 +15,9 @@
         var clearance = 0.05;
         var backlash = 0.05;
         var profileShift = 0.0;
-        var wheel1ToothCount = 30;
+        var wheel1ToothCount = 15;
         var wheel1CenterHoleDiamater = 4;
-        var wheel2ToothCount = 30;
+        var wheel2ToothCount = 40;
         var wheel2CenterHoleDiamater = 4;
         //var showOption = 3
         var resolution = 30;
@@ -26,7 +26,7 @@
 
 
 
-				var gear1 = new Gear({
+				gear1 = new Gear({
 					circularPitch: circularPitch,
 					pressureAngle: pressureAngle,
 					clearance: clearance,
@@ -36,7 +36,7 @@
 					profileShift: -profileShift,
 					qualitySettings: qualitySettings
 				});
-				var gear2 = new Gear({
+				gear2 = new Gear({
 					circularPitch: circularPitch,
 					pressureAngle: pressureAngle,
 					clearance: clearance,
@@ -53,6 +53,14 @@
 					params.showOption);
 
 				var shape = gearSet.createShape();
+
+
+				var minx = shape.getBounds()[0].x
+				var maxx = shape.getBounds()[1].x;
+				var miny = shape.getBounds()[0].y
+				var maxy = shape.getBounds()[1].y;
+
+				shape = shape.rotateZ(0).translate([(minx * -1),(miny * -1),0]);
 				OpenJsCad.log("returning gear set shape");
 				return shape;
 			}
@@ -70,7 +78,7 @@
 					//{ name: 'wheel1CenterHoleDiamater', caption: 'Wheel 1 Center Hole Diameter (0 for no hole):', type: 'float', initial: 20 },
 					//{ name: 'wheel2ToothCount', caption: 'Wheel 2 Tooth Count:', type: 'int', initial: 8 },
 					//{ name: 'wheel2CenterHoleDiamater', caption: 'Wheel 2 Center Hole Diameter (0 for no hole):', type: 'float', initial: 4 },
-					{ name: 'showOption', caption: 'Show:', type: 'choice', values: [3, 1, 2], initial: 3, captions: ["Wheel 1 and Wheel 2", "Wheel 1 Only", "Wheel 2 Only"]},
+					{ name: 'showOption', caption: 'Show:', type: 'choice', values: [3, 1, 2], initial: 3, captions: ["Gear 1 and Gear 2", "Gear 1 Only", "Gear 2 Only"]},
 					//{ name: 'stepsPerToothAngle', caption: 'Rotation steps per tooth angle when assembling the tooth profile (3 = draft, 10 = good quality). Increasing the value will result in smoother profiles at the cost of significantly higher calcucation time. Incease in small increments and check the result by zooming in.', type: 'int', initial: 3 },
 					//{ name: 'resolution', caption: 'Number of segments per 360 degree of rotation (only used for circles and arcs); 90 is plenty:', type: 'int', initial: 30 },
 				];
@@ -642,5 +650,6 @@
 					return shape;
 				}
 
-				return GearSet;
+
+			return GearSet;
 			})();

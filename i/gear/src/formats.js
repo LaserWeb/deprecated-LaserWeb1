@@ -265,9 +265,13 @@ CAG.PathsToDxf = function(paths) {
         }
     });
     str += "  0\nENDSEC\n  0\nEOF\n";
+
+    document.getElementById('dxf').value = str;
+
     return new Blob([str], {
         type: "application/dxf"
     });
+
 };
 
 CAG.prototype.toDxf = function() {
@@ -336,4 +340,3 @@ CSG.Vector3D.prototype.toAMFString = function() {
 CSG.Vertex.prototype.toAMFString = function() {
    return "<vertex><coordinates>" + this.pos.toAMFString() + "</coordinates></vertex>\n";
 };
-

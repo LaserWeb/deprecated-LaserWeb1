@@ -86,7 +86,7 @@ var fileServer = new static.Server('./i');
 
 function handler (req, res) {
 
-		//console.log(chalk.gray('url request: '+req.url));
+	//console.log(chalk.gray('url request: '+req.url));
 
 	fileServer.serve(req, res, function (err, result) {
 		if (err) {

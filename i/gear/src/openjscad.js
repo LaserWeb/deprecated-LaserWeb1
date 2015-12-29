@@ -1,8 +1,16 @@
 OpenJsCad = function() {
 };
 
+// Specific to your machine
+var laserxmax = 600
+var laserymax = 400
 var lineincrement = 50
 
+axesgrp = '';
+axes = '';
+gridhelper = '';
+colorMeshes = '';
+res = '';
 
 OpenJsCad.log = function(txt) {
   var timeInMs = Date.now();
@@ -59,6 +67,7 @@ OpenJsCad.Viewer = function(containerElm, size, options) {
     this.createScene(drawAxes, axLength);
     this.createGrid();
     this.createCamera();
+
     this.parseSizeParams();
     // createRenderer will also call render
     this.createRenderer(options.noWebGL);
@@ -120,6 +129,8 @@ function makeSprite(scene, rendererType, vals) {
 }
 
 OpenJsCad.Viewer.prototype = {
+
+
     // adds axes too
     createScene: function(drawAxes, axLen) {
       var scene = new THREE.Scene();
@@ -135,21 +146,19 @@ OpenJsCad.Viewer.prototype = {
     if (gridhelper) {
            scene.remove(gridhelper);
        }
-   	var gridhelper = new THREE.GridHelperRect(300, 10, 200, 10);
+   	gridhelper = new THREE.GridHelperRect((laserxmax /2), 10, (laserymax / 2), 10);
                gridhelper.setColors(0x0000ff, 0x707070);
-               gridhelper.position.y = 200;
-               gridhelper.position.x = 300;
+               gridhelper.position.y = 0;
+               gridhelper.position.x = 0;
                gridhelper.position.z = 0;
                gridhelper.rotation.x = 90 * Math.PI / 180;
                gridhelper.material.opacity = 0.15;
                gridhelper.material.transparent = true;
                gridhelper.receiveShadow = false;
                //console.log("helper grid:", helper);
-               //axes.translateX(300 * -1);
-               //axes.translateY(200 * -1);
                this.grid = gridhelper;
                //this.sceneAdd(this.grid);
-   			this.scene_.add(gridhelper);
+   			       this.scene_.add(gridhelper);
 
         if (axes) {
                scene.remove(axes);
@@ -158,22 +167,21 @@ OpenJsCad.Viewer.prototype = {
         if (axesgrp) {
                scene.remove(axesgrp);
            }
-       var axesgrp = new THREE.Object3D();
-
-       var axes = new THREE.AxisHelper(120);
+      axesgrp = new THREE.Object3D();
+      axes = new THREE.AxisHelper(120);
 
                    axes.material.transparent = true;
                    axes.material.opacity = 0.8;
                    axes.material.depthWrite = false;
                    axes.position.set(0,0,-0.0001);
-                   //axes.translateX(300 * -1);
-       			       //axes.translateY(200 * -1);
+                   axes.translateX((laserxmax / 2) * -1);
+       			       axes.translateY((laserymax / 2) * -1);
 
                    this.scene_.add(axes);
 
        			var x = [];
        			var y = [];
-       		    for (var i = 0; i < 600 ; i+=lineincrement) {
+       		    for (var i = 0; i < laserxmax ; i+=lineincrement) {
 
        				x[i] = makeSprite(this.scene, "webgl", {
        					x: i,
@@ -185,7 +193,7 @@ OpenJsCad.Viewer.prototype = {
        				axesgrp.add(x[i]);
        			}
 
-       			 for (var i = 0; i < 400 ; i+=lineincrement) {
+       			 for (var i = 0; i < laserymax ; i+=lineincrement) {
 
        				y[i] = makeSprite(this.scene, "webgl", {
        					x: -10,
@@ -222,10 +230,10 @@ OpenJsCad.Viewer.prototype = {
 
                    axesgrp.add(xlbl);
                    axesgrp.add(ylbl);
-                   axesgrp.add(zlbl);
+                   //axesgrp.add(zlbl);
 
-       			//axesgrp.translateX(300 * -1);
-       			//axesgrp.translateY(200 * -1);
+       			axesgrp.translateX((laserxmax / 2) * -1);
+       			axesgrp.translateY((laserymax / 2) * -1);
        			this.scene_.add(axesgrp);
       },
 
@@ -237,13 +245,14 @@ OpenJsCad.Viewer.prototype = {
       directionalLight.position.set( 0, 1, 0 );
       this.scene_.add( directionalLight );
 
-      var camera = new THREE.PerspectiveCamera(this.perspective, 1/1, 0.01, 1000000);
+      camera = new THREE.PerspectiveCamera(this.perspective, 1/1, 0.01, 1000000);
       this.camera_ = camera;
       //camera.add(light);
-      camera.position.set(-300,-200,0);
+      camera.position.set(0,0,0);
       camera.up.set(0, 0, 1);
       camera.lookAt(0, 0, 0);
       this.scene_.add(camera);
+      camera.translateX(300);
     },
     createControls: function(canvas) {
       console.log('create controls');
@@ -355,8 +364,8 @@ OpenJsCad.Viewer.prototype = {
     },
     setCsg: function(csg, resetZoom) {
         this.clear();
-        var res = THREE.CSG.fromCSG(csg, this.defaultColor_);
-        var colorMeshes = [].concat(res.colorMesh)
+        res = THREE.CSG.fromCSG(csg, this.defaultColor_);
+        colorMeshes = [].concat(res.colorMesh)
           .map(function(mesh) {
             mesh.userData = {faces: true};
             return mesh;
@@ -367,11 +376,13 @@ OpenJsCad.Viewer.prototype = {
         this.scene_.add(wireMesh);
         resetZoom && this.resetZoom(res.boundLen);
         this.applyDrawOptions();
-        wireMesh.translateX(300 * -1);
-        wireMesh.translateY(200 * -1);
-        //colorMeshes.translateX(300 * -1);
-        //colorMeshes.translateY(200 * -1);
-
+        wireMesh.translateX((laserxmax /2) * -1);
+        wireMesh.translateY((laserymax /2) * -1);
+        this.getUserMeshes('faces').forEach(function(faceMesh) {
+          faceMesh.visible = !!this.drawOptions.faces;
+          faceMesh.translateX((laserxmax /2) * -1);
+          faceMesh.translateY((laserymax /2) * -1);
+        }, this);
     },
     applyDrawOptions: function() {
         this.getUserMeshes('faces').forEach(function(faceMesh) {
@@ -402,7 +413,8 @@ OpenJsCad.Viewer.prototype = {
         }
         var d = r / Math.tan(this.perspective * Math.PI / 180);
         // play here for different start zoom
-        this.camera_.position.set(d*2, d*2, d);
+        //this.camera_.position.set(d*2, d*2, d);
+        this.camera_.position.set(0, 0, d*5);
         this.camera_.zoom = 1;
         //this.camera_.lookAt(this.scene_.position);
         this.camera_.lookAt(0,0,0);
@@ -766,7 +778,8 @@ OpenJsCad.FileSystemApiErrorHandler = function(fileError, operation) {
 OpenJsCad.AlertUserOfUncaughtExceptions = function() {
   window.onerror = function(message, url, line) {
     message = message.replace(/^Uncaught /i, "");
-    alert(message+"\n\n("+url+" line "+line+")");
+    //alert(message+"\n\n("+url+" line "+line+")");
+    console.log(message+"\n\n("+url+" line "+line+")");
   };
 };
 
@@ -954,6 +967,10 @@ OpenJsCad.Processor.prototype = {
     this.generateOutputFileButton.onclick = function(e) {
       that.generateOutputFile();
     };
+    this.generateOutputFileButton.onclick = function(e) {
+      that.generateOutputFile();
+    };
+
     this.statusbuttons.appendChild(this.generateOutputFileButton);
     this.downloadOutputFileLink = document.createElement("a");
     this.statusbuttons.appendChild(this.downloadOutputFileLink);
