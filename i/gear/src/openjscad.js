@@ -866,12 +866,15 @@ OpenJsCad.Processor.prototype = {
     this.viewerdiv = viewerdiv;
     this.viewer = new OpenJsCad.Viewer(this.viewerdiv, this.viewerSize, this.options);
     this.errordiv = document.createElement("div");
+    this.errordiv.className = "well";
     this.errorpre = document.createElement("pre");
     this.errordiv.appendChild(this.errorpre);
     this.statusdiv = document.createElement("div");
-    this.statusdiv.className = "statusdiv";
+    //this.statusdiv.className = "statusdiv";
+    this.statusdiv.className = "well";
     // surface/line draw
     this.controldiv = document.createElement("div");
+    this.controldiv.style.cssText = 'display:none;';
     var this_ = this;
     [['faces', 'surfaces', this.options.drawFaces],
      ['lines', 'lines', this.options.drawLines]].forEach(function(tup) {
@@ -886,6 +889,7 @@ OpenJsCad.Processor.prototype = {
         [cb, lb].forEach(function(ui) {this.controldiv.appendChild(ui)}, this);
     }, this);
     this.statusspan = document.createElement("span");
+
     this.statusbuttons = document.createElement("div");
     this.statusbuttons.style.float = "right";
     this.statusdiv.appendChild(this.statusspan);
@@ -928,11 +932,13 @@ OpenJsCad.Processor.prototype = {
     this.parameterstable.className = "parameterstable";
     this.parametersdiv.appendChild(this.parameterstable);
     var parseParametersButton = document.createElement("button");
-    parseParametersButton.innerHTML = "Update and Preview";
+    parseParametersButton.style.cssText = 'margin: 10px;';
+    parseParametersButton.className = "btn btn-danger";
+
+    parseParametersButton.innerHTML = "<i></i>Update and Preview...";
     parseParametersButton.onclick = function(e) {
       //that.generateOutputFile();
       that.rebuildSolid();
-      that.generateOutputFile();
     };
 
     this.parametersdiv.appendChild(parseParametersButton);
@@ -1228,6 +1234,7 @@ OpenJsCad.Processor.prototype = {
           that.statusspan.innerHTML = "Ready." + (that.options.verbose ?
               "  Rendered in " + elapsed + "ms" : "");
         }
+        that.generateOutputFile();
         that.enableItems();
         if(that.onchange) that.onchange();
       });
@@ -1286,6 +1293,8 @@ OpenJsCad.Processor.prototype = {
 
   generateOutputFile: function() {
     this.clearOutputFile();
+    console.log('Generating Output');
+    document.getElementById('dxf').value = '';
     if(this.hasValidCurrentObject)
     {
       try
@@ -1358,6 +1367,7 @@ OpenJsCad.Processor.prototype = {
   },
 
   generateOutputFileBlobUrl: function() {
+    console.log('OutputFileBlob');
     var blob = this.currentObjectToBlob();
     var windowURL=OpenJsCad.getWindowURL();
     this.outputFileBlobUrl = windowURL.createObjectURL(blob)

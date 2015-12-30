@@ -268,6 +268,7 @@ CAG.PathsToDxf = function(paths) {
 
     document.getElementById('dxf').value = str;
 
+    document.getElementById('generatePreview').click();
     return new Blob([str], {
         type: "application/dxf"
     });

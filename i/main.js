@@ -1193,6 +1193,7 @@ $(document).ready(function() {
 
 
 $('#generateOutputFileButton2').on('click', function() {
+	OpenJsCad.Processor.prototype.generateOutputFile();
 	$('#gearGenerator').modal('toggle');  // Close Modal
 	fileName = 'Gear Generator';
 	dxf = new Dxf();
@@ -1256,7 +1257,6 @@ $('#generateOutputFileButton2').on('click', function() {
 			s += ']};\n';
 		}
 
-
 		//console.log(dxf);
 		// for each line/polyline, do:
 		for (var c=0; c<dxf.polylines.length; c++) {
@@ -1304,6 +1304,7 @@ $('#generateOutputFileButton2').on('click', function() {
 $('#generatePreview').on('click', function() {
 	//generateOutputFile();
 	//$('#gearGenerator').modal('toggle');  // Close Modal
+	console.log('Previewing');
 	fileName = 'Gear Generator';
 	dxf = new Dxf();
 	pwr = {};
@@ -1446,10 +1447,13 @@ $('#generatePreview').on('click', function() {
 
 	// open Gear Generator (courtesy of http://hessmer.org/gears/InvoluteSpurGearBuilder.html)
 	$('#gearButton').on('click', function() {
-		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
+		$('#console').append('<br><span style="color: #060606;"><u><b>Opening OpenJSCAD</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
 		var gCurrentFile = null;
 		var gProcessor=null;
+
+		loadGeargen();
+
 
 		$('#gearGenerator').modal('toggle');
 

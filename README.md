@@ -19,6 +19,7 @@ Then every day, run ```./update.sh ```
 
 ## Changelog
 
+* 30 Dec 2015: Added a parametric Gear Generator based on hessmer.org/gears/InvoluteSpurGearBuilder.html
 * 27 Dec 2015: Added a little more instructions to readme
 * 26 Dec 2015: Consider SVG broken for now. Please test DXF etc  - we may need to switch to a different SVG Library - let me know if you can help
 * 25 Dec 2015: Added per-layer (DXF) and per-path (SVG) Laser Power and Feedrate settings to the DXF/SVG Importing code
@@ -40,9 +41,10 @@ Then every day, run ```./update.sh ```
 * 10 Nov 2015: Added FontAwesome icons, moved Jogging to a Modal widget so its out of the way when not in use
 * 8 Nov 2015:  Project started
 
-![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/laserweb.PNG)
-![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/controlmodal.PNG)
-![Screenshot 16 Nov 2015](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/Scale Widget.png)
+![LaserWeb](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/laserweb.PNG)
+![Control Modal](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/controlmodal.PNG)
+![Transformation Widget](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/Scale Widget.png)
+![Parametric](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/parametricgenerator.png)
 
 
 

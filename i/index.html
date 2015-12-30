@@ -43,11 +43,13 @@
 	<script src="bootstrap-notify.js"></script>
 	<script src="main.js"></script>
 
- <!-- v68 Three.js -->
-
-    <script src="gcode-viewer/gcode-parser.js"></script>
-    <script src="gcode-viewer/renderer.js"></script>
-    <script src="gcode-viewer/ui.js"></script>
+ <!-- v70 Three.js -->
+	<script src="gear/lib/three.min.js"></script>
+	<script src="gear/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
+	<script src="gear/lib/orbitcontrols.js"></script>
+	<script src="gcode-viewer/gcode-parser.js"></script>
+	<script src="gcode-viewer/renderer.js"></script>
+	<script src="gcode-viewer/ui.js"></script>
 
  <!-- Millcrum -->
 	<script type="text/javascript" src="millcrum/inc/mc.js"></script>
@@ -61,11 +63,9 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="screen.css" />
 
-	<!-- Gear Generator -->
-	<script src="gear/lib/three.min.js"></script>
-  <script src="gear/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
-  <script src="gear/lib/orbitcontrols.js"></script>
-  <!-- fallback if no WebGL -->
+	<!-- Gear Generator : http://hessmer.org/gears/InvoluteSpurGearBuilder.html-->
+
+	<!-- fallback if no WebGL -->
   <script src="gear/lib/projector.js"></script>
   <script src="gear/lib/canvasrenderer.js"></script>
   <script src="gear/src/csg.js"></script>
@@ -87,7 +87,7 @@
 			gProcessor.setJsCad(document.getElementById('code').value);
 		}
 
-		function onload()
+		function loadGeargen()
 		{
 			gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
 			getProg('gear/gear.jscad');
@@ -104,7 +104,7 @@
 
 </head>
 
-<body onload="onload()">
+<body>
 
 <div id="renderArea"></div> <!-- Note - background div - see CSS -->
 
@@ -691,12 +691,12 @@ Send</button>
 				<!-- Tabs -->
 			  <ul class="nav nav-tabs nav-justified" role="tablist">
 			    <li id="jsV"  class="active">
-			      <a id="jsVA" href="#">Viewer</a>
+			      <a id="jsVA" href="#">Parametric</a>
 			    </li>
 			    <li id="jsE">
-			      <a id="jsEA" href="#">Editor</a>
+			      <a id="jsEA" href="#">OpenJSCAD</a>
 			    </li>
-			    <li id="jsD">
+			    <li id="jsD" style="display:none;">
 			      <a id="jsDA" href="#">DXF</a>
 			    </li>
 			  </ul>
@@ -704,7 +704,8 @@ Send</button>
 			  <div id="jsView">
 			    <div id="viewer"></div>
 			    <div class="btn btn-danger" id="generateOutputFileButton2"><i class="fa fa-street-view fa-lg"></i>Prepare for Laser Cutting</div>
-					<div class="btn btn-danger" id="generatePreview"><i class="fa fa-street-view fa-lg"></i>Preview</div>
+					<p>
+					<div class="btn btn-danger" id="generatePreview" style="display: none;"><i class="fa fa-street-view fa-lg"></i>Preview</div>
 			  </div>
 
 			  <!-- Tab 2 -->
