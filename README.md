@@ -56,9 +56,9 @@ Then every day, run ```./update.sh ```
 More in-app Parametric generators coming soon!
 
 
-More information can be found at http://xyzbots.com (soon)  and http://www.openhardware.co.za
+More information can be found at http://www.openhardware.co.za
 
-Copyright 2015 Andrew Hodel andrewhodel@gmail.com and Peter van der Walt https://plus.google.com/+PetervanderWalt/posts under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
+Peter van der Walt https://plus.google.com/+PetervanderWalt/posts under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3
 
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
