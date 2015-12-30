@@ -41,11 +41,19 @@ Then every day, run ```./update.sh ```
 * 10 Nov 2015: Added FontAwesome icons, moved Jogging to a Modal widget so its out of the way when not in use
 * 8 Nov 2015:  Project started
 
+### Web Application
 ![LaserWeb](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/laserweb.PNG)
+
+### Machine control Widget
 ![Control Modal](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/controlmodal.PNG)
+
+## In-app scale, rotate, scaling of existing GCODE
 ![Transformation Widget](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/Scale Widget.png)
+
+### In-app Parametric Gear Generator 
 ![Parametric](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/parametricgenerator.png)
 
+More in-app Parametric generators coming soon!
 
 
 More information can be found at http://xyzbots.com (soon)  and http://www.openhardware.co.za
