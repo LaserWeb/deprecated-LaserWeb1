@@ -12,8 +12,8 @@ var added = false;
 // Specific to your machine
 var laserxmax = 600
 var laserymax = 400
-var lineincrement = 50 
-	
+var lineincrement = 50
+
 
 $(function() {
 
@@ -27,9 +27,9 @@ function createObject(gcode) {
     object = createObjectFromGCode(gcode);
 	object.translateX(laserxmax /2 * -1);
 	object.translateY(laserymax /2 * -1);
-		
+
     scene.add(object);
-    
+
  if (cylinder) {
         scene.remove(cylinder);
     }
@@ -43,14 +43,14 @@ function createObject(gcode) {
             cylinder.position.x = (laserxmax /2 * -1)
 			cylinder.position.y = (laserymax /2 * -1)
 			cylinder.position.z = 20;
-			cylinder.needsUpdate = true;	
+			cylinder.needsUpdate = true;
 		scene.add(cylinder)
-	
-	
+
+
  if (helper) {
         scene.remove(helper);
     }
-	
+
 	helper = new THREE.GridHelperRect((laserxmax /2), 10, (laserymax /2), 10);
             helper.setColors(0x0000ff, 0x707070);
             helper.position.y = 0;
@@ -64,9 +64,9 @@ function createObject(gcode) {
             this.grid = helper;
             //this.sceneAdd(this.grid);
 			scene.add(helper);
-	
-	
-    
+
+
+
  if (axes) {
         scene.remove(axes);
     }
@@ -75,7 +75,7 @@ function createObject(gcode) {
         scene.remove(axesgrp);
     }
 	axesgrp = new THREE.Object3D();
-            
+
 	        axes = new THREE.AxisHelper(120);
 
             axes.material.transparent = true;
@@ -84,13 +84,13 @@ function createObject(gcode) {
             axes.position.set(0,0,-0.0001);
             axes.translateX(laserxmax /2 * -1);
 			axes.translateY(laserymax /2 * -1);
-		
+
             scene.add(axes);
-		   
+
 			var x = [];
 			var y = [];
-		    for (var i = 0; i < laserxmax ; i+=lineincrement) { 
-				
+		    for (var i = 0; i < laserxmax ; i+=lineincrement) {
+
 				x[i] = this.makeSprite(this.scene, "webgl", {
 					x: i,
 					y: -10,
@@ -101,8 +101,8 @@ function createObject(gcode) {
 				axesgrp.add(x[i]);
 			}
 
-			 for (var i = 0; i < laserymax ; i+=lineincrement) { 
-				
+			 for (var i = 0; i < laserymax ; i+=lineincrement) {
+
 				y[i] = this.makeSprite(this.scene, "webgl", {
 					x: -10,
 					y: i,
@@ -134,12 +134,12 @@ function createObject(gcode) {
                 text: "Z",
                 color: "#0000ff"
             });
-			
-			
+
+
             axesgrp.add(xlbl);
             axesgrp.add(ylbl);
             axesgrp.add(zlbl);
-			
+
 			axesgrp.translateX(laserxmax /2 * -1);
 			axesgrp.translateY(laserymax /2 * -1);
 			scene.add(axesgrp);
@@ -189,6 +189,7 @@ function makeSprite(scene, rendererType, vals) {
 
             var texture = new THREE.Texture(canvas);
             texture.needsUpdate = true;
+						texture.minFilter = THREE.LinearFilter;
 
             var material = new THREE.SpriteMaterial({
                 map: texture,
@@ -216,5 +217,3 @@ function makeSprite(scene, rendererType, vals) {
             //scene.add(textObject);
             return textObject;
 }
-
-

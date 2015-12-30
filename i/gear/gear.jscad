@@ -10,42 +10,28 @@
 			function main(params)
 			{
 				// Main entry point; here we construct our solid:
-				var circularPitch = 8;
-        var pressureAngle = 20;
-        var clearance = 0.05;
-        var backlash = 0.05;
-        var profileShift = 0.0;
-        var wheel1ToothCount = 15;
-        var wheel1CenterHoleDiamater = 4;
-        var wheel2ToothCount = 40;
-        var wheel2CenterHoleDiamater = 4;
-        //var showOption = 3
-        var resolution = 30;
-        var stepsPerToothAngle = 3;
-        var qualitySettings = {resolution: resolution, stepsPerToothAngle: stepsPerToothAngle};
+				var qualitySettings = {resolution: params.resolution, stepsPerToothAngle: params.stepsPerToothAngle};
 
-
-
-				gear1 = new Gear({
-					circularPitch: circularPitch,
-					pressureAngle: pressureAngle,
-					clearance: clearance,
-					backlash: backlash,
-					toothCount: wheel1ToothCount,
-					centerHoleDiameter: wheel1CenterHoleDiamater,
-					profileShift: -profileShift,
-					qualitySettings: qualitySettings
-				});
-				gear2 = new Gear({
-					circularPitch: circularPitch,
-					pressureAngle: pressureAngle,
-					clearance: clearance,
-					backlash: backlash,
-					toothCount: wheel2ToothCount,
-					centerHoleDiameter: wheel2CenterHoleDiamater,
-					profileShift: profileShift,
-					qualitySettings: qualitySettings
-				});
+				var gear1 = new Gear({
+						circularPitch: params.circularPitch,
+						pressureAngle: params.pressureAngle,
+						clearance: params.clearance,
+						backlash: params.backlash,
+						toothCount: params.wheel1ToothCount,
+						centerHoleDiameter: params.wheel1CenterHoleDiamater,
+						profileShift: -params.profileShift,
+						qualitySettings: qualitySettings
+					});
+					var gear2 = new Gear({
+						circularPitch: params.circularPitch,
+						pressureAngle: params.pressureAngle,
+						clearance: params.clearance,
+						backlash: params.backlash,
+						toothCount: params.wheel2ToothCount,
+						centerHoleDiameter: params.wheel2CenterHoleDiamater,
+						profileShift: params.profileShift,
+						qualitySettings: qualitySettings
+					});
 
 				var gearSet = new GearSet(
 					gear1,
@@ -69,18 +55,18 @@
 
       function getParameterDefinitions() {
 				return [
-					//{ name: 'circularPitch', caption: 'Circular pitch (the circumference of the pitch circle divided by the number of teeth):', type: 'float', initial: 8 },
-					//{ name: 'pressureAngle', caption: 'Pressure Angle (common values are 14.5, 20 and 25 degrees):', type: 'float', initial: 20 },
-					//{ name: 'clearance', caption: 'Clearance (minimal distance between the apex of a tooth and the trough of the other gear; in length units):', type: 'float', initial: 0.05 },
-					//{ name: 'backlash', caption: 'Backlash (minimal distance between meshing gears; in length units):', type: 'float', initial: 0.05 },
-					//{ name: 'profileShift', caption: 'Profile Shift (indicates what portion of gear one\'s addendum height should be shifted to gear two. E.g., a value of 0.1 means the adddendum of gear two is increased by a factor of 1.1 while the height of the addendum of gear one is reduced to 0.9 of its normal height.):', type: 'float', initial: 0.0 },
-					//{ name: 'wheel1ToothCount', caption: 'Wheel 1 Tooth Count (n1 > 0: external gear; n1 = 0: rack; n1 < 0: internal gear):', type: 'int', initial: 30 },
-					//{ name: 'wheel1CenterHoleDiamater', caption: 'Wheel 1 Center Hole Diameter (0 for no hole):', type: 'float', initial: 20 },
-					//{ name: 'wheel2ToothCount', caption: 'Wheel 2 Tooth Count:', type: 'int', initial: 8 },
-					//{ name: 'wheel2CenterHoleDiamater', caption: 'Wheel 2 Center Hole Diameter (0 for no hole):', type: 'float', initial: 4 },
+					{ name: 'circularPitch', caption: 'Circular pitch (the circumference of the pitch circle divided by the number of teeth):', type: 'float', initial: 8 },
+					{ name: 'pressureAngle', caption: 'Pressure Angle (common values are 14.5, 20 and 25 degrees):', type: 'float', initial: 20 },
+					{ name: 'clearance', caption: 'Clearance (minimal distance between the apex of a tooth and the trough of the other gear; in length units):', type: 'float', initial: 0.05 },
+					{ name: 'backlash', caption: 'Backlash (minimal distance between meshing gears; in length units):', type: 'float', initial: 0.05 },
+					{ name: 'profileShift', caption: 'Profile Shift (indicates what portion of gear one\'s addendum height should be shifted to gear two. E.g., a value of 0.1 means the adddendum of gear two is increased by a factor of 1.1 while the height of the addendum of gear one is reduced to 0.9 of its normal height.):', type: 'float', initial: 0.0 },
+					{ name: 'wheel1ToothCount', caption: 'Wheel 1 Tooth Count (n1 > 0: external gear; n1 = 0: rack; n1 < 0: internal gear):', type: 'int', initial: 30 },
+					{ name: 'wheel1CenterHoleDiamater', caption: 'Wheel 1 Center Hole Diameter (0 for no hole):', type: 'float', initial: 20 },
+					{ name: 'wheel2ToothCount', caption: 'Wheel 2 Tooth Count:', type: 'int', initial: 8 },
+					{ name: 'wheel2CenterHoleDiamater', caption: 'Wheel 2 Center Hole Diameter (0 for no hole):', type: 'float', initial: 4 },
 					{ name: 'showOption', caption: 'Show:', type: 'choice', values: [3, 1, 2], initial: 3, captions: ["Gear 1 and Gear 2", "Gear 1 Only", "Gear 2 Only"]},
-					//{ name: 'stepsPerToothAngle', caption: 'Rotation steps per tooth angle when assembling the tooth profile (3 = draft, 10 = good quality). Increasing the value will result in smoother profiles at the cost of significantly higher calcucation time. Incease in small increments and check the result by zooming in.', type: 'int', initial: 3 },
-					//{ name: 'resolution', caption: 'Number of segments per 360 degree of rotation (only used for circles and arcs); 90 is plenty:', type: 'int', initial: 30 },
+					{ name: 'stepsPerToothAngle', caption: 'Rotation steps per tooth angle when assembling the tooth profile (3 = draft, 10 = good quality). Increasing the value will result in smoother profiles at the cost of significantly higher calcucation time. Incease in small increments and check the result by zooming in.', type: 'int', initial: 3 },
+					{ name: 'resolution', caption: 'Number of segments per 360 degree of rotation (only used for circles and arcs); 90 is plenty:', type: 'int', initial: 30 },
 				];
 			}
 

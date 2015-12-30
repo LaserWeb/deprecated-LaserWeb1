@@ -44,9 +44,7 @@
 	<script src="main.js"></script>
 
  <!-- v68 Three.js -->
-    <script src="gcode-viewer/Three.js"></script>
-    <script src="gcode-viewer/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
-    <script src="gcode-viewer/TrackballControls.js"></script>
+
     <script src="gcode-viewer/gcode-parser.js"></script>
     <script src="gcode-viewer/renderer.js"></script>
     <script src="gcode-viewer/ui.js"></script>
@@ -64,14 +62,49 @@
 	<link rel="stylesheet" href="screen.css" />
 
 	<!-- Gear Generator -->
+	<script src="gear/lib/three.min.js"></script>
+  <script src="gear/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
+  <script src="gear/lib/orbitcontrols.js"></script>
+  <!-- fallback if no WebGL -->
+  <script src="gear/lib/projector.js"></script>
+  <script src="gear/lib/canvasrenderer.js"></script>
+  <script src="gear/src/csg.js"></script>
+  <script src="gear/src/threecsg.js"></script>
+  <script src="gear/src/openjscad.js"></script>
+  <script src="gear/src/formats.js"></script>
+  <script src="gear/TrackballControls.js"></script>
 
 
+	<link rel="stylesheet" href="gear/openjscad.css" type="text/css">
 
+	<script>
+
+	// Show all exceptions to the user:
+	OpenJsCad.AlertUserOfUncaughtExceptions();
+
+		function updateSolid()
+		{
+			gProcessor.setJsCad(document.getElementById('code').value);
+		}
+
+		function onload()
+		{
+			gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
+			getProg('gear/gear.jscad');
+		}
+
+		function getProg(name) {
+			el = document.getElementById('code');
+			$.get(name, function(data) {
+				el.value = data;
+				updateSolid();
+			});
+		}
+	</script>
 
 </head>
 
-<body>
-
+<body onload="onload()">
 
 <div id="renderArea"></div> <!-- Note - background div - see CSS -->
 
@@ -655,7 +688,35 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Gear Generator</h4>
       </div>
       <div class="modal-body">
-				<!-- Content Here -->
+				<!-- Tabs -->
+			  <ul class="nav nav-tabs nav-justified" role="tablist">
+			    <li id="jsV"  class="active">
+			      <a id="jsVA" href="#">Viewer</a>
+			    </li>
+			    <li id="jsE">
+			      <a id="jsEA" href="#">Editor</a>
+			    </li>
+			    <li id="jsD">
+			      <a id="jsDA" href="#">DXF</a>
+			    </li>
+			  </ul>
+			  <!-- Tab 1 -->
+			  <div id="jsView">
+			    <div id="viewer"></div>
+			    <div class="btn btn-danger" id="generateOutputFileButton2"><i class="fa fa-street-view fa-lg"></i>Prepare for Laser Cutting</div>
+					<div class="btn btn-danger" id="generatePreview"><i class="fa fa-street-view fa-lg"></i>Preview</div>
+			  </div>
+
+			  <!-- Tab 2 -->
+			  <div id="jsEdit" style="display: none;">
+			    <textarea id="code" style="width: 565px; height: 400px;"></textarea>
+			  </div>
+
+			  <!-- Tab 3 -->
+			  <div id="jsDXF" style="display: none;">
+			    <textarea id="dxf" style="width: 565px; height: 400px;"></textarea>
+			  </div>
+			</ul>
 			</div>
       <div class="modal-footer">
         <!-- button type="button" class="btn btn-default" id="generate" style="display: none;" data-dismiss="modal">Prepare GCODE</button>

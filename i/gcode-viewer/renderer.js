@@ -1,6 +1,6 @@
 function createScene(element) {
     // renderer setup
-    var renderer = new THREE.WebGLRenderer({
+    renderer = new THREE.WebGLRenderer({
         autoClearColor: true
     });
     renderer.setClearColor(0xffffff, 1);
@@ -26,8 +26,8 @@ function createScene(element) {
     camera.position.x = 0;
     camera.position.y = 0;
 	scene.add(camera);
-	
-	
+
+
 	// Disabling mouse
     controls = new THREE.TrackballControls(camera, renderer.domElement);
     controls.noPan = false;
@@ -36,16 +36,16 @@ function createScene(element) {
     controls.panSpeed = 1;
     controls.rotateSpeed = 1;
 
-	
-	
+
+
     // render
     function render() {
         controls.update();
         renderer.render(scene, camera);
         requestAnimationFrame(render);
     }
-	
-	
+
+
     render();
 
 // fix controls if window is resized.
@@ -58,12 +58,9 @@ function createScene(element) {
     controls.reset();
   });
 
-    
-   
-	
-	
+
+
+
+
     return scene;
 }
-
-
-

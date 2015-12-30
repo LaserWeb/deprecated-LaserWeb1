@@ -241,6 +241,13 @@ $(document).ready(function() {
 
 
 	// Enable sendToLaser button, if we receive gcode in #gcodepreview
+	$('#gcodepreview').bind('input propertychange', function() {
+		$('#sendToLaser').addClass('disabled');
+        if(this.value.length){
+					$('#sendToLaser').removeClass('disabled');
+        }
+  });
+
 	$("#gcodepreview").change(function () {
 		openGCodeFromText();
 		$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
@@ -964,6 +971,9 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
+	$("#gearGenerator").draggable({
+		handle: ".modal-header"
+	});
 
 
 	// handle generate click (Created GCode)
@@ -1182,11 +1192,267 @@ $(document).ready(function() {
 	});
 
 
+$('#generateOutputFileButton2').on('click', function() {
+	$('#gearGenerator').modal('toggle');  // Close Modal
+	fileName = 'Gear Generator';
+	dxf = new Dxf();
+	pwr = {};
+	cutSpeed = {};
+	row = [];
+
+	$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
+	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+	dxf = new Dxf();
+	dxf.parseDxf($('#dxf').val());
+
+	var errStr = '';
+	if (dxf.invalidEntities.length > 0) {
+		for (var c=0; c<dxf.invalidEntities.length; c++) {
+			errStr += 'Invalid Entity: '+dxf.invalidEntities[c] + '\n';
+			}
+		errStr += '\n';
+	}
+
+	if (dxf.alerts.length > 0) {
+		for (var c=0; c<dxf.alerts.length; c++) {
+			errStr += dxf.alerts[c] + '\n\n';
+		}
+	}
+
+	if (errStr != '') {
+		console.log('DXF Errors:'+errStr);
+		$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	}
+
+		s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
+		s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
+		s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
+
+		// convert polylines to millcrum
+		for (var c=0; c<dxf.polylines.length; c++) {
+			if (dxf.polylines[c].layer == '') {
+				// name it polyline+c
+				dxf.polylines[c].layer = 'polyline'+c;
+			}
+			s += '//LAYER '+dxf.polylines[c].layer+'\n';
+			s += 'var polyline'+c+' = {type:\'polygon\',name:\''+dxf.polylines[c].layer+'\',points:[';
+			for (var p=0; p<dxf.polylines[c].points.length; p++) {
+				s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
+			}
+
+			//s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+			s += ']};\n';
+		}
+
+		// convert lines to millcrum
+		for (var c=0; c<dxf.lines.length; c++) {
+			s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
+			s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
+			s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
+
+			//s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+			s += ']};\n';
+		}
+
+
+		//console.log(dxf);
+		// for each line/polyline, do:
+		for (var c=0; c<dxf.polylines.length; c++) {
+			row[c] = dxf.polylines[c].layer
+		}
+		for (var c=0; c<dxf.lines.length; c++) {
+			row[c] = dxf.polylines[c].layer
+		}
+
+
+		Array.prototype.unique = function()
+		{
+			var n = {},r=[];
+			for(var i = 0; i < this.length; i++)
+			{
+				if (!n[this[i]])
+				{
+					n[this[i]] = true;
+					r.push(this[i]);
+				}
+			}
+			return r;
+		}
+
+		layers = [];
+		layers = row.unique();
+		//console.log(layers);
+		for (var c=0; c<layers.length; c++) {
+			$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input class=simplebox name=sp'+c+' id=sp'+c+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+c+' id=pwr'+c+' value=100>&nbsp;%</td></tr>');
+		}
+
+
+
+
+
+	$('#generate').hide();
+	$('#dxfparamstomc').show();
+	$('#svgparamstomc').hide();
+	$('#cutParams').modal('toggle');
+	document.getElementById('fileName').value = fileName;
+
+});
+
+
+$('#generatePreview').on('click', function() {
+	//generateOutputFile();
+	//$('#gearGenerator').modal('toggle');  // Close Modal
+	fileName = 'Gear Generator';
+	dxf = new Dxf();
+	pwr = {};
+	cutSpeed = {};
+	row = [];
+
+	$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
+	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+	dxf = new Dxf();
+	dxf.parseDxf($('#dxf').val());
+
+	var errStr = '';
+	if (dxf.invalidEntities.length > 0) {
+		for (var c=0; c<dxf.invalidEntities.length; c++) {
+			errStr += 'Invalid Entity: '+dxf.invalidEntities[c] + '\n';
+			}
+		errStr += '\n';
+	}
+
+	if (dxf.alerts.length > 0) {
+		for (var c=0; c<dxf.alerts.length; c++) {
+			errStr += dxf.alerts[c] + '\n\n';
+		}
+	}
+
+	if (errStr != '') {
+		console.log('DXF Errors:'+errStr);
+		$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	}
+
+		s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
+		s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
+		s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
+
+		// convert polylines to millcrum
+		for (var c=0; c<dxf.polylines.length; c++) {
+			if (dxf.polylines[c].layer == '') {
+				// name it polyline+c
+				dxf.polylines[c].layer = 'polyline'+c;
+			}
+			s += '//LAYER '+dxf.polylines[c].layer+'\n';
+			s += 'var polyline'+c+' = {type:\'polygon\',name:\''+dxf.polylines[c].layer+'\',points:[';
+			for (var p=0; p<dxf.polylines[c].points.length; p++) {
+				s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
+			}
+
+			//s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+			s += ']};\n';
+		}
+
+		// convert lines to millcrum
+		for (var c=0; c<dxf.lines.length; c++) {
+			s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
+			s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
+			s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
+
+			//s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
+			s += ']};\n';
+		}
+
+
+		//console.log(dxf);
+		// for each line/polyline, do:
+		for (var c=0; c<dxf.polylines.length; c++) {
+			row[c] = dxf.polylines[c].layer
+		}
+		for (var c=0; c<dxf.lines.length; c++) {
+			row[c] = dxf.polylines[c].layer
+		}
+
+
+		Array.prototype.unique = function()
+		{
+			var n = {},r=[];
+			for(var i = 0; i < this.length; i++)
+			{
+				if (!n[this[i]])
+				{
+					n[this[i]] = true;
+					r.push(this[i]);
+				}
+			}
+			return r;
+		}
+
+		layers = [];
+		layers = row.unique();
+		//console.log(layers);
+		for (var c=0; c<layers.length; c++) {
+			$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input class=simplebox name=sp'+c+' id=sp'+c+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+c+' id=pwr'+c+' value=100>&nbsp;%</td></tr>');
+		}
+
+
+
+
+
+	$('#generate').hide();
+	$('#dxfparamstomc').show();
+	$('#svgparamstomc').hide();
+	//$('#cutParams').modal('toggle');
+	document.getElementById('fileName').value = fileName;
+
+	//console.log(layers);
+	// for each line/polyline, do:
+	for (var c=0; c<dxf.polylines.length; c++) {
+		var lay = layers.indexOf(dxf.polylines[c].layer);
+		//console.log(lay);
+		pwr[c] = $('#pwr'+lay).val();
+		cutSpeed[c] = $('#sp'+lay).val();
+		s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', 100, 3200, [0,0]);\n\n';
+	}
+	for (var c=0; c<dxf.lines.length; c++) {
+		s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', 100, 3200, [0,0]);\n\n';
+	}
+
+	s += '\nmc.get();\n';
+
+	// load the new millcrum code
+	document.getElementById('millcrumCode').value = s;
+	document.getElementById('gcodepreview').value = '';
+
+	$('#mcC').click();
+	document.getElementById('fileName').value = fileName;
+	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
+	$('#sendToLaser').removeClass('disabled');
+	generate.click();
+	document.getElementById('fileInputGcode').value = '';
+	document.getElementById('fileInputDXF').value = '';
+	//document.getElementById('fileInputSVG').value = '';
+	//document.getElementById('fileInputMILL').value = '';
+	$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
+	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+
+
+});
+
+
 	// open Gear Generator (courtesy of http://hessmer.org/gears/InvoluteSpurGearBuilder.html)
 	$('#gearButton').on('click', function() {
 		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
 		$('#sendToLaser').addClass('disabled');
+		var gCurrentFile = null;
+		var gProcessor=null;
+
 		$('#gearGenerator').modal('toggle');
+
 
 		document.getElementById('fileName').value = fileName;
 		$('#mainStatus').html('Status: Gear Generator loaded ...');
@@ -1633,4 +1899,40 @@ $(document).ready(function() {
 
 		}
 	});
+
+	$('#code').bind('input propertychange', function() {
+			console.log('empty');
+				// Todo if empty
+				if(this.value.length){
+					updateSolid();
+					console.log('full');
+				}
+	});
+
+	// OpenJsCad
+	$('#jsEA').on('click', function() {
+		$('#jsE').addClass('active');
+		$('#jsV').removeClass('active');
+		$('#jsD').removeClass('active');
+		$('#jsEdit').show();
+		$('#jsDXF').hide();
+		$('#jsView').hide();
+	});
+	$('#jsVA').on('click', function() {
+		$('#jsV').addClass('active');
+		$('#jsE').removeClass('active');
+		$('#jsD').removeClass('active');
+		$('#jsEdit').hide();
+		$('#jsDXF').hide();
+		$('#jsView').show();
+	});
+	$('#jsDA').on('click', function() {
+		$('#jsD').addClass('active');
+		$('#jsE').removeClass('active');
+		$('#jsV').removeClass('active');
+		$('#jsEdit').hide();
+		$('#jsView').hide();
+		$('#jsDXF').show();
+	});
+
 });
