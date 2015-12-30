@@ -19,7 +19,9 @@ Then every day, run ```./update.sh ```
 
 ## Changelog
 
+* 30 Dec 2014: Added a parametric Tabbed Box Generator based on http://ingegno.be/Manuals/openjscad/boxmaker.html
 * 30 Dec 2015: Added a parametric Gear Generator based on hessmer.org/gears/InvoluteSpurGearBuilder.html
+* 30 Dec 2015: Added a OpenJSCAD based engine to allow in-Laserweb apps like the ones above
 * 27 Dec 2015: Added a little more instructions to readme
 * 26 Dec 2015: Consider SVG broken for now. Please test DXF etc  - we may need to switch to a different SVG Library - let me know if you can help
 * 25 Dec 2015: Added per-layer (DXF) and per-path (SVG) Laser Power and Feedrate settings to the DXF/SVG Importing code

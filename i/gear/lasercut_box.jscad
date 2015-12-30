@@ -45,15 +45,15 @@ function getParameterDefinitions()
     {name: 'thick', type: 'float', initial: 3, caption: "Material Thickness:", captionEN: "Thickness of the material:"},
     {name: 'kerf', type: 'float', initial: 0.16, caption: "Laser beam kerf in mm:", captionEN: "Width of laser beam cut in mm:"},
 
-    {
-      name: 'type',
-      type: 'choice',
-      values: ["ASSEMBLED", "LASER", "3D"],
-      captions: ["Assembled", "Lasercut (DXF output)", "3D print (STL output)"],
-      captionsEN: ["Assembled", "Lasercut plate (DXF output)", "3D print plate (STL output)"],
-      caption: 'Layout:',     // optional
-      initial: "LASER"  // optional, default selected value, first item if omitted
-    },
+    //{
+    //  name: 'type',
+    //  type: 'choice',
+    //  values: ["ASSEMBLED", "LASER", "3D"],
+    //  captions: ["Assembled", "Lasercut (DXF output)", "3D print (STL output)"],
+    //  captionsEN: ["Assembled", "Lasercut plate (DXF output)", "3D print plate (STL output)"],
+    //  caption: 'Layout:',     // optional
+    //  initial: "LASER"  // optional, default selected value, first item if omitted
+    //},
     {
       name: 'openlid',
       type: 'choice',
@@ -70,7 +70,7 @@ function getParameterDefinitions()
       values: ["ALL", "BOTTOM", "TOP", "LEFT", "RIGHT", "FRONT", "BACK"],
       captions: ["All Sides", "Bottom", "Top", "Left", "Right", "Front", "Back"],
       captionsEN: ["All Sides", "Bottom", "Top", "Left", "Right", "Front", "Back"],
-      caption: 'Toon:',
+      caption: 'Display:',
       captionEN: 'Show:',
       initial: "ALL"
     },
@@ -128,16 +128,19 @@ function main(params)
     thick = params.thick;
     kerf = params.kerf;
 
-    if (params.type == "ASSEMBLED") {
-        lasercut_frame = false;
-        on_plate = false;
-    } else if (params.type == "LASER") {
-        lasercut_frame = true;
-        on_plate = true;
-    } else { //3D
-        lasercut_frame = false;
-        on_plate = true;
-    }
+    //if (params.type == "ASSEMBLED") {
+    //    lasercut_frame = false;
+    //    on_plate = false;
+    //} else if (params.type == "LASER") {
+    //    lasercut_frame = true;
+    //    on_plate = true;
+    //} else { //3D
+    //    lasercut_frame = false;
+    //    on_plate = true;
+    //}
+    // Replaced Params with Hard coded - Laserweb needs 2D always
+    lasercut_frame = true;
+    on_plate = true;
 
     if (params.openlid == "CLOSED") openlid = false;
     if (params.openlid == "OPEN") openlid = true;
@@ -275,12 +278,20 @@ function main(params)
         //2D projection
         var z0basis = CSG.OrthoNormalBasis.Z0Plane();
         var shape1_2d = shape1.projectToOrthoNormalBasis(z0basis);
+        var minx = shape1_2d.getBounds()[0].x;
+        var miny = shape1_2d.getBounds()[0].y;
+        shape1_2d = shape1_2d.translate([(minx * -1),(miny * -1),0]);
         var shape2_2d = shape2.projectToOrthoNormalBasis(z0basis);
+        shape2_2d = shape2_2d.translate([(minx * -1),(miny * -1),0]);
         var shape3_2d = shape3.projectToOrthoNormalBasis(z0basis);
+        shape3_2d = shape3_2d.translate([(minx * -1),(miny * -1),0]);
         if (!openlid)
-            var shape4_2d = shape4.projectToOrthoNormalBasis(z0basis);
+            var shape4_2d = shape4.projectToOrthoNormalBasis(z0basis),
+            shape4_2d = shape4_2d.translate([(minx * -1),(miny * -1),0]);
         var shape5_2d = shape5.projectToOrthoNormalBasis(z0basis);
+        shape5_2d = shape5_2d.translate([(minx * -1),(miny * -1),0]);
         var shape6_2d = shape6.projectToOrthoNormalBasis(z0basis);
+        shape6_2d = shape6_2d.translate([(minx * -1),(miny * -1),0]);
         if (side_to_show == 0 && !openlid) {
             return new CAG().union( [shape1_2d, shape2_2d, shape3_2d, shape4_2d, shape5_2d, shape6_2d]);
         } else if (side_to_show == 0 && openlid) {
