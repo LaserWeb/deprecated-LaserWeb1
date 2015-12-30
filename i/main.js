@@ -971,7 +971,7 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
-	$("#gearGenerator").draggable({
+	$("#openJSCADUI").draggable({
 		handle: ".modal-header"
 	});
 
@@ -1194,7 +1194,7 @@ $(document).ready(function() {
 
 $('#generateOutputFileButton2').on('click', function() {
 	OpenJsCad.Processor.prototype.generateOutputFile();
-	$('#gearGenerator').modal('toggle');  // Close Modal
+	$('#openJSCADUI').modal('toggle');  // Close Modal
 	fileName = 'Gear Generator';
 	dxf = new Dxf();
 	pwr = {};
@@ -1455,7 +1455,7 @@ $('#generatePreview').on('click', function() {
 		loadGeargen();
 
 
-		$('#gearGenerator').modal('toggle');
+		$('#openJSCADUI').modal('toggle');
 
 
 		document.getElementById('fileName').value = fileName;
@@ -1471,6 +1471,32 @@ $('#generatePreview').on('click', function() {
 
 });
 
+
+$('#boxButton').on('click', function() {
+	$('#console').append('<br><span style="color: #060606;"><u><b>Opening OpenJSCAD</b></u></span><br>');
+	$('#sendToLaser').addClass('disabled');
+	var gCurrentFile = null;
+	var gProcessor=null;
+
+	loadBoxgen();
+
+
+
+	$('#openJSCADUI').modal('toggle');
+
+
+	document.getElementById('fileName').value = fileName;
+	$('#mainStatus').html('Status: Gear Generator loaded ...');
+	$('#sendToLaser').removeClass('disabled');
+	generate.click();
+	document.getElementById('fileInputGcode').value = '';
+	document.getElementById('fileInputDXF').value = '';
+	//document.getElementById('fileInputSVG').value = '';
+	//document.getElementById('fileInputMILL').value = '';
+	$('#console').append('<p class="pf" style="color: #000000;"><b>Gear Generator Complete...</b></p>');
+	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+});
 
 /* // Taking out SVG support  - https://github.com/openhardwarecoza/LaserWeb/issues/27
 	// open .svg (File Open Function)
