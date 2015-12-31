@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>LaserWeb - A fully featured Web UI for Lasercutters running Marlin or Smoothieware</title>
+
+ <!-- Socket and UI -->
+	<script src="../jquery.min.js"></script>
+	<script src="../jquery-ui.js"></script>
+	<script src="../bootstrap.min.js"></script>
+	<script src="../bootstrap-notify.js"></script>
+
+  <link rel="stylesheet" href="../bootstrap.min.css" />
+  <link rel="stylesheet" href="../bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="../bootstrap-notify.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+
+  <script type="text/javascript" src="paper-full.js"></script>
+
+
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+var paperscript = {};
+
+function onFileSelected(event) {
+  var selectedFile = event.target.files[0];
+  var reader = new FileReader();
+
+  var imgtag = document.getElementById("origImage");
+  imgtag.title = selectedFile.name;
+
+  reader.onload = function(event) {
+    imgtag.src = event.target.result;
+    var img = document.getElementById('origImage');
+    var width = img.clientWidth;
+    var height = img.clientHeight;
+    window.globals = {
+        imgW: [width],
+        imgH: [height]
+    };
+  };
+
+  reader.readAsDataURL(selectedFile);
+
+  window.paper.RasterNow();
+}
+
+</script>
+
+
+<script type="text/paperscript" canvas="canvas-1">
+      this.RasterNow = function(){
+          // Create a raster item using the image tag with id='mona'
+        var raster = new Raster('origImage');
+        // Hide the raster:
+        //aster.visible = true;
+        raster.visible = false;
+
+        // The size of our grid cells:
+        var gridSize = 2;
+
+        // Space the cells by 120%:
+        var spacing = 1.0;
+
+        // As the web is asynchronous, we need to wait for the raster to load
+        // before we can perform any operation on its pixels.
+        raster.on('load', function() {
+        	// Since the example image we're using is much too large,
+        	// and therefore has way too many pixels, lets downsize it
+
+
+          var imgheight = globals.imgH;
+          var imgwidth = globals.imgW;
+
+          console.log('Width: '+imgwidth+'  Height: '+imgheight);
+
+        	//raster.size = new Size(imgwidth, imgheight);
+
+          s = '';
+
+        	for (var y = 0; y < raster.height; y++) {
+            for(var x = 0; x < raster.width; x++) {
+        			// Get the color of the pixel:
+        			var color = raster.getPixel(x, y);
+
+        			// Create a circle shaped path:
+        			var path = new Path.Circle({
+        				center: new Point(x, y) * gridSize,
+        				radius: gridSize / 2 / spacing,
+        				fillColor: 'black'
+        			});
+
+        			// Scale the path by the amount of gray in the pixel color:
+        			path.scale(1 - color.gray);
+              posx = x /10
+              posy = y/10
+              s += 'G1 X'+posx+' Y'+posy+' S'+color.gray+'\n';
+        		}
+          }
+
+        	// Move the active layer to the center of the view, so all
+        	// the created paths in it appear centered.
+        	project.activeLayer.position = view.center;
+          console.log(s);
+        });
+}
+</script>
+
+<table>
+  <th>Import Graycale Image</th>
+  <th>Raster Result</th>
+  <tr><td><img id="origImage">
+    <br>
+    <input type="file" onchange="onFileSelected(event)">
+    <div id="slider"></div>
+  </td>
+<td><div class="canvas">
+<canvas width="600px" height="600px" id="canvas-1"></canvas>
+</div>
+</td>
+</tr>
+</table>
+
+</body>
+</html>

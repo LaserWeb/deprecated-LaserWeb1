@@ -74,14 +74,14 @@ function getParameterDefinitions()
       captionEN: 'Show:',
       initial: "ALL"
     },
-    {name: 'hw1', type: 'float', initial: 0, caption: "Hole bottom width:", captionEN: "Hole bottom width:"},
-    {name: 'hh1', type: 'float', initial: 0, caption: "Hole bottom height:", captionEN: "Hole bottom height:"},
-    {name: 'hw4', type: 'float', initial: 0, caption: "Hole top width:", captionEN: "Hole top width:"},
-    {name: 'hh4', type: 'float', initial: 0, caption: "Hole top height:", captionEN: "Hole top height:"},
-    {name: 'hw2', type: 'float', initial: 0, caption: "Hole left width:", captionEN: "Hole left width:"},
-    {name: 'hh2', type: 'float', initial: 0, caption: "Hole left height:", captionEN: "Hole left height:"},
-    {name: 'hw3', type: 'float', initial: 0, caption: "Hole front width:", captionEN: "Hole front width:"},
-    {name: 'hh3', type: 'float', initial: 0, caption: "Hole front height:", captionEN: "Hole front height:"},
+    {name: 'hw1', type: 'float', initial: 0, caption: "Cutout bottom width:", captionEN: "Cutout bottom width:"},
+    {name: 'hh1', type: 'float', initial: 0, caption: "Cutout bottom height:", captionEN: "Cutout bottom height:"},
+    {name: 'hw4', type: 'float', initial: 0, caption: "Cutout top width:", captionEN: "Cutout top width:"},
+    {name: 'hh4', type: 'float', initial: 0, caption: "Cutout top height:", captionEN: "Cutout top height:"},
+    {name: 'hw2', type: 'float', initial: 0, caption: "Cutout left width:", captionEN: "Cutout left width:"},
+    {name: 'hh2', type: 'float', initial: 0, caption: "Cutout left height:", captionEN: "Cutout left height:"},
+    {name: 'hw3', type: 'float', initial: 0, caption: "Cutout front width:", captionEN: "Cutout front width:"},
+    {name: 'hh3', type: 'float', initial: 0, caption: "Cutout front height:", captionEN: "Cutout front height:"},
 
   ];
 }
