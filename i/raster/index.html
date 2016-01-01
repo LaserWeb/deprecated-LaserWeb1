@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -9,15 +10,47 @@
 <title>LaserWeb - A fully featured Web UI for Lasercutters running Marlin or Smoothieware</title>
 
  <!-- Socket and UI -->
-	<script src="../jquery.min.js"></script>
-	<script src="../jquery-ui.js"></script>
-	<script src="../bootstrap.min.js"></script>
-	<script src="../bootstrap-notify.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/jquery.min.js"></script>
+	<script src="/jquery-ui.js"></script>
+	<script src="/bootstrap.min.js"></script>
+	<script src="/bootstrap-notify.js"></script>
+	<script src="/main.js"></script>
 
-  <link rel="stylesheet" href="../bootstrap.min.css" />
-  <link rel="stylesheet" href="../bootstrap-theme.min.css" />
-  <link rel="stylesheet" href="../bootstrap-notify.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+ <!-- v70 Three.js -->
+	<script src="/openjscad/lib/three.min.js"></script>
+	<script src="/openjscad/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
+	<script src="/openjscad/lib/orbitcontrols.js"></script>
+	<script src="/gcode-viewer/gcode-parser.js"></script>
+	<script src="/gcode-viewer/renderer.js"></script>
+	<script src="/gcode-viewer/ui.js"></script>
+
+ <!-- Millcrum -->
+	<script type="text/javascript" src="/millcrum/inc/mc.js"></script>
+	<script type="text/javascript" src="/millcrum/inc/dxf.js"></script>
+	<script type="text/javascript" src="/millcrum/inc/svg.js"></script>
+
+	<link rel="stylesheet" href="/jquery-ui.css" />
+	<link rel="stylesheet" href="/bootstrap.min.css" />
+	<link rel="stylesheet" href="/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="/bootstrap-notify.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/screen.css" />
+
+	<!-- Gear Generator : http://hessmer.org/gears/InvoluteSpurGearBuilder.html-->
+
+	<!-- fallback if no WebGL -->
+  <script src="/openjscad/lib/projector.js"></script>
+  <script src="/openjscad/lib/canvasrenderer.js"></script>
+  <script src="/openjscad/src/csg.js"></script>
+  <script src="/openjscad/src/threecsg.js"></script>
+  <script src="/openjscad/src/openjscad.js"></script>
+	<script src="/openjscad/src/openscad.js"></script>
+  <script src="/openjscad/src/formats.js"></script>
+  <script src="/openjscad/TrackballControls.js"></script>
+	<link rel="stylesheet" href="/openjscad/openjscad.css" type="text/css">
+	<script src="/openjscad/LaserWebapps.js"></script> <!-- Add additional OpenJSCAD apps init scripts in here -->
+
   <style>
   #canvas-1 {
     border: 0px solid blue;
@@ -99,6 +132,7 @@ function onFileSelected(event) {
 
           console.log('Width: '+imgwidth+'  Height: '+imgheight);
 
+          // Resize the raster if needed
         	//raster.size = new Size(imgwidth, imgheight);
 
           s = ''; // Resultant gcode
@@ -119,13 +153,13 @@ function onFileSelected(event) {
         				fillColor: 'black'
         			});
 
-        			// Scale the path by the amount of gray in the pixel color:
-
-
+  			      // Scale the path by the amount of gray in the pixel color:
               var grayLevel = color.gray.toFixed(1);  // var grayLevel = color.gray.toFixed(2); // two decimal precision is plenty - for testing I will drop it to 1 decimal (10% increments)
               path.scale(1 - grayLevel);
-              posx = x / 10;
-              posy = y / 10;
+
+              // Start generating GCode
+              posx = x / 10; // divide by 10 gives us a 0.1mm spot size. Realistically in CO2 and diode lasers its closer to a 0.2mm - will add UI elements to tweak
+              posy = y / 10; // divide by 10 gives us a 0.1mm spot size. Realistically in CO2 and diode lasers its closer to a 0.2mm - will add UI elements to tweak
 
               // Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
               if (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
@@ -157,7 +191,7 @@ function onFileSelected(event) {
           console.log('Optimsed by number of line: '+skip);
           console.log('Number of GCode Moves: '+c);
         });
-}
+  }
 </script>
 
 <table style="border: 1px solid #000000;">
@@ -166,7 +200,6 @@ function onFileSelected(event) {
   </tr>
   <tr>
     <td style="vertical-align: top;">
-      <input type="file" onchange="onFileSelected(event)">
       Imported Image Dimensions: <span id="dims">0px x 0 px</span></span>
     </td>
     <td style="vertical-align: top;">
@@ -184,7 +217,34 @@ function onFileSelected(event) {
   </tr>
   <tr>
     <td style="vertical-align: top;">
-      <div id="slider"></div>
+      <div class="btn-group input-group  btn-group-justified">
+        <div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-folder-open fa-lg"></i></button></div>
+        <div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">GCODE <input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button></div>
+        <div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf" id="fileInputDXF" /></button></div>
+        <div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+            <span>OpenJSCAD</span>
+            <span class="caret"></span>
+          </button>
+        <ul class="dropdown-menu">
+            <li><a id="gearButton" href="#">Gear Generator</a></li>
+            <li><a id="boxButton" href="#">Tabbed Box</a></li>
+
+          </ul>
+        </div>
+        <!-- div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">SVG <input type="file" accept=".svg" id="fileInputSVG" /></button></div -->
+        <!-- div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">MC <input type="file" accept=".millcrum,.mill,.js" id="fileInputMILL" /></button></div -->
+      </div>
+      <p>
+      <!--onchange="onFileSelected(event)" -->
+
+      <div class="input-group" style="margin-bottom:10px; width: 100%;">
+				<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-arrows-v fa-lg" style="margin-right: 20px;"></i>Laser Spot Size:</span>
+				<input type="text" class="form-control" value="0.1" id="spotSize">
+				<span class="input-group-addon"  style="width: 60px;">mm</span>
+			</div>
+
+
     </td>
     <td style="vertical-align: top;">
       <textarea id="code" style="width: 565px; height: 200px;"></textarea>

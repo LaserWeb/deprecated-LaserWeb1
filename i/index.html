@@ -131,7 +131,7 @@
 			<div class="btn-group input-group  btn-group-justified">
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-folder-open fa-lg"></i></button></div>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">GCODE <input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button></div>
-				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf"" id="fileInputDXF" /></button></div>
+				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf" id="fileInputDXF" /></button></div>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
 				    <span>OpenJSCAD</span>
@@ -176,7 +176,7 @@
 			<!-- Gcode Tab -->
 			<div id="gcPosition">
 				<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; " id="gcodepreview"></textarea>
-				<a class="btn btn-info" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="saveGcode"><i class="fa fa-floppy-o fa-lg"" style="margin-right: 20px;"></i>Save GCODE</a>
+				<a class="btn btn-info" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="saveGcode"><i class="fa fa-floppy-o fa-lg" style="margin-right: 20px;"></i>Save GCODE</a>
 
 			</div>
 
@@ -234,7 +234,7 @@ Send to Laser</button></div>
 					<span class="input-group-addon"  style="width: 60px;">&deg;</span>
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>/div>
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg"" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>/div>
 					</div>
 				</div>
 
@@ -258,10 +258,10 @@ Send to Laser</button></div>
 					<input type="hidden" value="" id="BBXMAX">
 					<input type="hidden" value="" id="BBYMAX">
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="translate"><i class="fa fa-arrows fa-lg"" style="margin-right: 3px;"></i>Move</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="translate"><i class="fa fa-arrows fa-lg" style="margin-right: 3px;"></i>Move</a></div>
 
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="flip"><i class="fa fa-exchange fa-lg"" style="margin-right: 3px;"></i>Mirror</a></div>
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="noneg"><i class="fa fa-wrench fa-lg"" style="margin-right: 3px;"></i>Fix 0,0</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="flip"><i class="fa fa-exchange fa-lg" style="margin-right: 3px;"></i>Mirror</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-danger" id="noneg"><i class="fa fa-wrench fa-lg" style="margin-right: 3px;"></i>Fix 0,0</a></div>
 
 					</div>
 				</div>
@@ -287,8 +287,8 @@ Send to Laser</button></div>
 			</div>
 
 			<!-- Button to open Jogging and Machine Control Widget -->
-			<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-cogs fa-lg"" style="margin-right: 20px;"></i>Machine Control</a>
-			<br><a class="btn btn-success" style="width: 100%; height: 36px; padding-bottom: 5px; display: none;"  id="webcambutton"><i class="fa fa-video-camera fa-lg"" style="margin-right: 20px;"></i>Webcam</a>
+			<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-cogs fa-lg" style="margin-right: 20px;"></i>Machine Control</a>
+			<br><a class="btn btn-success" style="width: 100%; height: 36px; padding-bottom: 5px; display: none;"  id="webcambutton"><i class="fa fa-video-camera fa-lg" style="margin-right: 20px;"></i>Webcam</a>
 
 			<hr style="clear: both;" />
 
@@ -580,8 +580,8 @@ Send</button>
 					</div>
 				   </div>
 				</div>
-			 	<button type="button" class="btn btn-secondary btn-success" style="width: 100%;" id="zeroWork"><i class="fa fa-dot-circle-o fa-lg"" style="margin-right: 20px;"></i>Zero Machine (G92)</button>
-				<button type="button" class="btn btn-secondary btn-warning" style="width: 100%;" id="motorsOff"><i class="fa fa-power-off fa-lg"" style="margin-right: 20px;"></i>Motors Off (M84)</button>
+			 	<button type="button" class="btn btn-secondary btn-success" style="width: 100%;" id="zeroWork"><i class="fa fa-dot-circle-o fa-lg" style="margin-right: 20px;"></i>Zero Machine (G92)</button>
+				<button type="button" class="btn btn-secondary btn-warning" style="width: 100%;" id="motorsOff"><i class="fa fa-power-off fa-lg" style="margin-right: 20px;"></i>Motors Off (M84)</button>
 				<div class="btn-group input-group  btn-group-justified" id="AirGrp" style="display: none;">
 					<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-power fa-lg"></i>Air Assist</button></div>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" id="AirOn">On</button></div>

@@ -1193,8 +1193,9 @@ $(document).ready(function() {
 
 
 $('#generateOutputFileButton2').on('click', function() {
-	OpenJsCad.Processor.prototype.generateOutputFile();
+	//generateOutputFile();
 	$('#openJSCADUI').modal('toggle');  // Close Modal
+	console.log('Previewing');
 	fileName = 'Gear Generator';
 	dxf = new Dxf();
 	pwr = {};
@@ -1256,6 +1257,7 @@ $('#generateOutputFileButton2').on('click', function() {
 			//s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 			s += ']};\n';
 		}
+
 
 		//console.log(dxf);
 		// for each line/polyline, do:
