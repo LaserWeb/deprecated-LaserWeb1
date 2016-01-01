@@ -19,6 +19,7 @@ Then every day, run ```./update.sh ```
 
 ## Changelog
 
+* 31 Dec 2015: Working Javascript/PaperScript based Raster to GCODE code committed - long way from a fully support Raster Engraving solution, but thats the first most major step done:  See detailed implementation log on https://github.com/openhardwarecoza/LaserWeb/issues/32
 * 30 Dec 2014: Added a parametric Tabbed Box Generator based on http://ingegno.be/Manuals/openjscad/boxmaker.html
 * 30 Dec 2015: Added a parametric Gear Generator based on hessmer.org/gears/InvoluteSpurGearBuilder.html
 * 30 Dec 2015: Added a OpenJSCAD based engine to allow in-Laserweb apps like the ones above

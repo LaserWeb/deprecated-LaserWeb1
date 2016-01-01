@@ -18,7 +18,15 @@
   <link rel="stylesheet" href="../bootstrap-theme.min.css" />
   <link rel="stylesheet" href="../bootstrap-notify.css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <style>
+  #canvas-1 {
+    border: 0px solid blue;
+    }
+  th, td {
+      border-bottom: 1px solid #ddd;
+  }
 
+  </style>
 
   <script type="text/javascript" src="paper-full.js"></script>
 
@@ -47,6 +55,9 @@ function onFileSelected(event) {
         imgW: [width],
         imgH: [height]
     };
+    $("#dims").text(width+'px x '+height+'px');
+    $('#canvas-1').prop('width', (width*3));
+    $('#canvas-1').prop('height', (height*3));
   };
 
   reader.readAsDataURL(selectedFile);
@@ -59,17 +70,22 @@ function onFileSelected(event) {
 
 <script type="text/paperscript" canvas="canvas-1">
       this.RasterNow = function(){
+        // Clear previous canvas
+        var path = '';
+        project.clear();
+        var raster = '';
+        lastgrey = '';
           // Create a raster item using the image tag with id='mona'
         var raster = new Raster('origImage');
         // Hide the raster:
-        //aster.visible = true;
+        //raster.visible = true;
         raster.visible = false;
 
         // The size of our grid cells:
-        var gridSize = 2;
+        var gridSize = 3;
 
         // Space the cells by 120%:
-        var spacing = 1.0;
+        var spacing = 1.3;
 
         // As the web is asynchronous, we need to wait for the raster to load
         // before we can perform any operation on its pixels.
@@ -85,7 +101,11 @@ function onFileSelected(event) {
 
         	//raster.size = new Size(imgwidth, imgheight);
 
-          s = '';
+          s = ''; // Resultant gcode
+          c = 0; // Keep count of Gcode lines so we can optimise, lower = better
+          xm = 0; // Keep count of Gcode lines so we can optimise, lower = better
+          //skip = '';
+          skip = 0;
 
         	for (var y = 0; y < raster.height; y++) {
             for(var x = 0; x < raster.width; x++) {
@@ -100,35 +120,78 @@ function onFileSelected(event) {
         			});
 
         			// Scale the path by the amount of gray in the pixel color:
-        			path.scale(1 - color.gray);
-              posx = x /10
-              posy = y/10
-              s += 'G1 X'+posx+' Y'+posy+' S'+color.gray+'\n';
+
+
+              var grayLevel = color.gray.toFixed(1);  // var grayLevel = color.gray.toFixed(2); // two decimal precision is plenty - for testing I will drop it to 1 decimal (10% increments)
+              path.scale(1 - grayLevel);
+              posx = x / 10;
+              posy = y / 10;
+
+              // Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
+              if (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
+                console.log('Could Optimise');
+                posx = posx.toFixed(1);
+                posy = posy.toFixed(1);
+                //skip += 'G1 X'+posx+' Y'+posy+' S'+grayLevel+'\n'
+                skip++;
+                xm++;
+              } else {
+                if (xm > 0) {
+                  posx = posx + (xm / 1000);
+                }
+                posx = posx.toFixed(1);
+                posy = posy.toFixed(1);
+                s += 'G1 X'+posx+' Y'+posy+' S'+grayLevel+'\n';
+                  c++;
+                  xm = 0;
+              }
+              var lastGrey = grayLevel; // store to compare
         		}
           }
 
         	// Move the active layer to the center of the view, so all
         	// the created paths in it appear centered.
-        	project.activeLayer.position = view.center;
+        	//project.activeLayer.position = view.center;
           console.log(s);
+          document.getElementById('code').value = s;
+          console.log('Optimsed by number of line: '+skip);
+          console.log('Number of GCode Moves: '+c);
         });
 }
 </script>
 
-<table>
-  <th>Import Graycale Image</th>
-  <th>Raster Result</th>
-  <tr><td><img id="origImage">
-    <br>
-    <input type="file" onchange="onFileSelected(event)">
-    <div id="slider"></div>
-  </td>
-<td><div class="canvas">
-<canvas width="600px" height="600px" id="canvas-1"></canvas>
-</div>
-</td>
-</tr>
+<table style="border: 1px solid #000000;">
+  <tr>
+    <th>Import Graycale Image</th> <th>Raster Result</th>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      <input type="file" onchange="onFileSelected(event)">
+      Imported Image Dimensions: <span id="dims">0px x 0 px</span></span>
+    </td>
+    <td style="vertical-align: top;">
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      <img id="origImage">
+    </td>
+    <td style="vertical-align: top;">
+      <div class="canvas" id="rasterOutput">
+        <canvas id="canvas-1"></canvas>
+        </div>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      <div id="slider"></div>
+    </td>
+    <td style="vertical-align: top;">
+      <textarea id="code" style="width: 565px; height: 200px;"></textarea>
+    </td>
 </table>
+
+
 
 </body>
 </html>
