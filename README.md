@@ -80,7 +80,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 You must share the source of your project and notify the original author via email in plain english if you include or use this code, even if it is included or used as a library on the web.
 
-If you would like to include this code in a project which is not licensed under the AGPL V3, please contact the author at andrewhodel@gmail.com
 
 
 ## Serial baud rate
