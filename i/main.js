@@ -1207,7 +1207,7 @@ $('#generateOutputFileButton2').on('click', function() {
 
 	dxf = new Dxf();
 	dxf.parseDxf($('#dxf').val());
-
+	/*
 	var errStr = '';
 	if (dxf.invalidEntities.length > 0) {
 		for (var c=0; c<dxf.invalidEntities.length; c++) {
@@ -1227,6 +1227,7 @@ $('#generateOutputFileButton2').on('click', function() {
 		$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	}
+	*/
 
 		s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
 		s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
@@ -1319,7 +1320,7 @@ $('#generatePreview').on('click', function() {
 	dxf = new Dxf();
 	dxf.parseDxf($('#dxf').val());
 
-	var errStr = '';
+	/*var errStr = '';
 	if (dxf.invalidEntities.length > 0) {
 		for (var c=0; c<dxf.invalidEntities.length; c++) {
 			errStr += 'Invalid Entity: '+dxf.invalidEntities[c] + '\n';
@@ -1338,7 +1339,8 @@ $('#generatePreview').on('click', function() {
 		$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	}
-
+	*/
+	
 		s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
 		s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 		s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
