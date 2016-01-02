@@ -92,6 +92,7 @@ function onFileSelected(event) {
     var physwidth = $('#spotSize').val() * width;
     var physheight = $('#spotSize').val() * height;
     $("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm <br>');
+		$('#laserpwrslider').removeClass('disabled');
   };
 
   reader.readAsDataURL(selectedFile);
@@ -102,12 +103,34 @@ function onFileSelected(event) {
 
 $(document).ready(function() {
 
-	$('#rasterNow').on('click', function() {
+	$( "#laserpwrslider" ).slider({
+                range:true,
+                min: 0,
+                max: 100,
+                values: [ 30, 70 ],
+                slide: function( event, ui ) {
+                   $( "#laserpwr" ).val( "Power: " + ui.values[ 0 ] + "% - " + ui.values[ 1 ] + '%' );
+									 window.globals = {
+											 minpwr: [ui.values[ 0 ]],
+											 maxpwr: [ui.values[ 1 ]]
+									 };
+									 $('#rasterNow').removeClass('disabled');
+                }
+            });
 
+
+	$( "#laserpwr" ).val( "Power: " + $( "#laserpwrslider" ).slider( "values", 0 ) +
+	       "% - " + $( "#laserpwrslider" ).slider( "values", 1 ) +'%' );
+
+
+
+	$('#rasterNow').on('click', function() {
+		$('#load').show();
     var physwidth = $('#spotSize').val() * width;
     var physheight = $('#spotSize').val() * height;
     $("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm <br>');
-    window.paper.RasterNow();
+		window.paper.RasterNow();
+		$('#load').hide();
   });
 
 
@@ -129,11 +152,19 @@ $(document).ready(function() {
 
 <script type="text/paperscript" canvas="canvas-1">
       this.RasterNow = function(){
+				$('#load').show();
         // Clear previous canvas
         var path = '';
         project.clear();
         var raster = '';
         lastgrey = '';
+				intensity = '';
+				lastPosx = 0;
+				lastPosy = 0;
+				lastIntensity = 0;
+				var minIntensity = globals.minpwr;
+				var maxIntensity = globals.maxpwr;
+				console.log('Constraining Laser power between '+minIntensity+'% and '+maxIntensity+'%');
           // Create a raster item using the image tag with id='mona'
         var raster = new Raster('origImage');
         // Hide the raster:
@@ -168,43 +199,44 @@ $(document).ready(function() {
           //skip = 0;
 
         	for (var y = 0; y < raster.height; y++) {
-            for(var x = 0; x < raster.width; x++) {
-        			// Get the color of the pixel:
+						for(var x = 0; x < raster.width; x++) {
+							// Get the color of the pixel:
         			var color = raster.getPixel(x, y);
-
-        			// Create a circle shaped path:
-        			var path = new Path.Circle({
-        				center: new Point(x, y) * gridSize,
-        				radius: gridSize / 2 / spacing,
-        				fillColor: 'black'
-        			});
-
-  			      // Scale the path by the amount of gray in the pixel color:
+							// Scale the path by the amount of gray in the pixel color:
               var grayLevel = color.gray.toFixed(1);  // var grayLevel = color.gray.toFixed(2); // two decimal precision is plenty - for testing I will drop it to 1 decimal (10% increments)
-              path.scale(1 - grayLevel);
 
-              // Start generating GCode
-              posx = x / 10; // divide by 10 gives us a 0.1mm spot size. Realistically in CO2 and diode lasers its closer to a 0.2mm - will add UI elements to tweak
-              posy = y / 10; // divide by 10 gives us a 0.1mm spot size. Realistically in CO2 and diode lasers its closer to a 0.2mm - will add UI elements to tweak
+							// Start generating GCode
+							posx = x; // divide by 10 gives us a 0.1mm spot size. Realistically in CO2 and diode lasers its closer to a 0.2mm - will add UI elements to tweak
+							posy = y; // divide by 10 gives us a 0.1mm spot size. Realistically in CO2 and diode lasers its closer to a 0.2mm - will add UI elements to tweak
 
-              // Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
-              if (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
-                console.log('Could Optimise');
-                posx = posx.toFixed(1);
-                posy = posy.toFixed(1);
-                //skip += 'G1 X'+posx+' Y'+posy+' S'+grayLevel+'\n'
-                //skip++;
-                xm++;
-              } else {
-                if (xm > 0) {
-                  posx = posx + (xm / 1000);
-                }
-                posx = posx.toFixed(1);
-                posy = posy.toFixed(1);
-                s += 'G1 X'+posx+' Y'+posy+' S'+grayLevel+'\n';
-                  c++;
-                  xm = 0;
-              }
+							// Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
+							if (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
+							console.log('Could Optimise, still on '+grayLevel);
+							xm++;
+							} else {
+								if (xm > 0) {
+									posx = posx + (xm / 1000);
+								}
+								posx = posx.toFixed(1);
+								posy = posy.toFixed(1);
+								intensity = (1 -grayLevel) * 100;
+								intensity = intensity.toFixed(0);
+								s += 'G1 X'+posx+' Y'+posy+' S'+intensity+'\n';
+									c++;
+									xm = 0;
+									console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
+									path = new Path.Line({
+									    from: [(lastPosx * gridSize), (lastPosy * gridSize)],
+									    to: [(posx * gridSize), (posy * gridSize)],
+									    strokeColor: 'black'
+									});
+									path.strokeColor = 'black';
+									//path.scale(1 - grayLevel);
+									path.opacity = (lastIntensity / 100);
+									var lastPosx = posx;
+									var lastPosy = posy;
+									var lastIntensity = intensity;
+									}
               var lastGrey = grayLevel; // store to compare
         		}
           }
@@ -239,7 +271,15 @@ $(document).ready(function() {
         <span class="input-group-addon"  style="width: 60px;">mm</span>
       </div>
 
-      <div class="btn-group" role="group"><a class="btn btn-danger" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a></div></div>
+			<label for="price">Constrain Laser:</label>
+         <input type="text" id="laserpwr"
+            style="border:0; color:#aa0000; font-weight:bold;">
+      </p>
+      <div id="laserpwrslider"></div>
+
+			<br>
+			<div class="btn-group" role="group"><a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a></div></div>
+			<div id="load" style="display: none;"><img src="http://jimpunk.net/Loading/wp-content/uploads/loading1.gif"/></div>
 
     </td>
     <td style="vertical-align: top;">
@@ -253,6 +293,7 @@ $(document).ready(function() {
     </td>
     <td style="vertical-align: top;">
       Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span></span>
+
     </td>
   </tr>
   <tr>
