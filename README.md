@@ -106,6 +106,43 @@ On Windows 7 and above, please use the following instructions. We are assuming f
 5.  cd LaserWeb
 6.  npm install  (ignore any errors about socket.io failing to find vcbuild.exe, it has a built in fallback to pure JS when that happens, so its still fine.)
 
+## Vagrant
+
+For a clean testing environment use [Vagrant](http://www.vagrantup.com). For details on `"public_network"` see [VagrantDocs](http://docs.vagrantup.com/v2/networking/public_network.html).
+
+1. Open a terminal
+
+  ````
+  $ mkdir LaserWeb
+  $ cd LaserWeb
+  $ vagrant init
+  $ vagrant box add ubuntu/trusty64
+  ````
+
+2. Edit: `Vagrantfile`
+
+  ````ruby
+  config.vm.box = "hashicorp/precise32"
+  config.vm.network "public_network"
+  ````
+
+3. In the terminal
+
+  ````
+  $ vagrant up
+  $ vagrant ssh
+  $ sudo apt-get install nodejs nodejs-legacy npm build-essential git
+  $ git clone https://github.com/openhardwarecoza/LaserWeb.git
+  $ cd LaserWeb
+  $ npm install
+  ````
+4. Find public IP
+
+  `$ ifconfig` eth1 is your `"public_address"`
+
+5. Start LaserWeb! (Use `public_address:8000` on your local machine)
+
+  `$ nodejs server.js`
 
 
 ## Ubuntu
