@@ -179,7 +179,7 @@ Procedure courtery of @LordFennec : https://github.com/openhardwarecoza/LaserWeb
 5. Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
 6. Next install the npm modules by entering the following
 ```npm install serialport@1.6.1```
-```npm install socket.io node-static```
+```npm install socket.io node-static dotenv```
 7. Finally enter ```nodejs server.js```
 
 
