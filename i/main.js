@@ -259,22 +259,21 @@ $(document).ready(function() {
 
 
 	// Enable sendToLaser button, if we receive gcode in #gcodepreview
+
+
 	$('#gcodepreview').bind('input propertychange', function() {
-		$('#sendToLaser').addClass('disabled');
-        if(this.value.length){
+					$('#sendToLaser').addClass('disabled');
+			if(this.value.length){
+				  console.log('New Gcode');
+				  $('#sendToLaser').addClass('disabled');
+					$('#sendToLaser').removeClass('disabled');
+					openGCodeFromText();
+					$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
+							$('#openMachineControl').removeClass('disabled');
+					$('#sendCommand').removeClass('disabled');
 					$('#sendToLaser').removeClass('disabled');
         }
   });
-
-	$("#gcodepreview").change(function () {
-		openGCodeFromText();
-		$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
-        $('#openMachineControl').removeClass('disabled');
-		$('#sendCommand').removeClass('disabled');
-		$('#sendToLaser').removeClass('disabled');
-
-
-   	 });
 
 	// Send to laser button - start the job
 	$('#sendToLaser').on('click', function() {
@@ -993,6 +992,9 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
+	$("#rasterwidget").draggable({
+		handle: ".modal-header"
+	});
 
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
@@ -1987,5 +1989,136 @@ $('#boxButton').on('click', function() {
 		$('#jsDXF').show();
 	});
 
+	// Raster support
+
+
+	var paperscript = {};
+
+	$(document).ready(function() {
+
+		// OpenJsCad
+		$('#rasterT').on('click', function() {
+			$('#rasT').addClass('active');
+			$('#papT').removeClass('active');
+			$('#rasgcT').removeClass('active');
+			$('#rasterView').show();
+			$('#paperView').hide();
+			$('#rastergcView').hide();
+		});
+		$('#paperT').on('click', function() {
+			$('#rasT').removeClass('active');
+			$('#papT').addClass('active');
+			$('#rasgcT').removeClass('active');
+			$('#rasterView').hide();
+			$('#paperView').show();
+			$('#rastergcView').hide();
+		});
+		$('#rastergcDA').on('click', function() {
+			$('#rasT').removeClass('active');
+			$('#papT').removeClass('active');
+			$('#rasgcT').addClass('active');
+			$('#rasterView').hide();
+			$('#paperView').hide();
+			$('#rastergcView').show();
+		});
+
+
+		var paperscript = {};
+
+		var fileImg = document.getElementById('fileImage');
+
+		fileImg.addEventListener('change', function(e) {
+			$('#rasterwidget').modal('toggle');
+			var selectedFile = event.target.files[0];
+			var reader = new FileReader();
+
+			var imgtag = document.getElementById("origImage");
+			imgtag.title = selectedFile.name;
+
+			reader.onload = function(event) {
+				imgtag.src = event.target.result;
+				var img = document.getElementById('origImage');
+				width = img.clientWidth;
+				height = img.clientHeight;
+				$("#dims").text(width+'px x '+height+'px');
+				//$('#canvas-1').prop('width', (width*3));
+				//$('#canvas-1').prop('height', (height*3));
+				$('#canvas-1').prop('width', laserxmax);
+				$('#canvas-1').prop('height', laserymax);
+				var physwidth = $('#spotSize').val() * width;
+				var physheight = $('#spotSize').val() * height;
+				$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
+				$('#laserpwrslider').removeClass('disabled');
+			};
+
+			reader.readAsDataURL(selectedFile);
+		});
+
+		$( "#laserpwrslider" ).slider({
+				range:true,
+				min: 0,
+				max: 100,
+				values: [ 30, 70 ],
+				slide: function( event, ui ) {
+					$( "#laserpwr" ).val( "Power: " + ui.values[ 0 ] + "% - " + ui.values[ 1 ] + '%' );
+					minpwr = [ui.values[ 0 ]];
+					maxpwr = [ui.values[ 1 ]];
+					$('#rasterNow').removeClass('disabled');
+				}
+		});
+
+
+		$( "#laserpwr" ).val( "Power: " + $( "#laserpwrslider" ).slider( "values", 0 ) +
+					 "% - " + $( "#laserpwrslider" ).slider( "values", 1 ) +'%'
+		);
+
+		$('#rasterNow').on('click', function() {
+			spotSize = $('#spotSize').val();
+			laserFeed = $('#feedRate').val();
+			window.globals = {
+				  completed: function() { gcodereceived(); },
+					minpwr2: [minpwr],
+					maxpwr2: [maxpwr],
+					spotSize: [spotSize],
+					imgH: [height],
+					imgW: [width],
+					feed: [laserFeed]
+			};
+			window.paper.RasterNow(function() {
+				gcodereceived();
+			});
+		});
+
+		$('#spotSize').bind('input propertychange', function() {
+					//console.log('empty');
+					// Todo if empty
+					if(this.value.length){
+						var img = document.getElementById('origImage');
+						width = img.clientWidth;
+						height = img.clientHeight;
+						$("#dims").text(width+'px x '+height+'px');
+						//$('#canvas-1').prop('width', (width*3));
+						//$('#canvas-1').prop('height', (height*3));
+						$('#canvas-1').prop('width', laserxmax);
+						$('#canvas-1').prop('height', laserymax);
+						var physwidth = $('#spotSize').val() * width;
+						var physheight = $('#spotSize').val() * height;
+						$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
+					}
+		});
+
+	});
 
 });
+
+function gcodereceived() {
+				$('#rasterwidget').modal('toggle');
+				console.log('New Gcode');
+				$('#sendToLaser').removeClass('disabled');
+				openGCodeFromText();
+				gCodeToSend = document.getElementById('gcodepreview').value;
+				$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
+				$('#openMachineControl').removeClass('disabled');
+				$('#sendCommand').removeClass('disabled');
+				$('#sendToLaser').removeClass('disabled');
+			};
