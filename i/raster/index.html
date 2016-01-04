@@ -13,6 +13,7 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/jquery.min.js"></script>
 	<script src="/jquery-ui.js"></script>
+	<script src="/jquery-linedtextarea.js"></script>
 	<script src="/bootstrap.min.js"></script>
 	<script src="/bootstrap-notify.js"></script>
 	<!--script src="/main.js"></script -->
@@ -31,10 +32,11 @@
 	<script type="text/javascript" src="/millcrum/inc/svg.js"></script>
 
 	<link rel="stylesheet" href="/jquery-ui.css" />
+	<link rel="stylesheet" href="/jquery-linedtextarea.css" />
 	<link rel="stylesheet" href="/bootstrap.min.css" />
 	<link rel="stylesheet" href="/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="/bootstrap-notify.css" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/font-awesome.min.css">
 	<link rel="stylesheet" href="/screen.css" />
 
 	<!-- Gear Generator : http://hessmer.org/gears/InvoluteSpurGearBuilder.html-->
@@ -76,6 +78,9 @@ firmware = 'Grbl 0.9j'// Defined in main.js - don't port to Laserweb
 var paperscript = {};
 
 $(document).ready(function() {
+
+	// Prettyfy Gcode Block
+   $("#code").linedtextarea();
 
 	// OpenJsCad
 	$('#rasterT').on('click', function() {
@@ -368,8 +373,8 @@ $(document).ready(function() {
 	<div class="btn-group" role="group"><a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a></div></div>
 
 
-	Imported Image Dimensions: <span id="dims">0px x 0 px</span></span><br>
-	Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span></span><br>
+	Imported Image Dimensions: <span id="dims">0px x 0 px</span></span>
+	Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span></span>
 	<img id="origImage">
 
 </div>
