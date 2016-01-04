@@ -26,6 +26,7 @@ Then every day, run ```./update.sh ```
 
 ## Changelog
 
+* 4 Jan 2016: Added working S?? support to the 3D viewer's Gcode parser to show the laser intensity on the 3D viewer - screenshot below
 * 31 Dec 2015: Working Javascript/PaperScript based Raster to GCODE code committed - long way from a fully support Raster Engraving solution, but thats the first most major step done:  See detailed implementation log on https://github.com/openhardwarecoza/LaserWeb/issues/32
 * 30 Dec 2014: Added a parametric Tabbed Box Generator based on http://ingegno.be/Manuals/openjscad/boxmaker.html
 * 30 Dec 2015: Added a parametric Gear Generator based on hessmer.org/gears/InvoluteSpurGearBuilder.html
@@ -62,6 +63,10 @@ Then every day, run ```./update.sh ```
 
 ### In-app Parametric Gear Generator 
 ![Parametric](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/parametricgenerator.png)
+
+### 3D viewer supports Raster GCode fiels 
+![Raster](https://cloud.githubusercontent.com/assets/7695323/12090326/95f1b5be-b2f6-11e5-862b-92d16659d619.png)
+
 
 More in-app Parametric generators coming soon!
 
