@@ -126,7 +126,7 @@ var allPorts = [];
 serialport.list(function (err, ports) {
 
   if (fs.existsSync('/dev/ttyAMA0')) {
-  		ports.push({comName:'/dev/ttyAMA0',manufacturer:'Broadcom',pnpId:'raspberryPi__GPIO'});
+  		(ports = ports || []).push({comName:'/dev/ttyAMA0',manufacturer: undefined,pnpId: 'raspberryPi__GPIO'});
   		console.log('adding /dev/ttyAMA0 because it is enabled in config.js, you may need to enable it in the os - http://www.hobbytronics.co.uk/raspberry-pi-serial-port');
   	}
 
