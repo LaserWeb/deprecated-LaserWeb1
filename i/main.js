@@ -1441,7 +1441,7 @@ $('#generatePreview').on('click', function() {
 	document.getElementById('fileInputDXF').value = '';
 	//document.getElementById('fileInputSVG').value = '';
 	//document.getElementById('fileInputMILL').value = '';
-	$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
+	$('#console').append('<p class="pf" style="color: #000000;"><b>Preview from OpenJSCAD Complete...</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
 
@@ -1968,9 +1968,6 @@ $('#boxButton').on('click', function() {
 		$('#jsView').hide();
 		$('#jsDXF').show();
 	});
-
-	// Prettyfy Gcode Block
-   $("#gcodepreview").linedtextarea();
 
 
 });

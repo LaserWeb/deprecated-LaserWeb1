@@ -198,7 +198,7 @@ function serialData(data, port) {
     console.log(chalk.red('Found device: '),
       chalk.green(sp[port].manufacturer),
       chalk.blue(sp[port].port),
-      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
@@ -207,7 +207,7 @@ function serialData(data, port) {
 
 	if (data.indexOf('Grbl') == 0) { // Found Grbl
 		setInterval(function() {
-			sp[port].handle.write("?\n"); //for LasaurGrbl
+			sp[port].handle.write("?\n"); //for Grbl
 		}, 1000);
 		var firmwareVersion = data.split(/(\s+)/);
 		var lasaurGrblVersion = firmwareVersion[0]+' '+firmwareVersion[2];
@@ -215,14 +215,14 @@ function serialData(data, port) {
     console.log(chalk.red('Found device: '),
       chalk.green(sp[port].manufacturer),
       chalk.blue(sp[port].port),
-      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
 	}
 
-	if (data.indexOf('Marlin') != -1) {
+	if (data.indexOf('Marlin') != -1) { // Found Marlin
 		setInterval(function() {
 			sp[port].handle.write("M114\n"); //for Marlin
 		}, 1000);
@@ -231,14 +231,14 @@ function serialData(data, port) {
     console.log(chalk.red('Found device: '),
       chalk.green(sp[port].manufacturer),
       chalk.blue(sp[port].port),
-      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
 	}
 
-	if (data.indexOf('Repetier') != -1) {
+	if (data.indexOf('Repetier') != -1) { //found Repetier
 		setInterval(function() {
 			sp[port].handle.write("M114\n"); //for Repetier
 		}, 1000);
@@ -249,16 +249,16 @@ function serialData(data, port) {
     console.log(chalk.red('Found device: '),
       chalk.green(sp[port].manufacturer),
       chalk.blue(sp[port].port),
-      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
 	}
 
-	if (data.indexOf('LPC1769') != -1 || data.indexOf('LPC1768') != -1) {
+	if (data.indexOf('LPC1769') != -1 || data.indexOf('LPC1768') != -1) { //  found a Smoothie or AZSMZ type Board
 		setInterval(function() {
-			sp[port].handle.write("M114\n"); //for Smoothie
+			sp[port].handle.write("M114\n"); //for Smoothieware
 		}, 1000);
 		data = data.replace(/:/g,',');
 		var firmwareVersion = data.split(/(,+)/);
@@ -267,14 +267,12 @@ function serialData(data, port) {
     console.log(chalk.red('Found device: '),
       chalk.green(sp[port].manufacturer),
       chalk.blue(sp[port].port),
-      chalk.yellow('Firmware Detected:'), // Most likely /dev/ttyS* on ubuntu (;
+      chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
 
 	}
-
-
 
 	// End of Queryloop
 

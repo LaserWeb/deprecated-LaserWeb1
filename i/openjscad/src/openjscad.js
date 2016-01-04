@@ -728,6 +728,8 @@ OpenJsCad.AlertUserOfUncaughtExceptions = function() {
     message = message.replace(/^Uncaught /i, "");
     //alert(message+"\n\n("+url+" line "+line+")");
     console.log(message+"\n\n("+url+" line "+line+")");
+    $('#console').append('<p class="pf" style="color: #FF0000;"><b>Application Error:</b><br>'+message+" (from "+url+" line "+line+'</p>');
+    $('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
   };
 };
 
