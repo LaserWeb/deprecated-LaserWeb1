@@ -116,7 +116,7 @@ $(document).ready(function() {
 			$('#gcC').click();
 			openGCodeFromText();
 			gCodeToSend = data.val;
-			//document.getElementById('fileName').value = 'GCODE from api...';
+			document.getElementById('fileName').value = 'api-data';
 			$('#mainStatus').html('Status: <b>LaserWeb API </b>');
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
