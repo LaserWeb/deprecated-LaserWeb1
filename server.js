@@ -88,11 +88,30 @@ function handler (req, res) {
 
 	console.log(chalk.gray('url request: '+req.url));
 
-	fileServer.serve(req, res, function (err, result) {
-		if (err) {
-			console.error(chalk.red('fileServer error:'), err.message);
-		}
-	});
+  if (req.url.indexOf('/api/upload') == 0 && req.method == 'POST') {
+		// this is a gcode upload, probably from jscut
+		console.log(chalk.green('API - New GCODE via POST'));
+		var b = '';
+		req.on('data', function (data) {
+			b += data;
+			if (b.length > 1e6) {
+				req.connection.destroy();
+			}
+		});
+		req.on('end', function() {
+			var post = qs.parse(b);
+			console.log(post);
+			io.sockets.emit('gcodeFromAPI', {'val':post.val});
+			//res.writeHead(200, {"Content-Type": "application/json"});
+			//res.end(JSON.stringify({'data':'ok'}));
+		});
+	} else {
+  	fileServer.serve(req, res, function (err, result) {
+  		if (err) {
+  			console.error(chalk.red('fileServer error:'), err.message);
+  		}
+  	});
+  }
 }
 
 function ConvChar( str ) {

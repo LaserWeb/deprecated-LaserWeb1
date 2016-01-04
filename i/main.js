@@ -109,6 +109,24 @@ $(document).ready(function() {
 	// Tell server.js we have started
 	socket.emit('firstLoad', 1);
 
+	// API for GCode Upload
+	socket.on('gcodeFromAPI', function (data) {
+		console.log(data);
+			$('#gcodepreview').val(data.val);
+			$('#gcC').click();
+			openGCodeFromText();
+			gCodeToSend = data.val;
+			//document.getElementById('fileName').value = 'GCODE from api...';
+			$('#mainStatus').html('Status: <b>LaserWeb API </b>');
+			$('#sendToLaser').removeClass('disabled');
+			document.getElementById('fileInputGcode').value = '';
+			document.getElementById('fileInputDXF').value = '';
+			//document.getElementById('fileInputSVG').value = '';
+			//document.getElementById('fileInputMILL').value = '';
+			$('#console').append('<p class="pf" style="color: #000000;"><b>New data from API...</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	});
+
 	// Error Handling
 	socket.on('serverError', function (data) {
 		alert(data);
@@ -306,7 +324,7 @@ $(document).ready(function() {
 		                var $invokedOn = $menu.data("invokedOn");
 		                var $selectedMenu = $(e.target);
 
-		                settings.menuSelected.call(this, $invokedOn, $selectedMenu);
+		                //settings.menuSelected.call(this, $invokedOn, $selectedMenu);
 		            });
 
 		        return false;

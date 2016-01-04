@@ -13,7 +13,6 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/jquery.min.js"></script>
 	<script src="/jquery-ui.js"></script>
-	<script src="/jquery-linedtextarea.js"></script>
 	<script src="/bootstrap.min.js"></script>
 	<script src="/bootstrap-notify.js"></script>
 	<!--script src="/main.js"></script -->
@@ -32,11 +31,10 @@
 	<script type="text/javascript" src="/millcrum/inc/svg.js"></script>
 
 	<link rel="stylesheet" href="/jquery-ui.css" />
-	<link rel="stylesheet" href="/jquery-linedtextarea.css" />
 	<link rel="stylesheet" href="/bootstrap.min.css" />
 	<link rel="stylesheet" href="/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="/bootstrap-notify.css" />
-	<link rel="stylesheet" href="/font-awesome.min.css">
+	<link rel="stylesheet" href="/font-awesome.css">
 	<link rel="stylesheet" href="/screen.css" />
 
 	<!-- Gear Generator : http://hessmer.org/gears/InvoluteSpurGearBuilder.html-->
@@ -78,9 +76,6 @@ firmware = 'Grbl 0.9j'// Defined in main.js - don't port to Laserweb
 var paperscript = {};
 
 $(document).ready(function() {
-
-	// Prettyfy Gcode Block
-   $("#code").linedtextarea();
 
 	// OpenJsCad
 	$('#rasterT').on('click', function() {
@@ -182,7 +177,29 @@ $(document).ready(function() {
         }
   });
 
+	$('#SendLW').on('click', function() {
+		PostGcode();
+	});
+
 });
+
+
+function PostGcode() {
+    //var alert = showAlert("Sending gcode LaserEeb", "alert-info", false);
+    $.ajax({
+        url: "/api/upload",
+        type: "POST",
+        data: { val: $('#code').val() },
+        dataType: "json",
+    })
+    .done(function (content) {
+        //alert.remove();
+    })
+    .fail(function (e) {
+        //alert.remove();
+        //showAlert("Can't save gcode to LaserWeb", "alert-danger");
+    });
+}
 </script>
 
 
@@ -251,7 +268,7 @@ $(document).ready(function() {
 					s += '; Laser Spot Size '+spotSize1+'mm\n';
 					s += '; Laser Feedrate '+feedRate+'mm/min\n\n';
 					s += 'G28\nG21\nG90\nG1 F'+feedRate+'\n';
-					s += 'G0 X'+imgheight+' F'+feedRate+'\nG92 X0 Y0;'; // Raster runs top to bottom o we offset by the height
+					//s += 'G0 Y'+imgheight+' F'+feedRate+'\nG92 X0 Y0;'; // Raster runs top to bottom o we offset by the height
 
 
 					for (var y = 0; y < raster.height; y++) {
@@ -388,7 +405,11 @@ $(document).ready(function() {
 
 <!-- Tab 3 -->
 <div id="rastergcView" style="display: none;">
-	      <textarea id="code" style="width: 600px; height: 200px;"></textarea>
+
+	 <textarea id="code" name="b" style="width: 600px; height: 200px;"></textarea>
+   <input type="botton" name="button" id="SendLW" value="Send to LaserWeb" />
+   </form>
+
 </div>
 </ul>
 
