@@ -1340,7 +1340,7 @@ $('#generatePreview').on('click', function() {
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	}
 	*/
-	
+
 		s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
 		s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 		s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
@@ -1968,5 +1968,9 @@ $('#boxButton').on('click', function() {
 		$('#jsView').hide();
 		$('#jsDXF').show();
 	});
+
+	// Prettyfy Gcode Block
+   $("#gcodepreview").linedtextarea();
+
 
 });
