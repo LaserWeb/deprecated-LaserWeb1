@@ -22,7 +22,7 @@ OpenJsCad.log = function(txt) {
   txt = "["+timefmt+"] "+txt;
   if( (typeof(console) == "object") && (typeof(console.log) == "function") )
   {
-    console.log(txt);
+    //console.log(txt); // Turn on for Debug
   }
   else if( (typeof(self) == "object") && (typeof(self.postMessage) == "function") )
   {

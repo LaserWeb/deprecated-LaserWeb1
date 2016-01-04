@@ -100,7 +100,7 @@ function handler (req, res) {
 		});
 		req.on('end', function() {
 			var post = qs.parse(b);
-			console.log(post);
+			//console.log(post);
 			io.sockets.emit('gcodeFromAPI', {'val':post.val});
 			//res.writeHead(200, {"Content-Type": "application/json"});
 			//res.end(JSON.stringify({'data':'ok'}));

@@ -62,7 +62,7 @@ function GCodeParser(handlers) {
                         // and it should be assumed that the last specified gcode
                         // cmd is what's assumed
                         isComment = false;
-                        if (!cmd.match(/^(G|M|T)/i)) {
+                        if (!cmd.match(/^(G|M|T|S)/i)) {
                             // if comment, drop it
                             /*
                             if (cmd.match(/(;|\(|<)/)) {
@@ -264,13 +264,22 @@ function createObjectFromGCode(gcode) {
                 layers.push(layer);
             };
 
-            getLineGroup = function (line, args) {
+          getLineGroup = function (line, args) {
                 //console.log("getLineGroup:", line);
                 if (layer == undefined) newLayer(line);
                 var speed = Math.round(line.e / 1000);
-                var grouptype = (line.extruding ? 10000 : 0) + speed;
-                //var color = new THREE.Color(line.extruding ? 0xff00ff : 0x0000ff);
+                var opacity = Math.round(line.s);
+                var grouptype = (line.extruding ? 10000 : 0) + speed + opacity;
+
                 var color = new THREE.Color(line.extruding ? 0x990000 : 0x990000);
+
+                if(typeof line.s === 'undefined'){
+                    opacity = 0.6;
+                } else {
+                    opacity = line.s / 100;
+                }
+                //console.log(opacity);
+                // LaserWeb 3D Viewer Colors
                 if (line.g0) {
                     grouptype =  "g0";
                     //color = new THREE.Color(0x00ff00);
@@ -299,7 +308,8 @@ function createObjectFromGCode(gcode) {
                         color: color,
                         segmentCount: 0,
                         material: new THREE.LineBasicMaterial({
-                            opacity: line.extruding ? 0.3 : line.g2 ? 0.2 : 0.5,
+                            opacity: opacity,
+                            //opacity: line.extruding ? 0.5: line.g2 ? 0.2 : 0.3,
                             transparent: true,
                             linewidth: 1,
                             vertexColors: THREE.FaceColors
@@ -312,6 +322,7 @@ function createObjectFromGCode(gcode) {
                 }
                 return layer.type[grouptype];
             };
+
 
             drawArc = function(aX, aY, aZ, endaZ, aRadius, aStartAngle, aEndAngle, aClockwise, plane) {
                 //console.log("drawArc:", aX, aY, aZ, aRadius, aStartAngle, aEndAngle, aClockwise);
@@ -719,6 +730,11 @@ function createObjectFromGCode(gcode) {
                     // obviously, we have to slowly accelerate in and out
                     timeMinutes = timeMinutes * 1.32;
                 }
+
+                // Handle Laser Sxxx parameter
+                sv = args.s;
+                //console.log(sv);
+
                 totalTime += timeMinutes;
 
                 p2.feedrate = args.feedrate;
@@ -796,6 +812,7 @@ function createObjectFromGCode(gcode) {
                         z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
                         e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
                         f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
+                        s: args.s !== undefined ? cofg.absolute(lastLine.s, args.s) : lastLine.s,
 
                     };
                     /* layer change detection is or made by watching Z, it's made by
@@ -821,6 +838,7 @@ function createObjectFromGCode(gcode) {
                         z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
                         e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
                         f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
+                        s: args.s !== undefined ? cofg.absolute(lastLine.s, args.s) : lastLine.s,
                         arci: args.i ? args.i : null,
                         arcj: args.j ? args.j : null,
                         arck: args.k ? args.k : null,

@@ -272,6 +272,8 @@ function PostGcode() {
 
 
 					for (var y = 0; y < raster.height; y++) {
+						var newline = (imgheight * spotSize1) - y
+						//s += 'G0 X0 Y'+newline+' F'+feedRate+'\n'
 						for(var x = 0; x < raster.width; x++) {
 							// Get the color of the pixel:
         			var color = raster.getPixel(x, y);
@@ -312,7 +314,9 @@ function PostGcode() {
 									if (firmware.indexOf('Grbl') == 0) {
 											s += 'M3\n'
 									}
+
 									s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
+
 									if (firmware.indexOf('Grbl') == 0) {
 											s += 'M5\n'
 									}
