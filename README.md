@@ -64,7 +64,7 @@ Then every day, run ```./update.sh ```
 ### In-app Parametric Gear Generator 
 ![Parametric](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/parametricgenerator.png)
 
-### 3D viewer supports Raster GCode fiels 
+### 3D viewer supports Raster GCode files 
 ![Raster](https://cloud.githubusercontent.com/assets/7695323/12090326/95f1b5be-b2f6-11e5-862b-92d16659d619.png)
 
 
