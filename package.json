@@ -1,6 +1,23 @@
 {
   "name": "laserweb",
   "description": "a fully featured web ui for reprap and other 3d printers",
+  "contributors": [
+    {
+      "name": "Peter van der Walt",
+      "email": "peter.plaaswerf@gmail.com"
+    }
+  ],  
+  "repository" :
+  { 	
+  	"type" : "git", 
+  	"url" : "https://github.com/openhardwarecoza/LaserWeb.git"
+  },
+  "licenses": [
+    {
+      "type": "AGPL-3.0",
+      "url": "http://www.gnu.org/licenses/agpl-3.0.txt"
+    }
+  ],
   "dependencies": {
     "chalk": "1.1.1",
     "dotenv": "1.2.0",
