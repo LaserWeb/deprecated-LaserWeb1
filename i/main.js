@@ -39,6 +39,9 @@ String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
 
+firmware = '';
+
+
 $(document).ready(function() {
 
 	$('#thickness').change(function() {
@@ -1892,7 +1895,7 @@ $('#boxButton').on('click', function() {
 
 
 	socket.on('firmware', function(data) {
-		var firmware = data
+		firmware = data
 		//console.log(firmware);
 		if (firmware) {
 			$('#firmwareDet').removeClass('btn-danger');

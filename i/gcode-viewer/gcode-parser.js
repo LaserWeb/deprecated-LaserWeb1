@@ -276,7 +276,18 @@ function createObjectFromGCode(gcode) {
                 if(typeof line.s === 'undefined'){
                     opacity = 0.6;
                 } else {
-                    opacity = line.s / 100;
+                  if (firmware) {
+                    if (firmware.indexOf('Grbl') == 0) {
+                      opacity = line.s / 255;
+                    } else if (firmware.indexOf('Smooth') == 0) {
+                      opacity = line.s;
+                    } else {
+                      opacity = line.s / 100;
+                    }
+                  }
+
+                  //opacity = line.s / 100;
+
                 }
                 //console.log(opacity);
                 // LaserWeb 3D Viewer Colors
