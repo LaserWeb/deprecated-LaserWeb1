@@ -23,10 +23,15 @@ NB:  See the Changelog below, almost DAILY there is new code coming out.
 Before running, execute ```cd  LaserWeb; chmod +x update.sh; ./update.sh```
 Then every day, run ```./update.sh ```
 
+
+## Video Demo
+
 [![Demo of Raster](http://img.youtube.com/vi/_tbCIdONdZQ/0.jpg)](https://www.youtube.com/watch?v=_tbCIdONdZQ)
 
 ## Changelog
 
+
+* 6 Jan 2016: Raster Engraving is live!  Click the Raster button under the file open toolbar
 * 4 Jan 2016: Added working S?? support to the 3D viewer's Gcode parser to show the laser intensity on the 3D viewer - screenshot below
 * 31 Dec 2015: Working Javascript/PaperScript based Raster to GCODE code committed - long way from a fully support Raster Engraving solution, but thats the first most major step done:  See detailed implementation log on https://github.com/openhardwarecoza/LaserWeb/issues/32
 * 30 Dec 2014: Added a parametric Tabbed Box Generator based on http://ingegno.be/Manuals/openjscad/boxmaker.html
