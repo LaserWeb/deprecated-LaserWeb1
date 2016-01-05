@@ -175,10 +175,10 @@
 
 										intensity = (1 -grayLevel) * 100; //  Also add out Firmware specific mapping using intensity (which is 0-100) and map it between minIntensity and maxIntensity variables above * firmware specific multiplier (grbl 0-255, smoothie 0-1, etc)
 										//Constraining Laser power between minIntensity and maxIntensity
+										console.log('Constraining');
 										intensity = intensity.map(0, 100, parseInt(minIntensity,10), parseInt(maxIntensity,10));
 
 										// Firmware Specific Gcode Output
-										if (firmware) {
 											if (firmware.indexOf('Grbl') == 0) {
 												 intensity = intensity.map(0, 100, 0, 255);
 												 //console.log('Mapping Intensity range for Grbl S0-S255');
@@ -192,13 +192,6 @@
 												 //console.log('Mapping Intensity range for S0-S100');
 												 intensity = intensity.toFixed(0);
 											}
-										} else {
-											intensity = intensity.map(0, 100, 0, 100);
-											//console.log('Mapping Intensity range for S0-S100');
-											intensity = intensity.toFixed(0);
-										}
-
-
 
 										c++;
 										xm = 0;
