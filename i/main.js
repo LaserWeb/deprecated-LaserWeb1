@@ -1993,43 +1993,9 @@ $('#boxButton').on('click', function() {
 	});
 
 	// Raster support
-
-
 	var paperscript = {};
 
-	$(document).ready(function() {
-
-		// OpenJsCad
-		$('#rasterT').on('click', function() {
-			$('#rasT').addClass('active');
-			$('#papT').removeClass('active');
-			$('#rasgcT').removeClass('active');
-			$('#rasterView').show();
-			$('#paperView').hide();
-			$('#rastergcView').hide();
-		});
-		$('#paperT').on('click', function() {
-			$('#rasT').removeClass('active');
-			$('#papT').addClass('active');
-			$('#rasgcT').removeClass('active');
-			$('#rasterView').hide();
-			$('#paperView').show();
-			$('#rastergcView').hide();
-		});
-		$('#rastergcDA').on('click', function() {
-			$('#rasT').removeClass('active');
-			$('#papT').removeClass('active');
-			$('#rasgcT').addClass('active');
-			$('#rasterView').hide();
-			$('#paperView').hide();
-			$('#rastergcView').show();
-		});
-
-
-		var paperscript = {};
-
-		var fileImg = document.getElementById('fileImage');
-
+	var fileImg = document.getElementById('fileImage');
 		fileImg.addEventListener('change', function(e) {
 			$('#rasterwidget').modal('toggle');
 			var selectedFile = event.target.files[0];
@@ -2040,18 +2006,7 @@ $('#boxButton').on('click', function() {
 
 			reader.onload = function(event) {
 				imgtag.src = event.target.result;
-				var img = document.getElementById('origImage');
-				width = img.clientWidth;
-				height = img.clientHeight;
-				$("#dims").text(width+'px x '+height+'px');
-				//$('#canvas-1').prop('width', (width*3));
-				//$('#canvas-1').prop('height', (height*3));
-				$('#canvas-1').prop('width', laserxmax);
-				$('#canvas-1').prop('height', laserymax);
-				var physwidth = $('#spotSize').val() * width;
-				var physheight = $('#spotSize').val() * height;
-				$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
-				$('#laserpwrslider').removeClass('disabled');
+				setImgDims();
 			};
 
 			reader.readAsDataURL(selectedFile);
@@ -2063,20 +2018,34 @@ $('#boxButton').on('click', function() {
 				max: 100,
 				values: [ 30, 70 ],
 				slide: function( event, ui ) {
-					$( "#laserpwr" ).val( "Power: " + ui.values[ 0 ] + "% - " + ui.values[ 1 ] + '%' );
 					minpwr = [ui.values[ 0 ]];
 					maxpwr = [ui.values[ 1 ]];
 					$('#rasterNow').removeClass('disabled');
+					$('#laserpwr').html( $( "#laserpwrslider" ).slider( "values", 0 ) + '% - ' + $( "#laserpwrslider" ).slider( "values", 1 ) +'%');
+					setImgDims()
+				}
+		});
+		$('#laserpwr').html( $( "#laserpwrslider" ).slider( "values", 0 ) + '% - ' + $( "#laserpwrslider" ).slider( "values", 1 ) +'%');
+		minpwr = $( "#laserpwrslider" ).slider( "values", 0 );
+		maxpwr = $( "#laserpwrslider" ).slider( "values", 1 );
+
+
+		$( "#spotsizeslider" ).slider({
+				min: 0,
+				max: 250,
+				values: [ 20 ],
+				slide: function( event, ui ) {
+					//spotSize = [ui.values[ 0 ]];
+					$('#rasterNow').removeClass('disabled');
+					setImgDims()
 				}
 		});
 
-
-		$( "#laserpwr" ).val( "Power: " + $( "#laserpwrslider" ).slider( "values", 0 ) +
-					 "% - " + $( "#laserpwrslider" ).slider( "values", 1 ) +'%'
-		);
+		$('#spotsize').html(':  '+ ($( "#spotsizeslider" ).slider( "values", 0 ) / 100) + 'mm ');
+		spotSizeMul = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 
 		$('#rasterNow').on('click', function() {
-			spotSize = $('#spotSize').val();
+			spotSize = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 			laserFeed = $('#feedRate').val();
 			window.globals = {
 				  completed: function() { gcodereceived(); },
@@ -2096,32 +2065,44 @@ $('#boxButton').on('click', function() {
 					//console.log('empty');
 					// Todo if empty
 					if(this.value.length){
-						var img = document.getElementById('origImage');
-						width = img.clientWidth;
-						height = img.clientHeight;
-						$("#dims").text(width+'px x '+height+'px');
-						//$('#canvas-1').prop('width', (width*3));
-						//$('#canvas-1').prop('height', (height*3));
-						$('#canvas-1').prop('width', laserxmax);
-						$('#canvas-1').prop('height', laserymax);
-						var physwidth = $('#spotSize').val() * width;
-						var physheight = $('#spotSize').val() * height;
-						$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
+					setImgDims();
 					}
 		});
 
-	});
+
 
 });
 
+function setImgDims() {
+	spotSizeMul = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
+
+	minpwr = $( "#laserpwrslider" ).slider( "values", 0 );
+	maxpwr = $( "#laserpwrslider" ).slider( "values", 1 );
+
+
+	var img = document.getElementById('origImage');
+	width = img.clientWidth;
+	height = img.clientHeight;
+	$("#dims").text(width+'px x '+height+'px');
+	//$('#canvas-1').prop('width', (width*3));
+	//$('#canvas-1').prop('height', (height*3));
+	$('#canvas-1').prop('width', laserxmax);
+	$('#canvas-1').prop('height', laserymax);
+	var physwidth = spotSizeMul * width;
+	var physheight = spotSizeMul * height;
+	$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
+	$('#spotsize').html( ($( "#spotsizeslider" ).slider( "values", 0 ) / 100) + 'mm (distance between dots )<br>Resultant Job Size: '+ physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm' );
+
+};
+
 function gcodereceived() {
-				$('#rasterwidget').modal('toggle');
-				console.log('New Gcode');
-				$('#sendToLaser').removeClass('disabled');
-				openGCodeFromText();
-				gCodeToSend = document.getElementById('gcodepreview').value;
-				$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
-				$('#openMachineControl').removeClass('disabled');
-				$('#sendCommand').removeClass('disabled');
-				$('#sendToLaser').removeClass('disabled');
-			};
+	$('#rasterwidget').modal('toggle');
+	console.log('New Gcode');
+	$('#sendToLaser').removeClass('disabled');
+	openGCodeFromText();
+	gCodeToSend = document.getElementById('gcodepreview').value;
+	$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
+	$('#openMachineControl').removeClass('disabled');
+	$('#sendCommand').removeClass('disabled');
+	$('#sendToLaser').removeClass('disabled');
+};

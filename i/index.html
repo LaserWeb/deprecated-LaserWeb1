@@ -175,7 +175,7 @@
 
 										intensity = (1 -grayLevel) * 100; //  Also add out Firmware specific mapping using intensity (which is 0-100) and map it between minIntensity and maxIntensity variables above * firmware specific multiplier (grbl 0-255, smoothie 0-1, etc)
 										//Constraining Laser power between minIntensity and maxIntensity
-										console.log('Constraining');
+										//console.log('Constraining');
 										intensity = intensity.map(0, 100, parseInt(minIntensity,10), parseInt(maxIntensity,10));
 
 										// Firmware Specific Gcode Output
@@ -288,14 +288,14 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-		<li><button type="button" class="btn btn-default" style="margin: 10px; display: none;" id="sendReset">RESET (ctrl-x)</button></li>
-		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendUnlock">unlock ($X)</button></li>
-		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblHelp">help ($)</button></li>
-		<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblSettings">settings ($$)</button></li>
-		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="limit_status_btn">Endstops</button></li>
-		<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
-                <li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>
-		<li><button type="button" class="btn btn-danger" style="margin: 10px; " id="firmwareDet">Not Connected</button></li>
+						<li><button type="button" class="btn btn-default" style="margin: 10px; display: none;" id="sendReset">RESET (ctrl-x)</button></li>
+						<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendUnlock">unlock ($X)</button></li>
+						<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblHelp">help ($)</button></li>
+						<li><button type="button" class="btn btn-success" style="margin: 10px; display: none;" id="sendGrblSettings">settings ($$)</button></li>
+						<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="limit_status_btn">Endstops</button></li>
+						<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
+				  	<li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>
+						<li><button type="button" class="btn btn-danger" style="margin: 10px; " id="firmwareDet">Not Connected</button></li>
 
           </ul>
         </div>
@@ -312,7 +312,7 @@
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-folder-open fa-lg"></i></button></div>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">GCODE <input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button></div>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">DXF <input type="file" accept=".dxf" id="fileInputDXF" /></button></div>
-				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">BITMAP <input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
+				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">RASTER <input type="file" accept=".svg,.png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
 				    <span>JSCAD</span>
@@ -904,29 +904,20 @@ Send</button>
         <h4 class="modal-title" id="myModalLabel">Raster Engraving</h4>
       </div>
       <div class="modal-body">
-				<!-- -->
-				<ul class="nav nav-tabs nav-justified" role="tablist">
-					<li id="rasT"  class="active">
-						<a id="rasterT" href="#">Engraving Setup</a>
-					</li>
-					<li id="papT">
-						<a id="paperT" href="#">Raster Preview</a>
-					</li>
-				</ul>
-				<!-- Tab 1 -->
-				<div id="rasterView">
-					<div class="input-group" style="margin-bottom:10px; width: 100%;">
-						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-dot-circle-o fa-lg" style="margin-right: 20px;"></i>Laser Spot Size:</span>
-						<input type="text" class="form-control" value="0.1" id="spotSize">
-						<span class="input-group-addon"  style="width: 60px;">mm</span>
-					</div>
 
 					<div class="well">
-						<label for="price">Constrain Laser:</label>
-							 <input type="text" id="laserpwr"
-									style="border:0; color:#aa0000; font-weight:bold;">
+						<label for="laserpwrsliderlbl">Constrain Laser Power: </label>
+							 <span id="laserpwr" style="border:0;  font-weight:bold; background: transparent;" ></span>
 						</p>
 						<div id="laserpwrslider"></div>
+					</div>
+
+
+					<div class="well">
+						<label for="spotsizesliderlbl">Zoom/Resolution: </label>
+							 <span id="spotsize" style="border:0;  font-weight:bold; background: transparent;" ></span>
+						</p>
+						<div id="spotsizeslider"></div>
 					</div>
 
 					<div class="input-group" style="margin-bottom:10px; width: 100%;">
@@ -938,20 +929,15 @@ Send</button>
 					<div class="btn-group" role="group"><a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a></div></div>
 
 
-					Imported Image Dimensions: <span id="dims">0px x 0 px</span></span><br>
-					Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span></span><br>
-					<img id="origImage">
-
-				</div>
-
-				<!-- Tab 2 -->
-				<div id="paperView" style="display: none;">
-					<div class="canvas" id="rasterOutput">
-						<canvas id="canvas-1"></canvas>
-					</div>
-				</div>
-
-
+					<center>
+						Imported Image Dimensions: <span id="dims">0px x 0 px</span></span><br>
+						Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span></span><br>
+						<img id="origImage" style="border: 1px solid orange;">
+					</center>
+						<hr>
+						<div class="canvas" id="rasterOutput"  style="display: none;">
+							<canvas id="canvas-1"></canvas>
+						</div>
 
 	  </div>
       <div class="modal-footer">
