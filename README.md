@@ -23,6 +23,7 @@ NB:  See the Changelog below, almost DAILY there is new code coming out.
 Before running, execute ```cd  LaserWeb; chmod +x update.sh; ./update.sh```
 Then every day, run ```./update.sh ```
 
+[![Demo of Raster](http://img.youtube.com/vi/_tbCIdONdZQ/0.jpg)](https://www.youtube.com/watch?v=_tbCIdONdZQ)
 
 ## Changelog
 
