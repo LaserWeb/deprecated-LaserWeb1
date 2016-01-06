@@ -62,7 +62,7 @@ function GCodeParser(handlers) {
                         // and it should be assumed that the last specified gcode
                         // cmd is what's assumed
                         isComment = false;
-                        if (!cmd.match(/^(G|M|T|S)/i)) {
+                        if (!cmd.match(/^(G|M|T)/i)) {
                             // if comment, drop it
                             /*
                             if (cmd.match(/(;|\(|<)/)) {
@@ -73,9 +73,9 @@ function GCodeParser(handlers) {
                             } else {
                             */
 
-                                //console.log("no cmd so using last one. lastArgs:", lastArgs);
+                                //console.log("no cmd so using last one. lastArgs:", this.lastArgs);
                                 // we need to use the last gcode cmd
-                                cmd = lastArgs.cmd;
+                                cmd = this.lastArgs.cmd;
                                 //console.log("using last cmd:", cmd);
                                 tokens.unshift(cmd); // put at spot 0 in array
                                 //console.log("tokens:", tokens);
@@ -118,7 +118,7 @@ function GCodeParser(handlers) {
                         // don't save if saw a comment
                         if (!args.isComment) {
                             lastArgs = args;
-                            //console.log("just saved lastArgs for next use:", lastArgs);
+                            //console.log("just saved lastArgs for next use:", this.lastArgs);
                         } else {
                             //console.log("this was a comment, so didn't save lastArgs");
                         }
@@ -131,23 +131,23 @@ function GCodeParser(handlers) {
                             // we were only catching it when it was the first cmd
                             // of the line.
                             if (args.text.match(/\bG20\b/i)) {
-                                console.log("3D: SETTING UNITS TO INCHES");
-                                isUnitsMm = false; // false means inches cuz default is mm
+                                console.log("SETTING UNITS TO INCHES from pre-parser!!!");
+                                this.isUnitsMm = false; // false means inches cuz default is mm
                             } else if (args.text.match(/\bG21\b/i)) {
-                                console.log("3D: SETTING UNITS TO MM");
-                                isUnitsMm = true; // true means mm
+                                console.log("SETTING UNITS TO MM!!! from pre-parser");
+                                this.isUnitsMm = true; // true means mm
                             }
 
                             // scan for feedrate
                             if (args.text.match(/F([\d.]+)/i)) {
                                 // we have a new feedrate
                                 var feedrate = parseFloat(RegExp.$1);
-                                //console.log("got feedrate on this line. feedrate:", feedrate, "args:", args);
+                                console.log("got feedrate on this line. feedrate:", feedrate, "args:", args);
                                 args.feedrate = feedrate;
-                                lastFeedrate = feedrate;
+                                this.lastFeedrate = feedrate;
                             } else {
                                 // use feedrate from prior lines
-                                args.feedrate = lastFeedrate;
+                                args.feedrate = this.lastFeedrate;
                                 //if (args.feedrate
                             }
 
@@ -173,7 +173,7 @@ function GCodeParser(handlers) {
                         'isComment': isComment
                     };
                     var handler = handlers['default'];
-                           return handler(args, info, this);
+                    return handler(args, info, this);
                 }
             }
 
@@ -185,84 +185,86 @@ function GCodeParser(handlers) {
                     }
                 }
             }
-		};
+        };
+        colorG0: 0x00ff00;
+        colorG1: 0x0000ff;
+        colorG2: 0x999900;
 
+    createObjectFromGCode = function (gcode, indxMax) {
+              //debugger;
+              // Credit goes to https://github.com/joewalnes/gcode-viewer
+              // for the initial inspiration and example code.
+              //
+              // GCode descriptions come from:
+              //    http://reprap.org/wiki/G-code
+              //    http://en.wikipedia.org/wiki/G-code
+              //    SprintRun source code
 
-function createObjectFromGCode(gcode) {
-            //debugger;
-            // Credit goes to https://github.com/joewalnes/gcode-viewer
-            // for the initial inspiration and example code.
-            //
-            // GCode descriptions come from:
-            //    http://reprap.org/wiki/G-code
-            //    http://en.wikipedia.org/wiki/G-code
-            //    SprintRun source code
+              // these are extra Object3D elements added during
+              // the gcode rendering to attach to scene
+              this.extraObjects = [];
+              this.extraObjects["G17"] = [];
+              this.extraObjects["G18"] = [];
+              this.extraObjects["G19"] = [];
+              this.offsetG92 = {x:0, y:0, z:0, e:0};
 
-            // these are extra Object3D elements added during
-            // the gcode rendering to attach to scene
-            extraObjects = [];
-            extraObjects["G17"] = [];
-            extraObjects["G18"] = [];
-            extraObjects["G19"] = [];
-            offsetG92 = {x:0, y:0, z:0, e:0};
+              var lastLine = {
+                  x: 0,
+                  y: 0,
+                  z: 0,
+                  e: 0,
+                  f: 0,
+                  feedrate: null,
+                  extruding: false
+              };
 
-            var lastLine = {
-                x: 0,
-                y: 0,
-                z: 0,
-                e: 0,
-                f: 0,
-                feedrate: null,
-                extruding: false
-            };
+              // we have been using an approach where we just append
+              // each gcode move to one monolithic geometry. we
+              // are moving away from that idea and instead making each
+              // gcode move be it's own full-fledged line object with
+              // its own userData info
+              // G2/G3 moves are their own child of lots of lines so
+              // that even the simulator can follow along better
+              var new3dObj = new THREE.Group();
+              var plane = "G17"; //set default plane to G17 - Assume G17 if no plane specified in gcode.
+              var layers = [];
+              var layer = undefined;
+              var lines = [];
+              var totalDist = 0;
+              var bbbox = {
+                  min: {
+                      x: 100000,
+                      y: 100000,
+                      z: 100000
+                  },
+                  max: {
+                      x: -100000,
+                      y: -100000,
+                      z: -100000
+                  }
+              };
+              var bbbox2 = {
+                  min: {
+                      x: 100000,
+                      y: 100000,
+                      z: 100000
+                  },
+                  max: {
+                      x: -100000,
+                      y: -100000,
+                      z: -100000
+                  }
+              };
 
-            // we have been using an approach where we just append
-            // each gcode move to one monolithic geometry. we
-            // are moving away from that idea and instead making each
-            // gcode move be it's own full-fledged line object with
-            // its own userData info
-            // G2/G3 moves are their own child of lots of lines so
-            // that even the simulator can follow along better
-            var new3dObj = new THREE.Object3D();
-            var plane = "G17"; //set default plane to G17 - Assume G17 if no plane specified in gcode.
-            var layers = [];
-            var layer = undefined;
-            var lines = [];
-            var totalDist = 0;
-            var bbbox = {
-                min: {
-                    x: 100000,
-                    y: 100000,
-                    z: 100000
-                },
-                max: {
-                    x: -100000,
-                    y: -100000,
-                    z: -100000
-                }
-            };
-            var bbbox2 = {
-                min: {
-                    x: 100000,
-                    y: 100000,
-                    z: 100000
-                },
-                max: {
-                    x: -100000,
-                    y: -100000,
-                    z: -100000
-                }
-            };
-
-            newLayer = function (line) {
-                //console.log("layers:", layers, "layers.length", layers.length);
-                layer = {
-                    type: {},
-                    layer: layers.length,
-                    z: line.z,
-                };
-                layers.push(layer);
-            };
+              newLayer = function (line) {
+                  //console.log("layers:", layers, "layers.length", layers.length);
+                  layer = {
+                      type: {},
+                      layer: layers.length,
+                      z: line.z,
+                  };
+                  layers.push(layer);
+              };
 
           getLineGroup = function (line, args) {
                 //console.log("getLineGroup:", line);
@@ -780,7 +782,7 @@ function createObjectFromGCode(gcode) {
 
             var cofg = this;
 
-			 var parser = new this.GCodeParser({
+			 parser = new GCodeParser({
                 //set the g92 offsets for the parser - defaults to no offset
                 /* When doing CNC, generally G0 just moves to a new location
                 as fast as possible which means no milling or extruding is happening in G0.
@@ -830,43 +832,66 @@ function createObjectFromGCode(gcode) {
                     //console.log("G1", lastLine, newLine, args, cofg.offsetG92);
                     lastLine = newLine;
                 },
-           G2: function (args, indx, gcp) {
-                    /* this is an arc move from lastLine's xy to the new xy. we'll
-                    show it as a light gray line, but we'll also sub-render the
-                    arc itself by figuring out the sub-segments . */
+                G2 : function (args, indx, gcp) {
+                         /* this is an arc move from lastLine's xy to the new xy. we'll
+                         show it as a light gray line, but we'll also sub-render the
+                         arc itself by figuring out the sub-segments . */
 
-                    args.plane = plane; //set the plane for this command to whatever the current plane is
+                         args.plane = plane; //set the plane for this command to whatever the current plane is
 
-                    var newLine = {
-                        x: args.x !== undefined ? cofg.absolute(lastLine.x, args.x) + cofg.offsetG92.x : lastLine.x,
-                        y: args.y !== undefined ? cofg.absolute(lastLine.y, args.y) + cofg.offsetG92.y : lastLine.y,
-                        z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
-                        e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
-                        f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
-                        s: args.s !== undefined ? cofg.absolute(lastLine.s, args.s) : lastLine.s,
-                        arci: args.i ? args.i : null,
-                        arcj: args.j ? args.j : null,
-                        arck: args.k ? args.k : null,
-                        arcr: args.r ? args.r : null,
-                    };
+                         var newLine = {
+                             x: args.x !== undefined ? cofg.absolute(lastLine.x, args.x) + cofg.offsetG92.x : lastLine.x,
+                             y: args.y !== undefined ? cofg.absolute(lastLine.y, args.y) + cofg.offsetG92.y : lastLine.y,
+                             z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
+                             e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
+                             f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
+                             arci: args.i ? args.i : null,
+                             arcj: args.j ? args.j : null,
+                             arck: args.k ? args.k : null,
+                             arcr: args.r ? args.r : null,
+                         };
 
-                    //console.log("G2 newLine:", newLine);
-                    //newLine.g2 = true;
-                    newLine.arc = true;
-                    newLine.clockwise = true;
-                    if (args.clockwise === false) newLine.clockwise = args.clockwise;
-                    cofg.addSegment(lastLine, newLine, args);
-                    //console.log("G2", lastLine, newLine, args, cofg.offsetG92);
-                    lastLine = newLine;
-                    //console.log("G2. args:", args);
-                },
-                G3: function (args, indx, gcp) {
-                    /* this is an arc move from lastLine's xy to the new xy. same
-                    as G2 but reverse*/
-                    args.arc = true;
-                    args.clockwise = false;
-                    gcp.handlers.G2(args, indx, gcp);
-                },
+                         //console.log("G2 newLine:", newLine);
+                         //newLine.g2 = true;
+                         newLine.arc = true;
+                         newLine.clockwise = true;
+                         if (args.clockwise === false) newLine.clockwise = args.clockwise;
+                         cofg.addSegment(lastLine, newLine, args);
+                         //console.log("G2", lastLine, newLine, args, cofg.offsetG92);
+                         lastLine = newLine;
+                         //console.log("G2. args:", args);
+                     },
+                     G3: function (args, indx, gcp) {
+
+                         /* this is an arc move from lastLine's xy to the new xy. same
+                         as G2 but reverse*/
+                         args.arc = true;
+                         args.clockwise = false;
+                         //parser.handler.G2(args, indx, gcp);
+
+                         args.plane = plane; //set the plane for this command to whatever the current plane is
+
+                         var newLine = {
+                             x: args.x !== undefined ? cofg.absolute(lastLine.x, args.x) + cofg.offsetG92.x : lastLine.x,
+                             y: args.y !== undefined ? cofg.absolute(lastLine.y, args.y) + cofg.offsetG92.y : lastLine.y,
+                             z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
+                             e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
+                             f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
+                             arci: args.i ? args.i : null,
+                             arcj: args.j ? args.j : null,
+                             arck: args.k ? args.k : null,
+                             arcr: args.r ? args.r : null,
+                         };
+
+                         //console.log("G2 newLine:", newLine);
+                         //newLine.g2 = true;
+                         newLine.arc = true;
+                         newLine.clockwise = true;
+                         if (args.clockwise === false) newLine.clockwise = args.clockwise;
+                         cofg.addSegment(lastLine, newLine, args);
+                         //console.log("G2", lastLine, newLine, args, cofg.offsetG92);
+                         lastLine = newLine;
+                     },
 
                 G17: function (args){
                     //console.log("SETTING XY PLANE");
