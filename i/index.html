@@ -835,6 +835,7 @@ Send</button>
 						</div>
 						<span class="input-group-addon"  style="width: 60px;">mm</span>
 				</div>
+				Note: Z-Down per pass works hand in hand with the Material Thickness selector on the main page. For example, if you have 3mm thick material selected, and set Z-Down per pass to 3mm, we will generate a single cutting pass.  If you have a weaker laser that need multiple passes, set Z-Down per pass to the depth of cut you can achieve. For example, if you set Material Thickness to 6mm, and your 40w laser can only pierce 2mm deep, set the Z-down per pass to 2mm.  6mm &divide; 2mm = 3 passes.
 			</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="generate" style="display: none;" data-dismiss="modal">Prepare GCODE</button>

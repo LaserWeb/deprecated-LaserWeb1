@@ -990,6 +990,10 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
+	$("#cutParams").draggable({
+		handle: ".modal-header"
+	});
+
 	$("#machineControl").draggable({
 		handle: ".modal-header"
 	});
