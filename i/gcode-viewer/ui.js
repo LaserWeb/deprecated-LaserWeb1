@@ -147,7 +147,7 @@ function createObject(gcode) {
 	}
 
 function openGCodeFromText() {
-    var gcode = $('#gcodepreview').val();
+	var gcode = $('#gcodepreview').val();
 	if (document.hasFocus()) {
 	createObject(gcode);
         //console.log('adding object with existing focus');

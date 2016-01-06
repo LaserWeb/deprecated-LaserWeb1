@@ -43,10 +43,22 @@
 	<script src="bootstrap-notify.js"></script>
 	<script src="main.js"></script>
 
- <!-- v70 Three.js -->
+	<link rel="stylesheet" href="jquery-ui.css" />
+	<link rel="stylesheet" href="bootstrap.min.css" />
+	<link rel="stylesheet" href="bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="bootstrap-notify.css" />
+	<link rel="stylesheet" href="font-awesome.css" />
+	<link rel="stylesheet" href="screen.css" />
+
+
+ <!-- v73 Three.js -->
 	<script src="openjscad/lib/three.min.js"></script>
+
+	<!-- OpenJSCAD -->
 	<script src="openjscad/GridRect.js"></script>  <!-- Courtesy of https://github.com/mrdoob/three.js/issues/6549 -->
 	<script src="openjscad/lib/orbitcontrols.js"></script>
+
+	<!-- Gcode Viewer -->
 	<script src="gcode-viewer/gcode-parser.js"></script>
 	<script src="gcode-viewer/renderer.js"></script>
 	<script src="gcode-viewer/ui.js"></script>
@@ -56,12 +68,6 @@
 	<script type="text/javascript" src="millcrum/inc/dxf.js"></script>
 	<script type="text/javascript" src="millcrum/inc/svg.js"></script>
 
-	<link rel="stylesheet" href="jquery-ui.css" />
-	<link rel="stylesheet" href="bootstrap.min.css" />
-	<link rel="stylesheet" href="bootstrap-theme.min.css" />
-	<link rel="stylesheet" href="bootstrap-notify.css" />
-	<link rel="stylesheet" href="font-awesome.css" />
-	<link rel="stylesheet" href="screen.css" />
 
 	<!-- Gear Generator : http://hessmer.org/gears/InvoluteSpurGearBuilder.html-->
 
@@ -186,7 +192,7 @@
 											} else if (firmware.indexOf('Smooth') == 0) {
 												 intensity = intensity.map(0, 100, 0, 1);
 												 //console.log('Mapping Intensity range for Smoothieware S0-S1');
-												 intensity = intensity.toFixed(1);
+												 intensity = intensity.toFixed(2);
 											} else {
 												 intensity = intensity.map(0, 100, 0, 100);
 												 //console.log('Mapping Intensity range for S0-S100');

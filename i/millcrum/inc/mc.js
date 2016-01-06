@@ -749,7 +749,19 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 
 		// generate Z movement at this.tool.plunge speed
 		this.gcode += 'G1 F'+this.tool.plunge+' Z'+zPos+'\n';
-		this.gcode += 'M03 S'+laserPwr+'\n';
+
+		if (firmware.indexOf('Grbl') == 0) {
+			 laserPwr = laserPwr.map(0, 100, 0, 255);
+			 this.gcode += 'M03 S'+laserPwr+'\n';
+		} else if (firmware.indexOf('Smooth') == 0) {
+			laserPwr = laserPwr.map(0, 100, 0, 1);
+			laserPwr = laserPwr.toFixed(0);
+			this.gcode += 'G1 S'+laserPwr+'\n';
+
+		} else {
+			 laserPwr = laserPwr.map(0, 100, 0, 255);
+			 this.gcode += 'M03 S'+laserPwr+'\n';
+		}
 
 		// loop through each point in the path
 		for (c=0; c<toolPath.length; c++) {
@@ -801,19 +813,19 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 
 					// now that we have the line angle, we can create each of the tabs
 					// first we need to add the first point to gcode
-					this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+					this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+' S'+laserPwr+'\n';
 					this.gcode += '\n; START TABS\n';
 					var npt = toolPath[c];
 					for (var r=0; r<numTabs; r++) {
 						// then for each tab
 						// add another point at the current point +tabPaddingPerSpace
 						npt = this.newPointFromDistanceAndAngle(npt,ang,tabPaddingPerSpace);
-						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+'\n';
+						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+' S'+laserPwr+'\n';
 						// then we raise the z height by config.tabHeight
 						this.gcode += 'G1 Z'+(zPos+config.tabHeight)+'\n';
 						// then add another point at the current point +tabWidth
 						npt = this.newPointFromDistanceAndAngle(npt,ang,config.tabWidth);
-						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+'\n';
+						this.gcode += 'G1 F'+cutSpeed+' X'+npt[0]+' Y'+npt[1]+' S'+laserPwr+'\n';
 						// then lower the z height back to zPos at plunge speed
 						this.gcode += 'G1 F'+this.tool.plunge+' Z'+zPos+'\n';
 						// then add another point at the current point +tabPaddingPerSpace
@@ -827,11 +839,11 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 					//console.log('line angle '+ang);
 				} else {
 					// line is not long enough, just draw it
-					this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+					this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+' S'+laserPwr+'\n';
 				}
 			} else {
 				// no tabs
-				this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+'\n';
+				this.gcode += 'G1 F'+cutSpeed+' X'+toolPath[c][0]+' Y'+toolPath[c][1]+' S'+laserPwr+'\n';
 			}
 		}
 

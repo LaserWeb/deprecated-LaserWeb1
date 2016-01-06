@@ -117,6 +117,9 @@ $(document).ready(function() {
 		console.log(data);
 			$('#gcodepreview').val(data.val);
 			$('#gcC').click();
+			if (boundingBox) {
+				scene.remove( boundingBox );
+			}
 			openGCodeFromText();
 			gCodeToSend = data.val;
 			document.getElementById('fileName').value = 'api-data';
@@ -1045,6 +1048,9 @@ $(document).ready(function() {
 				document.getElementById('millcrumCode').value = '';
 				document.getElementById('gcodepreview').value = this.result;
 				$('#gcC').click();
+				if (boundingBox) {
+					scene.remove( boundingBox );
+				}
 				openGCodeFromText();
 				gCodeToSend = this.result;
 				document.getElementById('fileName').value = fileName;
@@ -1203,6 +1209,9 @@ $(document).ready(function() {
 				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				$('#sendToLaser').removeClass('disabled');
+				if (boundingBox) {
+					scene.remove( boundingBox );
+				}
 				generate.click();
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
@@ -1459,6 +1468,9 @@ $('#generatePreview').on('click', function() {
 	document.getElementById('fileName').value = fileName;
 	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 	$('#sendToLaser').removeClass('disabled');
+	if (boundingBox) {
+		scene.remove( boundingBox );
+	}
 	generate.click();
 	document.getElementById('fileInputGcode').value = '';
 	document.getElementById('fileInputDXF').value = '';
@@ -2000,6 +2012,7 @@ $('#boxButton').on('click', function() {
 			$('#rasterwidget').modal('toggle');
 			var selectedFile = event.target.files[0];
 			var reader = new FileReader();
+			document.getElementById('fileImage').value = '';
 
 			var imgtag = document.getElementById("origImage");
 			imgtag.title = selectedFile.name;
@@ -2007,6 +2020,7 @@ $('#boxButton').on('click', function() {
 			reader.onload = function(event) {
 				imgtag.src = event.target.result;
 				setImgDims();
+
 			};
 
 			reader.readAsDataURL(selectedFile);
@@ -2068,17 +2082,14 @@ $('#boxButton').on('click', function() {
 					setImgDims();
 					}
 		});
-
-
-
 });
+
+var boundingBox = null;
 
 function setImgDims() {
 	spotSizeMul = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
-
 	minpwr = $( "#laserpwrslider" ).slider( "values", 0 );
 	maxpwr = $( "#laserpwrslider" ).slider( "values", 1 );
-
 
 	var img = document.getElementById('origImage');
 	width = img.clientWidth;
@@ -2093,7 +2104,26 @@ function setImgDims() {
 	$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
 	$('#spotsize').html( ($( "#spotsizeslider" ).slider( "values", 0 ) / 100) + 'mm (distance between dots )<br>Resultant Job Size: '+ physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm' );
 
-};
+
+	//  Draw a rect showing outer dims of Engraving - engravings with white space to sides are tricky to visualise without
+	rectWidth = physwidth, rectHeight = physheight;
+	if (boundingBox) {
+		scene.remove( boundingBox );
+	}
+	BBmaterial = new THREE.LineDashedMaterial( { color: 0xcccccc, dashSize: 10, gapSize: 5, linewidth: 2 });
+	BBgeometry = new THREE.Geometry();
+	BBgeometry.vertices.push(
+		new THREE.Vector3( 0, 0, 0 ),
+		new THREE.Vector3( 0, rectHeight, 0 ),
+		new THREE.Vector3( rectWidth, rectHeight, 0 ),
+		new THREE.Vector3( rectWidth, 0, 0 ),
+		new THREE.Vector3( 0, 0, 0 )
+	);
+ 	boundingBox= new THREE.Line( BBgeometry, BBmaterial );
+	boundingBox.translateX(laserxmax /2 * -1);
+	boundingBox.translateY(laserymax /2 * -1);
+ 	scene.add( boundingBox );
+	};
 
 function gcodereceived() {
 	$('#rasterwidget').modal('toggle');
