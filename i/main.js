@@ -2034,7 +2034,7 @@ $('#boxButton').on('click', function() {
 				range:true,
 				min: 0,
 				max: 100,
-				values: [ 30, 70 ],
+				values: [ 5, 40 ],
 				slide: function( event, ui ) {
 					minpwr = [ui.values[ 0 ]];
 					maxpwr = [ui.values[ 1 ]];
