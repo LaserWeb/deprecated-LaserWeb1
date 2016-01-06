@@ -186,7 +186,7 @@
 											} else if (firmware.indexOf('Smooth') == 0) {
 												 intensity = intensity.map(0, 100, 0, 1);
 												 //console.log('Mapping Intensity range for Smoothieware S0-S1');
-												 intensity = intensity.toFixed(2);
+												 intensity = intensity.toFixed(1);
 											} else {
 												 intensity = intensity.map(0, 100, 0, 100);
 												 //console.log('Mapping Intensity range for S0-S100');
