@@ -96,7 +96,6 @@
 				this.RasterNow = function( _callback){
 					// Initialise
 					project.clear();
-					$('#load').show();
 					var path = '';
 					var raster = '';
 	        var lastgrey = '';
@@ -129,7 +128,7 @@
 	        var gridSize = 1;
 
 	        // Space the cells by 120%:
-	        var spacing = 1.0;
+	        var spacing = 1.3;
 
 	        // As the web is asynchronous, we need to wait for the raster to load
 	        // before we can perform any operation on its pixels.
@@ -501,19 +500,19 @@ Send to Laser</button></div>
 
 				<span class="input-group-addon"  style="width: 100px;">Scale:</span>
 				<div class="input-group">
-					<input type="text" class="form-control" value="100" id="scaleFactor" style="text-align:right;">
+					<input type="text" class="form-control  input-sm" value="100" id="scaleFactor" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">%</span>
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Resize</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Resize</a></div>
 
 					</div>
 
 					<span class="input-group-addon"  style="margin-left: 30px;">Rotation:</span>
-					<input type="text" class="form-control" value="0" id="rotAngle" style="text-align:right;">
+					<input type="text" class="form-control  input-sm" value="0" id="rotAngle" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">&deg;</span>
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="bounding"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="bounding"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>
 					</div>
 				</div>
 
@@ -524,11 +523,11 @@ Send to Laser</button></div>
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon"  style="width: 100px;">Translate:</span>
 				<div class="input-group">
-					<input type="text" class="form-control" value="0" id="XTRANS" style="text-align:right;">
+					<input type="text" class="form-control input-sm" value="0" id="XTRANS" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">X</span>
-					<input type="text" class="form-control" value="0" id="YTRANS" style="text-align:right;">
+					<input type="text" class="form-control input-sm" value="0" id="YTRANS" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">Y</span>
-					<input type="text" class="form-control" value="0" id="ZTRANS" style="text-align:right;">
+					<input type="text" class="form-control input-sm" value="0" id="ZTRANS" style="text-align:right;">
 					<span class="input-group-addon"  style="width: 60px;">Z</span>
 					<input type="hidden" value="" id="BBXDIM">
 					<input type="hidden" value="" id="BBYDIM">
@@ -537,10 +536,10 @@ Send to Laser</button></div>
 					<input type="hidden" value="" id="BBXMAX">
 					<input type="hidden" value="" id="BBYMAX">
 					<div class="input-group-btn">
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="translate"><i class="fa fa-arrows fa-lg" style="margin-right: 3px;"></i>Move</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="translate"><i class="fa fa-arrows fa-lg" style="margin-right: 3px;"></i>Move</a></div>
 
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="flip"><i class="fa fa-exchange fa-lg" style="margin-right: 3px;"></i>Mirror</a></div>
-						<div class="btn-group" role="group"><a class="btn btn-danger" id="noneg"><i class="fa fa-wrench fa-lg" style="margin-right: 3px;"></i>Fix 0,0</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="flip"><i class="fa fa-exchange fa-lg" style="margin-right: 3px;"></i>Mirror</a></div>
+						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="noneg"><i class="fa fa-wrench fa-lg" style="margin-right: 3px;"></i>Fix 0,0</a></div>
 
 					</div>
 				</div>
@@ -557,7 +556,12 @@ Send to Laser</button></div>
 				<select id="choosePort" class="form-control">
 					<option val="no">Select a serial port</option>
 				</select>
+				<div class="input-group-btn">
+					<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-sliders fa-lg" style="margin-right: 8px;"></i>Settings</a></div>
+
+				</div>
 			</div>
+
 			<!-- Digital Readout -->
 			<div id="mPosition" >
 				<div id="mX" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin-bottom: 4px; font-size: 30px; width: 100%; border: 1px solid #aaa; font-weight: bold;">X: 0.000</div>
