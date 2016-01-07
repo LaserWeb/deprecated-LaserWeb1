@@ -129,7 +129,7 @@
 	        var gridSize = 1;
 
 	        // Space the cells by 120%:
-	        var spacing = 1.3;
+	        var spacing = 1.0;
 
 	        // As the web is asynchronous, we need to wait for the raster to load
 	        // before we can perform any operation on its pixels.
@@ -160,13 +160,11 @@
 						//s += 'G0 Y'+imgheight+' F'+feedRate+'\nG92 X0 Y0;'; // Raster runs top to bottom o we offset by the height
 
 						for (var y = 0; y < raster.height; y++) {
-							var newline = (imgheight * spotSize1) - y
-							//s += 'G0 X0 Y'+newline+' F'+feedRate+'\n'
+							var newline = (imgheight * spotSize1) - y;
 							if (dir > 0) {
 								console.log('Forward');
+								//s += 'G0 Y'+gcodey+' F'+feedRate+'\n';
 								for(var x = 0; x < raster.width; x++) {
-
-
 									// Get the color of the pixel:
 		        			var color = raster.getPixel(x, y);
 									// Scale the path by the amount of gray in the pixel color:
@@ -226,7 +224,11 @@
 
 
 
-											s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
+											if (lastIntensity > 0) {
+												s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
+											} else {
+												s += 'G0 X'+posx+' Y'+gcodey+'\n';
+											}
 
 											path = new Path.Line({
 											    from: [(lastPosx * gridSize), (lastPosy * gridSize)],
@@ -242,19 +244,18 @@
 											var lastIntensity = intensity;
 											}
 		              var lastGrey = grayLevel; // store to compare in next loop
-		        		}
+		        	}
 								dir = 0;
 							} else {
 								console.log('Reverse');
-								lastInensity = 0;
-								for(var x = raster.width; x > 0 ; x--) {
-
-
+								lastIntensity = 0;
+								//s += 'G0 Y'+gcodey+' F'+feedRate+'\n';
+								for(var x = raster.width - 1; x > 0 ; x--) {
 									// Get the color of the pixel:
 		        			var color = raster.getPixel(x, y);
 									// Scale the path by the amount of gray in the pixel color:
 		              var grayLevel = color.gray.toFixed(1);  // var grayLevel = color.gray.toFixed(2); // two decimal precision is plenty - for testing I will drop it to 1 decimal (10% increments)
-									posx = x;
+									posx = x + 1;
 									posy = y;
 
 									// Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
@@ -309,7 +310,12 @@
 
 
 
-											s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
+											if (lastIntensity > 0) {
+												s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
+											} else {
+												s += 'G0 X'+posx+' Y'+gcodey+'\n';
+											}
+
 											//console.log('G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n');
 
 											path = new Path.Line({
@@ -327,7 +333,6 @@
 											}
 		              var lastGrey = grayLevel; // store to compare in next loop
 		        		}
-
 								dir = 1;
 							};
 
