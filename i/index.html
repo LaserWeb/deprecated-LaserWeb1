@@ -162,7 +162,8 @@
 						for (var y = 0; y < raster.height; y++) {
 							var newline = (imgheight * spotSize1) - y;
 							if (dir > 0) {
-								console.log('Forward');
+								//console.log('Forward');
+								lastIntensity = 0;
 								//s += 'G0 Y'+gcodey+' F'+feedRate+'\n';
 								for(var x = 0; x < raster.width; x++) {
 									// Get the color of the pixel:
@@ -247,7 +248,7 @@
 		        	}
 								dir = 0;
 							} else {
-								console.log('Reverse');
+								//console.log('Reverse');
 								lastIntensity = 0;
 								//s += 'G0 Y'+gcodey+' F'+feedRate+'\n';
 								for(var x = raster.width - 1; x > 0 ; x--) {
