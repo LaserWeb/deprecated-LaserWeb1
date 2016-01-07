@@ -44,6 +44,20 @@ firmware = '';
 
 $(document).ready(function() {
 
+	$('#3dpmode').click(function() {
+    var $this = $(this);
+    // $this will contain a reference to the checkbox
+    if ($this.is(':checked')) {
+        console.log('3dmode active');
+				$('#tempDisplay').show();
+				$('#tempControl').show();
+    } else {
+        console.log('3dmode Stopped');
+				$('#tempDisplay').hide();
+				$('#tempControl').hide();
+    }
+	});
+
 	$('#thickness').change(function() {
 		$('#perpass').val($(this).val());
 		console.log((this).val());
@@ -1881,8 +1895,63 @@ $('#boxButton').on('click', function() {
 			}).show();
 	});
 
+	// Temp Control
+	$('#sethe').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M104 S'+$('#hotend').val()+'\n' });
+	});
+
+	$('#setbed').on('click', function() {
+		socket.emit('gcodeLine', { line: 'M140 S'+$('#hotend').val()+'\n' });
+	});
+
+
+	// Temp Guages
+	g2 = new JustGage({
+        id: 'g2',
+				relativeGaugeSize: true,
+        value: 0,
+        min: 0,
+        max: 250,
+        symbol: '℃',
+        pointer: true,
+        pointerOptions: {
+          toplength: -15,
+          bottomlength: 10,
+          bottomwidth: 12,
+          color: '#8e8e93',
+          stroke: '#ffffff',
+          stroke_width: 3,
+          stroke_linecap: 'round'
+        },
+        gaugeWidthScale: 1.1,
+        counter: true
+      });
+
+	g3 = new JustGage({
+					id: 'g3',
+						relativeGaugeSize: true,
+						value: 0,
+						min: 0,
+						max: 130,
+						symbol: '℃',
+						pointer: true,
+						pointerOptions: {
+							toplength: -15,
+							bottomlength: 10,
+							bottomwidth: 12,
+							color: '#8e8e93',
+							stroke: '#ffffff',
+							stroke_width: 3,
+							stroke_linecap: 'round'
+						},
+						gaugeWidthScale: 1.1,
+						counter: true
+					});
+
+
 	// temperature [data = T:24.31 /0 @:0 B:24.31 /0 @:0]  // Not in use in UI at the moment but I want to use Marlin's temp sensing at some point to check nozzle or water temp etc on the laser (marlin)
 	socket.on('tempStatus', function(data) {
+
 		if (data.indexOf('ok') == 0) {
 			// this is a normal temp status
 			var fs = data.split(/[TB]/);
@@ -1895,17 +1964,29 @@ $('#boxButton').on('click', function() {
 				b[i] = b[i].trim();
 			}
 			$('#eTC').html(t[0]+'C');
+			g2.refresh(t[0]);
 			$('#eTS').html(t[1]+'C');
 			$('#bTC').html(b[0]+'C');
+			g3.refresh(b[0]);
 			$('#bTS').html(b[1]+'C');
 
 		} else {
 			// this is a waiting temp status
-			var eT = data.split('T');
-			eT = eT[1].split('E');
-			eT = eT[0].slice(1);
-			eT = eT.trim();
-			$('#eTC').html(eT+'C');
+			var fs = data.split(/[TB]/);
+			var t = fs[1].split('/');
+			var b = fs[2].split('/');
+			t[0] = t[0].slice(1);
+			b[0] = b[0].slice(1);
+			for (var i=0; i<2; i++) {
+				t[i] = t[i].trim();
+				b[i] = b[i].trim();
+			}
+			$('#eTC').html(t[0]+'C');
+			g2.refresh(t[0]);
+			$('#eTS').html(t[1]+'C');
+			$('#bTC').html(b[0]+'C');
+			g3.refresh(b[0]);
+			$('#bTS').html(b[1]+'C');
 		}
 	});
 

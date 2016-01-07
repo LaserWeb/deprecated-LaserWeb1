@@ -202,7 +202,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	//console.log('Port '+port+' got newline from serial: '+data);
+	console.log('Port '+port+' got newline from serial: '+data);
 
 
 	// Try to determine Firmware in use and set up queryloop
@@ -261,7 +261,11 @@ function serialData(data, port) {
 		setInterval(function() {
 			sp[port].handle.write("M114\n"); //for Repetier
 		}, 1000);
-		data = data.replace(/_/g,' ');
+    setInterval(function() {
+      sp[port].handle.write("M105\n"); //for Repetier
+    }, 1000);
+
+    data = data.replace(/_/g,' ');
 		data = data.replace(/:/g,' ');
 		var firmwareVersion = data.split(/(\s+)/);
 		var firmware = firmwareVersion[4]+' '+firmwareVersion[6];

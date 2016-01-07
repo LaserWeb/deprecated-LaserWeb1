@@ -51,6 +51,10 @@
 	<link rel="stylesheet" href="screen.css" />
 
 
+ <!-- Temp Guages -->
+ <script src="raphael-2.1.4.min.js"></script>
+	<script src="justgage.js"></script>
+
  <!-- v73 Three.js -->
 	<script src="openjscad/lib/three.min.js"></script>
 
@@ -70,7 +74,6 @@
 
 
 	<!-- Gear Generator : http://hessmer.org/gears/InvoluteSpurGearBuilder.html-->
-
 	<!-- fallback if no WebGL -->
   <script src="openjscad/lib/projector.js"></script>
   <script src="openjscad/lib/canvasrenderer.js"></script>
@@ -393,7 +396,6 @@
 						<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
 				  	<li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>
 						<li><button type="button" class="btn btn-danger" style="margin: 10px; " id="firmwareDet">Not Connected</button></li>
-
           </ul>
         </div>
       </div>
@@ -516,9 +518,6 @@ Send to Laser</button></div>
 					</div>
 				</div>
 
-
-
-
 			</div>
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 				<span class="input-group-addon"  style="width: 100px;">Translate:</span>
@@ -545,9 +544,6 @@ Send to Laser</button></div>
 				</div>
 			</div>
 
-
-
-
        </div>
         <div class="col-md-3 panel-transparent">
           <!-- Port Selection -->
@@ -558,9 +554,14 @@ Send to Laser</button></div>
 				</select>
 				<div class="input-group-btn">
 					<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-sliders fa-lg" style="margin-right: 8px;"></i>Settings</a></div>
-
 				</div>
 			</div>
+
+			<label class="navbar-link" for="filterUnfulfilled">
+					<input type="checkbox" class="autosubmit" id="3dpmode" value="true">
+					3D Printer mode (BETA)
+			</label>
+
 
 			<!-- Digital Readout -->
 			<div id="mPosition" >
@@ -568,6 +569,15 @@ Send to Laser</button></div>
 				<div id="mY" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin-bottom: 4px; font-size: 30px; width: 100%; border: 1px solid #aaa; font-weight: bold;">Y: 0.000</div>
 				<div id="mZ" style="background-color: #ffffff; text-align: left; padding-left: 15px; margin-bottom: 4px; font-size: 30px; width: 100%; border: 1px solid #aaa; font-weight: bold;">Z: 0.000</div>
 			</div>
+
+			<!-- Temperature Guages -->
+			<div id="tempDisplay" style="display: none;">
+					<table><tr>
+						<td><div id="g2" class="gauge" data-title="E0"></div></td>
+						<td><div id="g3" class="gauge" data-title="BED"></div></td>
+					</tr></table>
+			</div>
+
 
 			<!-- Button to open Jogging and Machine Control Widget -->
 			<a class="btn btn-success disabled" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="openMachineControl"><i class="fa fa-cogs fa-lg" style="margin-right: 20px;"></i>Machine Control</a>
@@ -879,6 +889,34 @@ Send</button>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan75">75%</button></div>
 					<div class="btn-group" role="group"><button type="button" class="btn btn-sm btn-secondary btn-primary" id="fan100">100%</button></div>
 				</div>
+				<br>
+
+					<div id="tempControl" style="display: none;">
+						<div class="input-group" style="margin-bottom:10px; width: 100%;">
+							<span class="input-group-addon"  style="width: 100px;">Hotend:</span>
+							<div class="input-group">
+								<input type="text" class="form-control  input-sm" value="230" id="hotend" style="text-align:right;">
+								<span class="input-group-addon"  style="width: 60px;">&deg;C</span>
+								<div class="input-group-btn">
+									<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="sethe"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Set</a></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="input-group" style="margin-bottom:10px; width: 100%;">
+							<span class="input-group-addon"  style="width: 100px;">Bed:</span>
+							<div class="input-group">
+								<input type="text" class="form-control  input-sm" value="100" id="bed" style="text-align:right;">
+								<span class="input-group-addon"  style="width: 60px;">&deg;C</span>
+								<div class="input-group-btn">
+									<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="setbed"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Set</a></div>
+								</div>
+							</div>
+						</div>
+					</div>  <!-- End of Temp Control -->
+
+				</div>
+
 	  </div>
       <div class="modal-footer">
         <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button // Commented out - using $('#sliceModal').modal('toggle'); in main.js to close once sliced-->
