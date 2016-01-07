@@ -1176,6 +1176,8 @@ $(document).ready(function() {
 
 			}
 
+			document.getElementById('fileInputGcode').value = '';
+			document.getElementById('fileInputDXF').value = '';
 
 
 			$('#generate').hide();
