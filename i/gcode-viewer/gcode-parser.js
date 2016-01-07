@@ -142,7 +142,7 @@ function GCodeParser(handlers) {
                             if (args.text.match(/F([\d.]+)/i)) {
                                 // we have a new feedrate
                                 var feedrate = parseFloat(RegExp.$1);
-                                console.log("got feedrate on this line. feedrate:", feedrate, "args:", args);
+                                //console.log("got feedrate on this line. feedrate:", feedrate, "args:", args);
                                 args.feedrate = feedrate;
                                 this.lastFeedrate = feedrate;
                             } else {

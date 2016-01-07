@@ -233,6 +233,11 @@ Dxf.prototype.handleArc = function(d) {
 		thisArc[4] = 360;
 	} else {
 		this.alerts.push('Arc detected, arcs are difficult to close paths with.  It may be easier to edit the DXF and generate polylines.');
+		console.log('Arc detected, arcs are difficult to close paths with.  It may be easier to edit the DXF and generate polylines.');
+		$('.bottom-left').notify({
+			message: { text: 'WARNING: Arc detected, arcs are difficult to close paths with.  It may be easier to edit the DXF and generate polylines.' },
+			type: 'danger'
+		}).show();
 	}
 
 	// probably need to include 210,220,230 extrusion direction here
@@ -771,6 +776,10 @@ Dxf.prototype.parseDxf = function(d) {
 			var pointDiff = this.distanceFormula([this.lines[c][3],this.lines[c][4]], [this.lines[c+1][0],this.lines[c+1][1]]);
 			if (pointDiff < this.avgSize/20) {
 				this.alerts.push('line'+c+' and line'+Number(c+1)+' could be part of a polyline they are '+pointDiff+' units away from one another.  Make lines start and end at the exact same point and they will form polylines.');
+				$('.bottom-left').notify({
+					message: { text: 'WARNING: Arc detected, arcs are difficult to close paths with.  It may be easier to edit the DXF and generate polylines.' },
+					type: 'danger'
+				}).show();
 			}
 
 		}
