@@ -611,7 +611,7 @@ io.sockets.on('connection', function (socket) {
     var child = require('child_process').exec('git remote update; git status');
       // use event hooks to provide a callback to execute when data are available:
       child.stdout.on('data', function(data) {
-      console.log(data);
+      //console.log(data);
       socket.emit('updateStatus', data);
     });
   });
@@ -622,7 +622,7 @@ io.sockets.on('connection', function (socket) {
     var child = require('child_process').exec('git pull');
       // use event hooks to provide a callback to execute when data are available:
       child.stdout.on('data', function(data) {
-      console.log(data);
+      //console.log(data);
       socket.emit('updateStatus', data);
     });
   });
