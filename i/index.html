@@ -147,9 +147,9 @@
 							  </button>
 							  <ul class="dropdown-menu">
 							    <li><a href="#" id="viewChangelog">View Change Log</a></li>
-							    <li><a href="#">Detailed Commit Log</a></li>
+							    <li><a href="https://github.com/openhardwarecoza/LaserWeb/commits/master" target="_blank">Detailed Commit Log</a></li>
 							    <li role="separator" class="divider"></li>
-							    <li><a href="#">About</a></li>
+							    <li><a href="https://github.com/openhardwarecoza/LaserWeb" target="_blank">About</a></li>
 							  </ul>
 							</div>
 						</i>
@@ -793,22 +793,7 @@ Send</button>
 <!-- End of OpenJSCAD Widget (modal) -->
 
 
-<!-- Changelog -->
-<div class="modal fade" id="changewidget" tabindex="-1" role="dialog" aria-labelledby="Raster" aria-hidden="true">
-<div class="modal-dialog" style="width: 600px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Change Log</h4>
-      </div>
-      <div class="modal-body">
-				<div id="changelog"></div>
-	  	</div>
-      <div class="modal-footer">
-        <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
-      </div>
-    </div>
-<!-- End of Raster Widget (modal) -->
+
 
 <!-- Raster Widget (modal) -->
 <div class="modal fade" id="rasterwidget" tabindex="-1" role="dialog" aria-labelledby="Raster" aria-hidden="true">
@@ -852,13 +837,34 @@ Send</button>
 						<hr>
 						<div class="canvas" id="rasterOutput" style="display: none;">
 							<canvas id="canvas-1"></canvas>
-						</div>
+					</div>
 
 	  </div>
       <div class="modal-footer">
         <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
       </div>
     </div>
+	</div>
+</div>
+<!-- End of Raster Widget (modal) -->
+
+<!-- Changelog -->
+<div class="modal fade" id="changewidget" tabindex="-1" role="dialog" aria-labelledby="changelog" aria-hidden="true">
+<div class="modal-dialog" style="width: 600px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Change Log</h4>
+      </div>
+      <div class="modal-body">
+				<div id="changelog"></div>
+	  	</div>
+      <div class="modal-footer">
+        <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
+      </div>
+    </div>
+	</div>
+</div>
 <!-- End of Raster Widget (modal) -->
 
 
@@ -879,7 +885,8 @@ Send</button>
         <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
       </div>
     </div>
-	</dibv
+	</div>
+</div>
 <!-- End of Webcam Widget (modal) -->
 
 
