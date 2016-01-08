@@ -105,67 +105,76 @@ this.RasterNow = function( _callback){
         grayLevel = color.gray.toFixed(1);  // var grayLevel = color.gray.toFixed(2); // two decimal precision is plenty - for testing I will drop it to 1 decimal (10% increments)
         posx = x + 1;
         posy = y;
-        if (xm > 0) {
-          posx = posx - (xm / 1000);
-        }
-        intensity = (1 -grayLevel) * 100; //  Also add out Firmware specific mapping using intensity (which is 0-100) and map it between minIntensity and maxIntensity variables above * firmware specific multiplier (grbl 0-255, smoothie 0-1, etc)
-        //Constraining Laser power between minIntensity and maxIntensity
-        //console.log('Constraining');
 
-        if (parseFloat(intensity) > 0) {
-          intensity = intensity.map(0, 100, parseInt(minIntensity,10), parseInt(maxIntensity,10));
-        } else {
-          intensity = 0;
-        };
 
-        // Firmware Specific Gcode Output
-        if (firmware.indexOf('Grbl') == 0) {
-          intensity = intensity.map(0, 100, 0, 255);
-          //console.log('Mapping Intensity range for Grbl S0-S255');
-          intensity = intensity.toFixed(0);
-        } else if (firmware.indexOf('Smooth') == 0) {
-          intensity = intensity.map(0, 100, 0, 1);
-          //console.log('Mapping Intensity range for Smoothieware S0-S1');
-          intensity = intensity.toFixed(2);
-        } else {
-          intensity = intensity.map(0, 100, 0, 100);
-          //console.log('Mapping Intensity range for S0-S100');
-          intensity = intensity.toFixed(0);
-        }
+				// Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
+				if (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
+					//console.log('Could Optimise, still on '+grayLevel);
+					xm++; // Increment the X step over
+				} else {
 
-        c++;
-        xm = 0;
-        //console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
+          if (xm > 0) {
+            posx = posx - (xm / 1000);
+          }
+          intensity = (1 -grayLevel) * 100; //  Also add out Firmware specific mapping using intensity (which is 0-100) and map it between minIntensity and maxIntensity variables above * firmware specific multiplier (grbl 0-255, smoothie 0-1, etc)
+          //Constraining Laser power between minIntensity and maxIntensity
+          //console.log('Constraining');
 
-        posx = (posx * spotSize1);
-        posy = (posy * spotSize1);
-        posx = posx.toFixed(1);
-        posy = posy.toFixed(1);
-        gcodey = (imgheight * spotSize1) - posy  // Offset Y since Gcode runs from bottom left and paper.js runs from top left
-        gcodey = gcodey.toFixed(1);
+          if (parseFloat(intensity) > 0) {
+            intensity = intensity.map(0, 100, parseInt(minIntensity,10), parseInt(maxIntensity,10));
+          } else {
+            intensity = 0;
+          };
 
-        if (lastIntensity > 0) {
-          s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
-        } else {
-          s += 'G0 X'+posx+' Y'+gcodey+'\n';
-        }
+          // Firmware Specific Gcode Output
+          if (firmware.indexOf('Grbl') == 0) {
+            intensity = intensity.map(0, 100, 0, 255);
+            //console.log('Mapping Intensity range for Grbl S0-S255');
+            intensity = intensity.toFixed(0);
+          } else if (firmware.indexOf('Smooth') == 0) {
+            intensity = intensity.map(0, 100, 0, 1);
+            //console.log('Mapping Intensity range for Smoothieware S0-S1');
+            intensity = intensity.toFixed(2);
+          } else {
+            intensity = intensity.map(0, 100, 0, 100);
+            //console.log('Mapping Intensity range for S0-S100');
+            intensity = intensity.toFixed(0);
+          }
 
-        // Draw canvas (not used for GCODE generation)
-        path = new Path.Line({
-          from: [(lastPosx * gridSize), (lastPosy * gridSize)],
-          to: [(posx * gridSize), (posy * gridSize)],
-          strokeColor: 'black'
-        });
-        path.strokeColor = 'black';
-        //path.scale(1 - grayLevel);
-        path.opacity = (lastIntensity / 100);
-        // store to use in next loop
-        var lastPosx = posx;
-        var lastPosy = posy;
-        var lastIntensity = intensity;
+          c++;
+          xm = 0;
+          //console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
 
-        var lastGrey = grayLevel; // store to compare in next loop
+          posx = (posx * spotSize1);
+          posy = (posy * spotSize1);
+          posx = posx.toFixed(1);
+          posy = posy.toFixed(1);
+          gcodey = (imgheight * spotSize1) - posy  // Offset Y since Gcode runs from bottom left and paper.js runs from top left
+          gcodey = gcodey.toFixed(1);
+
+          if (lastIntensity > 0) {
+            s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
+          } else {
+            s += 'G0 X'+posx+' Y'+gcodey+'\n';
+          }
+
+          // Draw canvas (not used for GCODE generation)
+          path = new Path.Line({
+            from: [(lastPosx * gridSize), (lastPosy * gridSize)],
+            to: [(posx * gridSize), (posy * gridSize)],
+            strokeColor: 'black'
+          });
+          path.strokeColor = 'black';
+          //path.scale(1 - grayLevel);
+          path.opacity = (lastIntensity / 100);
+
+          // store to use in next loop
+          var lastIntensity = intensity;
+
+        } // end of optimaise
+
       }
+      // End of line handling
       if (lastIntensity > 0 && posx == 0) {
         //  console.log('G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n');
         s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
@@ -242,13 +251,12 @@ this.RasterNow = function( _callback){
           //path.scale(1 - grayLevel);
           path.opacity = (lastIntensity / 100);
           // store to use in next loop
-          var lastPosx = posx;
-          var lastPosy = posy;
           var lastIntensity = intensity;
 
         }
       var lastGrey = grayLevel; // store to compare in next loop
       }
+      //End of line handling
       if (lastIntensity > 0 && posx == raster.width) {
         console.log('G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n');
         //  s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';

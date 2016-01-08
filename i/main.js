@@ -2286,7 +2286,7 @@ function setImgDims() {
 	};
 
 function gcodereceived() {
-	//$('#rasterwidget').modal('toggle');
+	$('#rasterwidget').modal('toggle');
 	console.log('New Gcode');
 	$('#sendToLaser').removeClass('disabled');
 	openGCodeFromText();
