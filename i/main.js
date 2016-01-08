@@ -141,7 +141,7 @@ $(document).ready(function() {
 				scene.remove( boundingBox );
 			}
 			openGCodeFromText();
-			gCodeToSend = data.val;
+			CodeToSend = data.val;
 			document.getElementById('fileName').value = 'api-data';
 			$('#mainStatus').html('Status: <b>LaserWeb API </b>');
 			$('#sendToLaser').removeClass('disabled');
@@ -184,6 +184,16 @@ $(document).ready(function() {
 
 	// Updater
 
+	$('#viewChangelog').click(function() {
+		$.get( "https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/changelog.txt", function( data ) {
+			var lines = data.split('\n');
+			for (var line = 0; line < lines.length; line++){
+      $( "#changelog" ).append(lines[line] + '<br/>');
+    	}
+		});
+		$('#changewidget').modal('toggle');
+	});
+
 	$('#updateGit').click(function() {
 		socket.emit('updateGit', 1);
 		$('#console').append('<p class="pf" style="color: #000099 ;"><b>Checking for Updates on github.com/openhardwarecoza/LaserWeb...</b></p>');
@@ -208,10 +218,19 @@ $(document).ready(function() {
 		};
 		if (data.indexOf(' branch is behind') != -1) {
 			$('#console').append('<p class="pf" style="color: #990000 ;"><b>Updated version of LaserWeb Available</b></p>');
+			$('#console').append('<p class="pf" style="color: #222222 ;"><b>New Major features:</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			$.get( "https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/changelog.txt", function( data ) {
+				var lines = data.split('\n');
+				for (var line = 0; line < 4; line++){
+					$('#console').append('<p class="pf" style="color: #222222 ;">'+lines[line]+'</p>');
+					$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+				}
+				$('#console').append('<p class="pf" style="color: #e07900 ;"><b>Click Upgrade!</b></p>');
+				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			});
 			$('#updateGit').hide();
 			$('#upgradeGit').show();
-
 		};
 	});
 
@@ -227,6 +246,7 @@ $(document).ready(function() {
 	// obtain config options from server
 	socket.on('config', function (data) {
 		//console.log(data);
+		$('#updateGit').click(); // Check for updates on startup - very nb - I add code to Laserweb so often!
 		laserxmax = data.xmax
 		laserymax = data.ymax
 

@@ -137,8 +137,22 @@
 						<li><button type="button" class="btn btn-danger"  style="margin: 10px; display: none;"  id="door_status_btn">Door</button></li>
 				  	<li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;"  id="chiller_status_btn">Chiller</button></li>
 						<li><button type="button" class="btn btn-danger" style="margin: 10px; " id="firmwareDet">Not Connected</button></li>
-						<li><button type="button" class="btn btn-warning" style="margin: 10px; " id="updateGit">Check for Update</button></li>
-						<li><button type="button" class="btn btn-danger" style="margin: 10px; display: none;" id="upgradeGit">Upgrade Available!</button></li>
+						<li>
+							<div class="btn-group" style="margin: 10px;">
+								<button type="button" class="btn btn-warning" id="updateGit">Check for Update</button>
+								<button type="button" class="btn btn-warning" style="display: none;" id="upgradeGit">Upgrade Available!</button>
+						  	<button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu">
+							    <li><a href="#" id="viewChangelog">View Change Log</a></li>
+							    <li><a href="#">Detailed Commit Log</a></li>
+							    <li role="separator" class="divider"></li>
+							    <li><a href="#">About</a></li>
+							  </ul>
+							</div>
+						</i>
           </ul>
         </div>
       </div>
@@ -779,6 +793,23 @@ Send</button>
 <!-- End of OpenJSCAD Widget (modal) -->
 
 
+<!-- Changelog -->
+<div class="modal fade" id="changewidget" tabindex="-1" role="dialog" aria-labelledby="Raster" aria-hidden="true">
+<div class="modal-dialog" style="width: 600px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Change Log</h4>
+      </div>
+      <div class="modal-body">
+				<div id="changelog"></div>
+	  	</div>
+      <div class="modal-footer">
+        <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
+      </div>
+    </div>
+<!-- End of Raster Widget (modal) -->
+
 <!-- Raster Widget (modal) -->
 <div class="modal fade" id="rasterwidget" tabindex="-1" role="dialog" aria-labelledby="Raster" aria-hidden="true">
 <div class="modal-dialog" style="width: 600px;">
@@ -848,6 +879,7 @@ Send</button>
         <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
       </div>
     </div>
+	</dibv
 <!-- End of Webcam Widget (modal) -->
 
 
