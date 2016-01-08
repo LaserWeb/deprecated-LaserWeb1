@@ -93,7 +93,7 @@ this.RasterNow = function( _callback){
     s += '; Laser Min: '+maxIntensity+'%\n';
     s += '; Laser Spot Size '+spotSize1+'mm\n';
     s += '; Laser Feedrate '+feedRate+'mm/min\n\n';
-    s += 'G28\nG21\nG90\nG1 F'+feedRate+'\nG0 F'+rapidRate+'\n';
+    s += 'G21\nG90\nG1 F'+feedRate+'\nG0 F'+rapidRate+'\n';
 
     // Iterate through the Pixels
 
