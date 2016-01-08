@@ -5,7 +5,7 @@
 		Serial, DRO, Webcam: Andrew Hodel
 		Jog Widget:  Arthur Wolf and Kliment
 		3D Viewer:  John Lauer and Joe Walnes
-		
+
     LaserWeb - A Web Based Marlin Laser cutter Controller
     Copyright (C) 2015 Andrew Hodel & Peter van der Walt
 
@@ -326,7 +326,7 @@ $(document).ready(function() {
 		}
 	});
 
-
+/* // Disabling the context menu - not as useful as I thought it would be
 	 $.fn.contextMenu = function (settings) {
 		return this.each(function () {
 
@@ -376,7 +376,8 @@ $(document).ready(function() {
 		    return position;
 		}
 
-	    };
+	};
+
 
 
 	$("#renderArea").contextMenu({
@@ -387,6 +388,8 @@ $(document).ready(function() {
 //		alert(msg);
 //	    }
 	});
+
+*/
 
 
 
