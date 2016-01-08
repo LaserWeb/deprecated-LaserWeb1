@@ -320,7 +320,7 @@ function PostGcode() {
 									} else {
 										s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'\n';
 									}
-									
+
 									if (firmware.indexOf('Grbl') == 0) {
 											s += 'M5\n'
 									}

@@ -1,5 +1,11 @@
 /*
 
+		AUTHOR: Peter van der Walt
+		With:
+		Serial, DRO, Webcam: Andrew Hodel
+		Jog Widget:  Arthur Wolf and Kliment
+		3D Viewer:  John Lauer and Joe Walnes
+		
     LaserWeb - A Web Based Marlin Laser cutter Controller
     Copyright (C) 2015 Andrew Hodel & Peter van der Walt
 
@@ -218,8 +224,10 @@ $(document).ready(function() {
 		} else if (data.c == '3') {
 			col = 'black';
 		}
-		$('#console').append('<p class="pf" style="color: '+col+';">'+data.l+'</p>');
-		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		if (data.l.indexOf('ok') != 0 && data.l.indexOf('wait') != 0) {  // Seeing OK all the time distracts users from paying attention
+			$('#console').append('<p class="pf" style="color: '+col+';">'+data.l+'</p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		}
 	});
 
 	$('#choosePort').on('change', function() {
@@ -2117,7 +2125,7 @@ $('#boxButton').on('click', function() {
 				range:true,
 				min: 0,
 				max: 100,
-				values: [ 5, 40 ],
+				values: [ 0, 100 ],
 				slide: function( event, ui ) {
 					minpwr = [ui.values[ 0 ]];
 					maxpwr = [ui.values[ 1 ]];
@@ -2134,7 +2142,7 @@ $('#boxButton').on('click', function() {
 		$( "#spotsizeslider" ).slider({
 				min: 0,
 				max: 250,
-				values: [ 20 ],
+				values: [ 100 ],
 				slide: function( event, ui ) {
 					//spotSize = [ui.values[ 0 ]];
 					$('#rasterNow').removeClass('disabled');
@@ -2182,10 +2190,10 @@ function setImgDims() {
 	width = img.clientWidth;
 	height = img.clientHeight;
 	$("#dims").text(width+'px x '+height+'px');
-	//$('#canvas-1').prop('width', (width*3));
-	//$('#canvas-1').prop('height', (height*3));
-	$('#canvas-1').prop('width', laserxmax);
-	$('#canvas-1').prop('height', laserymax);
+	$('#canvas-1').prop('width', (width*2));
+	$('#canvas-1').prop('height', (height*2));
+	//$('#canvas-1').prop('width', laserxmax);
+	//$('#canvas-1').prop('height', laserymax);
 	var physwidth = spotSizeMul * width;
 	var physheight = spotSizeMul * height;
 	$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
@@ -2200,11 +2208,11 @@ function setImgDims() {
 	BBmaterial = new THREE.LineDashedMaterial( { color: 0xcccccc, dashSize: 10, gapSize: 5, linewidth: 2 });
 	BBgeometry = new THREE.Geometry();
 	BBgeometry.vertices.push(
-		new THREE.Vector3( 0, 0, 0 ),
-		new THREE.Vector3( 0, rectHeight, 0 ),
-		new THREE.Vector3( rectWidth, rectHeight, 0 ),
-		new THREE.Vector3( rectWidth, 0, 0 ),
-		new THREE.Vector3( 0, 0, 0 )
+		new THREE.Vector3( -1, -1, 0 ),
+		new THREE.Vector3( -1, (rectHeight + 1) , 0 ),
+		new THREE.Vector3( (rectWidth + 1), (rectHeight +1), 0 ),
+		new THREE.Vector3( (rectWidth + 1), -1, 0 ),
+		new THREE.Vector3( -1, -1, 0 )
 	);
  	boundingBox= new THREE.Line( BBgeometry, BBmaterial );
 	boundingBox.translateX(laserxmax /2 * -1);
@@ -2213,7 +2221,7 @@ function setImgDims() {
 	};
 
 function gcodereceived() {
-	$('#rasterwidget').modal('toggle');
+	//$('#rasterwidget').modal('toggle');
 	console.log('New Gcode');
 	$('#sendToLaser').removeClass('disabled');
 	openGCodeFromText();

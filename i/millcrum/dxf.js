@@ -1,3 +1,9 @@
+/*
+
+    AUTHOR:  Andrew Hodel
+
+*/
+
 var Dxf = function() {
 	this.invalidEntities = [];
 	this.layers = [];

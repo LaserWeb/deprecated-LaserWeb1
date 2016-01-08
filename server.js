@@ -1,5 +1,7 @@
 /*
 
+    AUTHOR:  Andrew Hodel with additional functionality by Peter van der Walt
+
     RepRapWeb - A Web Based 3d Printer Controller
     Copyright (C) 2015 Andrew Hodel
 
@@ -202,7 +204,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	console.log('Port '+port+' got newline from serial: '+data);
+	//console.log('Port '+port+' got newline from serial: '+data);
 
 
 	// Try to determine Firmware in use and set up queryloop
