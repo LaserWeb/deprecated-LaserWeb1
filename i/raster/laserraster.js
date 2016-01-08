@@ -108,7 +108,7 @@ this.RasterNow = function( _callback){
 
 
 				// Optimise: when the greyValue is the same as the one before, we don't write it, we append it and write on longer G1 move instead
-				if// (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
+				//if (typeof lastGrey != 'undefined' && lastGrey == grayLevel) {  // Optimisation code:  Test file without this was 50363 lines, with this was only 18292 lines.
 					//console.log('Could Optimise, still on '+grayLevel);
 					//xm++; // Increment the X step over
 				//} else {
