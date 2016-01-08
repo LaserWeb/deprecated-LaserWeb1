@@ -63,6 +63,9 @@ Dxf.prototype.crossProduct = function(v1,v2) {
 
 Dxf.prototype.calcBulgeCenter = function(p1,p2) {
 
+	console.log(p1);
+	console.log(p2);
+
 	var bulge = p1[2];
 
 	var chord = [];
