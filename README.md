@@ -141,7 +141,7 @@ Procedure courtery of @quillford : https://github.com/openhardwarecoza/LaserWeb/
 3. Go to the directory you would like to install LaserWeb in by entering ```cd Desktop``` for example
 4. Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
 5. Next install the npm modules by entering the following```
-npm install serialport socket.io node-static dotenv```
+npm install ```
 6. Finally enter ```nodejs server.js```
 
 ## Ubuntu MJPG_Streamer Install
@@ -164,8 +164,7 @@ Procedure courtery of @LordFennec : https://github.com/openhardwarecoza/LaserWeb
 4. Go to the directory you would like to install LaserWeb in by entering ```cd Desktop``` for example
 5. Enter ```git clone https://github.com/openhardwarecoza/LaserWeb.git``` then ```cd LaserWeb```
 6. Next install the npm modules by entering the following
-```npm install serialport@1.6.1```
-```npm install socket.io node-static dotenv```
+```npm install```
 7. Finally enter ```nodejs server.js```
 
 
