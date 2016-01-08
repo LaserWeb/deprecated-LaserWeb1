@@ -182,6 +182,48 @@ $(document).ready(function() {
 		$('#sendCommand').removeClass('disabled');
     });
 
+	// Updater
+
+	$('#updateGit').click(function() {
+		socket.emit('updateGit', 1);
+		$('#console').append('<p class="pf" style="color: #000099 ;"><b>Checking for Updates on github.com/openhardwarecoza/LaserWeb...</b></p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	});
+
+	$('#upgradeGit').click(function() {
+		socket.emit('upgradeGit', 1);
+		$('#console').append('<p class="pf" style="color: #000099 ;"><b>Upgrading LaserWeb Software...</b></p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	});
+
+	socket.on('updateStatus', function (data) {
+		$('#console').append('<p class="pf" style="color: #000 ;">'+data+'</p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		if (data.indexOf('up-to-date') != -1) {
+			$('#console').append('<p class="pf" style="color: #009900 ;"><b>LaserWeb is already up to date</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			$('#updateGit').show();
+			$('#upgradeGit').hide();
+
+		};
+		if (data.indexOf(' branch is behind') != -1) {
+			$('#console').append('<p class="pf" style="color: #990000 ;"><b>Updated version of LaserWeb Available</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			$('#updateGit').hide();
+			$('#upgradeGit').show();
+
+		};
+	});
+
+	socket.on('upgradeStatus', function (data) {
+		$('#console').append('<p class="pf" style="color: #000 ;">'+data+'</p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		$('#updateGit').show();
+		$('#upgradeGit').hide();
+		$('#console').append('<p class="pf" style="color: #009900 ;"><b>Upgrade Complete. Restart LaserWeb Please!</b></p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	});
+
 	// obtain config options from server
 	socket.on('config', function (data) {
 		//console.log(data);

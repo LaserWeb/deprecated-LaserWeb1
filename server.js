@@ -88,7 +88,7 @@ var fileServer = new static.Server('./i');
 
 function handler (req, res) {
 
-	console.log(chalk.gray('url request: '+req.url));
+	//console.log(chalk.gray('url request: '+req.url));
 
   if (req.url.indexOf('/api/upload') == 0 && req.method == 'POST') {
 		// this is a gcode upload, probably from jscut
@@ -477,7 +477,6 @@ var queuePause = 0;
 io.sockets.on('connection', function (socket) {
 
 	socket.on('firstLoad', function(data) {
-
 		socket.emit('config', config);
 	});
 
@@ -605,5 +604,28 @@ io.sockets.on('connection', function (socket) {
 		}
 
 	});
+
+  socket.on('updateGit', function(data) {
+    console.log(chalk.yellow('Check for Updates'));
+
+    var child = require('child_process').exec('git remote update; git status');
+      // use event hooks to provide a callback to execute when data are available:
+      child.stdout.on('data', function(data) {
+      console.log(data);
+      socket.emit('updateStatus', data);
+    });
+  });
+
+  socket.on('upgradeGit', function(data) {
+    console.log(chalk.yellow('Check for Updates'));
+
+    var child = require('child_process').exec('git pull');
+      // use event hooks to provide a callback to execute when data are available:
+      child.stdout.on('data', function(data) {
+      console.log(data);
+      socket.emit('updateStatus', data);
+    });
+  });
+
 
 });
