@@ -110,7 +110,7 @@ function handler (req, res) {
 	} else {
   	fileServer.serve(req, res, function (err, result) {
   		if (err) {
-  			console.error(chalk.red('fileServer error:'), err.message);
+  			console.error(chalk.red('fileServer error:'+req.url+' : '), err.message);
   		}
   	});
   }
