@@ -52,12 +52,15 @@ this.RasterNow = function( _callback){
   imgheight = globals.imgH;
   imgwidth = globals.imgW;
   feedRate = globals.feed;
+  rapidRate = globals.rapid;
 
   // Log it as a sanity check
   console.log('Constraining Laser power between '+minIntensity+'% and '+maxIntensity+'%');
   console.log('Height: '+imgheight+'px, Width: '+imgwidth+'px');
   console.log('Spot Size: '+spotSize1+'mm');
   console.log('Raster Width: '+raster.width+' Height: '+raster.height);
+  console.log('G0: '+rapidRate+' mm/min, G1: '+feedRate+' mm/min');
+
 
   // Create a raster item using the image tag 'origImage'
   raster = new Raster('origImage');
@@ -90,7 +93,7 @@ this.RasterNow = function( _callback){
     s += '; Laser Min: '+maxIntensity+'%\n';
     s += '; Laser Spot Size '+spotSize1+'mm\n';
     s += '; Laser Feedrate '+feedRate+'mm/min\n\n';
-    s += 'G28\nG21\nG90\nG1 F'+feedRate+'\n';
+    s += 'G28\nG21\nG90\nG1 F'+feedRate+'\nG0 F'+rapidRate+'\n';
 
     // Iterate through the Pixels
 
@@ -255,7 +258,7 @@ this.RasterNow = function( _callback){
               s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+'; Engrave <-\n';
             } else {
               if (intensity > 0) {
-                s += 'G0 X'+posx+' Y'+gcodey+'; Whitespace <-\n';
+                s += 'G0 X'+posx+' Y'+gcodey+' ; Whitespace <-\n';
               };
 
             }

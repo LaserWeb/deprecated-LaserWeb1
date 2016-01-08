@@ -2221,6 +2221,7 @@ $('#boxButton').on('click', function() {
 		$('#rasterNow').on('click', function() {
 			spotSize = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 			laserFeed = $('#feedRate').val();
+			laserRapid = $('#rapidRate').val();
 			window.globals = {
 				  completed: function() { gcodereceived(); },
 					minpwr2: [minpwr],
@@ -2228,7 +2229,8 @@ $('#boxButton').on('click', function() {
 					spotSize: [spotSize],
 					imgH: [height],
 					imgW: [width],
-					feed: [laserFeed]
+					feed: [laserFeed],
+					rapid: [laserRapid]
 			};
 			window.paper.RasterNow(function() {
 				gcodereceived();
