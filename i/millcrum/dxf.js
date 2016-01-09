@@ -259,7 +259,7 @@ Dxf.prototype.handleArc = function(d) {
 	var numSegments = 40;
 	var degreeStep = arcTotalDeg / numSegments;
 
-  console.log('MILLCRUM:  thisArc: '+thisArc)
+  //console.log('MILLCRUM:  thisArc: '+thisArc)
 
 	// holder for the path
 	var newPoints = [];

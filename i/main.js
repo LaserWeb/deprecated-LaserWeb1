@@ -1188,10 +1188,10 @@ $(document).ready(function() {
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
-			//NEW Dxf
-			var parser2 = new window.DxfParser();
-			var dxf2 = parser2.parseSync(r.result);
-			cadCanvas = new processDXF(dxf2);
+			//NEW Dxf  -- experimental
+			//var parser2 = new window.DxfParser();
+			//var dxf2 = parser2.parseSync(r.result);
+			//cadCanvas = new processDXF(dxf2);
 
 			//END NEW DXF
 
