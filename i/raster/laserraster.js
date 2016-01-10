@@ -27,6 +27,37 @@
 
 */
 
+function figureIntensity(grey) {
+	minIntensity = globals.minpwr2;
+	maxIntensity = globals.maxpwr2;
+	spotSize1 = globals.spotSize;
+	intensity = (1 -grayLevel) * 100; //  Also add out Firmware specific mapping using intensity (which is 0-100) and map it between minIntensity and maxIntensity variables above * firmware specific multiplier (grbl 0-255, smoothie 0-1, etc)
+	//Constraining Laser power between minIntensity and maxIntensity
+	//console.log('Constraining');
+
+	if (parseFloat(intensity) > 0) {
+		intensity = intensity.map(0, 100, parseInt(minIntensity,10), parseInt(maxIntensity,10));
+	} else {
+		intensity = 0;
+	};
+
+	// Firmware Specific Gcode Output
+	if (firmware.indexOf('Grbl') == 0) {
+		intensity = intensity.map(0, 100, 0, 255);
+		//console.log('Mapping Intensity range for Grbl S0-S255');
+		intensity = intensity.toFixed(0);
+	} else if (firmware.indexOf('Smooth') == 0) {
+		intensity = intensity.map(0, 100, 0, 1);
+		//console.log('Mapping Intensity range for Smoothieware S0-S1');
+		intensity = intensity.toFixed(2);
+	} else {
+		intensity = intensity.map(0, 100, 0, 100);
+		//console.log('Mapping Intensity range for S0-S100');
+		intensity = intensity.toFixed(0);
+	}
+	return intensity
+}
+
 // add MAP function to the Numbers function
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
   return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -46,13 +77,13 @@ this.RasterNow = function( _callback){
 	var gcodey = '';
 
   //Pull params from the Global context
-  minIntensity = globals.minpwr2;
-  maxIntensity = globals.maxpwr2;
-  spotSize1 = globals.spotSize;
   imgheight = globals.imgH;
   imgwidth = globals.imgW;
   feedRate = globals.feed;
   rapidRate = globals.rapid;
+	minIntensity = globals.minpwr2;
+	maxIntensity = globals.maxpwr2;
+	spotSize1 = globals.spotSize;
 
   // Log it as a sanity check
   console.log('Constraining Laser power between '+minIntensity+'% and '+maxIntensity+'%');
@@ -126,31 +157,7 @@ this.RasterNow = function( _callback){
           if (xm > 0) {
             //posx = posx - (xm / 1000);
           }
-          intensity = (1 -grayLevel) * 100; //  Also add out Firmware specific mapping using intensity (which is 0-100) and map it between minIntensity and maxIntensity variables above * firmware specific multiplier (grbl 0-255, smoothie 0-1, etc)
-          //Constraining Laser power between minIntensity and maxIntensity
-          //console.log('Constraining');
-
-          if (parseFloat(intensity) > 0) {
-            intensity = intensity.map(0, 100, parseInt(minIntensity,10), parseInt(maxIntensity,10));
-          } else {
-            intensity = 0;
-          };
-
-          // Firmware Specific Gcode Output
-          if (firmware.indexOf('Grbl') == 0) {
-            intensity = intensity.map(0, 100, 0, 255);
-            //console.log('Mapping Intensity range for Grbl S0-S255');
-            intensity = intensity.toFixed(0);
-          } else if (firmware.indexOf('Smooth') == 0) {
-            intensity = intensity.map(0, 100, 0, 1);
-            //console.log('Mapping Intensity range for Smoothieware S0-S1');
-            intensity = intensity.toFixed(2);
-          } else {
-            intensity = intensity.map(0, 100, 0, 100);
-            //console.log('Mapping Intensity range for S0-S100');
-            intensity = intensity.toFixed(0);
-          }
-
+		  intensity = figureIntensity(grayLevel);
           c++;
           xm = 0;
           //console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
