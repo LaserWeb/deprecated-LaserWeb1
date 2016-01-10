@@ -1116,6 +1116,10 @@ function GCodeParser(handlers) {
 			document.getElementById('BBXMAX').value = bbbox2.max.x;
 			document.getElementById('BBYMAX').value = bbbox2.max.y;
 
+      //camera.position.x = (dX / 2) - (laserxmax /2);
+      //camera.position.y = (dY / 2) - (laserxmax /2);
+      //controls.target = new THREE.Vector3(((dY / 2) - (laserxmax /2)),((dX / 2) - (laserxmax /2)), 0);
+
 
             // store meta data in userData of object3d for later use like in animation
             // of toolhead
