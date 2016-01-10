@@ -86,19 +86,19 @@ this.RasterNow = function( _callback){
 	maxIntensity = globals.maxpwr2;
 	spotSize1 = globals.spotSize;
 
-  // Log it as a sanity check
-  console.log('Constraining Laser power between '+minIntensity+'% and '+maxIntensity+'%');
-  console.log('Height: '+imgheight+'px, Width: '+imgwidth+'px');
-  console.log('Spot Size: '+spotSize1+'mm');
-  console.log('Raster Width: '+raster.width+' Height: '+raster.height);
-  console.log('G0: '+rapidRate+' mm/min, G1: '+feedRate+' mm/min');
-
-
   // Create a raster item using the image tag 'origImage'
   raster = new Raster('origImage');
   raster.visible = false;
   var gridSize = 1;
   var spacing = 1;
+
+	// Log it as a sanity check
+	console.log('Constraining Laser power between '+minIntensity+'% and '+maxIntensity+'%');
+	console.log('Height: '+imgheight+'px, Width: '+imgwidth+'px');
+	console.log('Spot Size: '+spotSize1+'mm');
+	console.log('Raster Width: '+raster.width+' Height: '+raster.height);
+	console.log('G0: '+rapidRate+' mm/min, G1: '+feedRate+' mm/min');
+
 
   // As the web is asynchronous, we need to wait for the raster to load before we can perform any operation on its pixels.
   raster.on('load', function() {
