@@ -145,7 +145,7 @@ this.RasterNow = function( _callback){
 		for(var px = 0; px <= raster.width ; px++) {
 			if (dir > 0) {
 				x = px;
-				posx = x + 1;
+				posx = x;
 			} else {
 				x = raster.width - px - 1;
 				posx = x + 1;
