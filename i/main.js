@@ -2294,11 +2294,11 @@ function setImgDims() {
 	BBmaterial = new THREE.LineDashedMaterial( { color: 0xcccccc, dashSize: 10, gapSize: 5, linewidth: 2 });
 	BBgeometry = new THREE.Geometry();
 	BBgeometry.vertices.push(
-		new THREE.Vector3( -1, -1, 0 ),
-		new THREE.Vector3( -1, (rectHeight + 1) , 0 ),
-		new THREE.Vector3( (rectWidth + 1), (rectHeight +1), 0 ),
-		new THREE.Vector3( (rectWidth + 1), -1, 0 ),
-		new THREE.Vector3( -1, -1, 0 )
+		new THREE.Vector3( 0, 0, 0 ),
+		new THREE.Vector3( 0, rectHeight , 0 ),
+		new THREE.Vector3( rectWidth, rectHeight, 0 ),
+		new THREE.Vector3( rectWidth, 0, 0 ),
+		new THREE.Vector3( 0, 0, 0 )
 	);
  	boundingBox= new THREE.Line( BBgeometry, BBmaterial );
 	boundingBox.translateX(laserxmax /2 * -1);
