@@ -131,65 +131,78 @@ this.RasterNow = function( _callback){
     // Iterate through the Pixels
 
     for (var y = 0; y < raster.height; y++) {
+		// Calculate where to move to to start the first and next rows - G0 Yxx move between lines
 		posy = y;
 		posy = (posy * spotSize1);
 		posy = posy.toFixed(1);
 		gcodey = (imgheight * spotSize1) - posy  // Offset Y since Gcode runs from bottom left and paper.js runs from top left
 		gcodey = gcodey.toFixed(1);
-		//newLine = (imgheight * spotSize1) - posy;  // Offset Y since Gcode runs from bottom left and paper.js runs from top left
 		s += 'G0 Y'+gcodey+'\n';
-		//if (dir>0){
+		// Clear grayscale values on each line change
 		lastGrey = -1;
-		lastIntensity = -1
-		//dir = 1;
+		lastIntensity = -1;
+		// Run the row:
 		for(var px = 0; px <= raster.width ; px++) {
-			if (dir > 0) {
+			if (dir > 0) { // Forward
 				x = px;
 				posx = x;
-			} else {
+			} else { // Backward
 				x = raster.width - px - 1;
 				posx = x + 1;
-			}
+			};
+			// Convert Pixel Position to millimeter position
 			posx = (posx * spotSize1);
 			posx = posx.toFixed(1);
-			//console.log('Spot: X: '+x+' Y: '+y);
-			megaPixel++
+			// Keep some stats of how many pixels we've processed
+			megaPixel++;
+			// Determine the grayscale of the pixel(x,y)  we are looping over
 			color = raster.getPixel(x, y);
 			grayLevel = color.gray.toFixed(1);  // var grayLevel = color.gray.toFixed(2); // two decimal precision is plenty - for testing I will drop it to 1 decimal (10% increments)
-			if (lastGrey != grayLevel) intensity = figureIntensity(grayLevel);
-			if (intensity != lastIntensity) skip++;
+			//
+			if (lastGrey != grayLevel) {
+				intensity = figureIntensity(grayLevel);
+			};
+			// Can't miss the first pixel (;
 			if (px == 0) lastPosx = posx;
-			if (intensity != lastIntensity || px == raster.width) { //draw
+			// If we dont match the grayscale, we need to write some gcode...
+			if (intensity != lastIntensity || px == raster.width) {
 				c++;
 				xm = 0;
 				//console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
 
 				if (lastIntensity > 0) {
-					s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' ; Engrave ->\n';
+					s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' \n';
 				} else {
-					s += 'G0 X'+posx+' Y'+gcodey+' S0; Whitespace ->\n';
+					s += 'G0 X'+posx+' Y'+gcodey+' S0\n';
 				}
 
+				// Debug:  Can be commented, but DON'T DELETE - I use it all the time when i find bug that I am not sure of
+				// whether the root cause is the raster module or the gcode viewer module - by drawing the paper.js object I can
+				// do a comparison to see which it is
 				// Draw canvas (not used for GCODE generation)
-				path = new Path.Line({
-					from: [(lastPosx * gridSize), (posy * gridSize)],
-					to: [(endPosx * gridSize), (posy * gridSize)],
-					strokeColor: 'black'
-				});
-				path.strokeColor = 'black';
-				//path.scale(1 - grayLevel);
-				path.opacity = (lastIntensity / 100);
-			}//finish draw
-			endPosx = posx
+				//path = new Path.Line({
+				//		from: [(lastPosx * gridSize), (posy * gridSize)],
+				//		to: [(endPosx * gridSize), (posy * gridSize)],
+				//		strokeColor: 'black'
+				//		});
+				//path.strokeColor = 'black';
+				//path.opacity = (lastIntensity / 100);
+				// End of debug drawing
+			} else {
+				skip++
+			};
+			// End of write a line of gcode
+			endPosx = posx;
+			// Store values to use in next loop
 			if (intensity != lastIntensity) {
 				lastIntensity = intensity;
 				lastPosx = posx
-			}
-		}
-		dir = - dir;
-	}
+			};
+		};
+		dir = - dir; // Reverse direction for next row - makes us move in a more efficient zig zag down the image
+	};
 
-  // Populate the GCode textarea
+	// Populate the GCode textarea
   document.getElementById('gcodepreview').value = s;
   console.log('Optimsed by number of line: '+skip);
 

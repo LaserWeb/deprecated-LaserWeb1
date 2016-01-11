@@ -1,0 +1,27 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="js/paper-full.min.js"></script>
+<!-- Define inlined JavaScript -->
+<script type="text/javascript">
+    // Only executed our code once the DOM is ready.
+    window.onload = function() {
+        // Get a reference to the canvas object
+        var canvas = document.getElementById('myCanvas');
+        // Create an empty project and a view for the canvas:
+        paper.setup(canvas);
+        // Create a Paper.js Path to draw a line into it:
+
+		    var path = paper.project.importSVG(document.getElementById('svg'));
+        console.log(path);
+    }
+</script>
+</head>
+<body>
+    <canvas id="myCanvas" resize></canvas>
+    <img src="homer-simpson.svg" id="svg">
+</body>
+</html>
