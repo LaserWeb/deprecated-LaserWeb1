@@ -32,7 +32,7 @@ function createObject(gcode) {
   if (object) {
         scene.remove(object);
     }
-    object = createObjectFromGCode(gcode);
+  object = createObjectFromGCode(gcode);
 	object.translateX(laserxmax /2 * -1);
 	object.translateY(laserymax /2 * -1);
 
@@ -168,7 +168,7 @@ function openGCodeFromText() {
 	//    createObject(gcode);
   //          //console.log('focus exists');
   //          // unbind for next object load
-            $(this).unbind(event);
+          //  $(this).unbind(event);
   //      });
   //  }
 	console.timeEnd("Process 3D View");

@@ -32,7 +32,12 @@
 
 */
 
-// Specific to your machine.  Also see same config in ui.js
+// First thing first - see if we have WebGL available!
+
+var canvas = ''
+var webgl = ''
+canvas = !! window.CanvasRenderingContext2D;
+webgl = ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )();
 
 
 // add some functions to the string object
@@ -197,13 +202,13 @@ $(document).ready(function() {
 
 	$('#updateGit').click(function() {
 		socket.emit('updateGit', 1);
-		$('#console').append('<p class="pf" style="color: #000099 ;"><b>Checking for Updates on github.com/openhardwarecoza/LaserWeb...</b></p>');
+		$('#console').append('<hr><p class="pf" style="color: #000099 ;"><b>Checking for Updates on github.com/openhardwarecoza/LaserWeb...</b></p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
 
 	$('#upgradeGit').click(function() {
 		socket.emit('upgradeGit', 1);
-		$('#console').append('<p class="pf" style="color: #000099 ;"><b>Upgrading LaserWeb Software...</b></p>');
+		$('#console').append('<hr><p class="pf" style="color: #000099 ;"><b>Upgrading LaserWeb Software...</b></p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
 
@@ -211,7 +216,7 @@ $(document).ready(function() {
 		$('#console').append('<p class="pf" style="color: #000 ;">'+data+'</p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 		if (data.indexOf('up-to-date') != -1) {
-			$('#console').append('<p class="pf" style="color: #009900 ;"><b>LaserWeb is already up to date</b></p>');
+			$('#console').append('<p class="pf" style="color: #009900 ;"><b>LaserWeb is already up to date</b></p><hr>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			$('#updateGit').show();
 			$('#upgradeGit').hide();
@@ -227,7 +232,7 @@ $(document).ready(function() {
 					$('#console').append('<p class="pf" style="color: #222222 ;">'+lines[line]+'</p>');
 					$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 				}
-				$('#console').append('<p class="pf" style="color: #e07900 ;"><b>Click Upgrade!</b></p>');
+				$('#console').append('<p class="pf" style="color: #e07900 ;"><b>Click Upgrade!</b></p><hr>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			});
 			$('#updateGit').hide();
@@ -247,7 +252,9 @@ $(document).ready(function() {
 	// obtain config options from server
 	socket.on('config', function (data) {
 		//console.log(data);
-		$('#updateGit').click(); // Check for updates on startup - very nb - I add code to Laserweb so often!
+		if (webgl) {
+			$('#updateGit').click(); // Check for updates on startup - very nb - I add code to Laserweb so often!
+		};
 		laserxmax = data.xmax
 		laserymax = data.ymax
 
@@ -2280,25 +2287,25 @@ function setImgDims() {
 	$('#canvas-1').prop('height', (height*2));
 	//$('#canvas-1').prop('width', laserxmax);
 	//$('#canvas-1').prop('height', laserymax);
-	var physwidth = spotSizeMul * width;
-	var physheight = spotSizeMul * height;
+	var physwidth = spotSizeMul * (width+1);
+	var physheight = spotSizeMul * (height);
 	$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
 	$('#spotsize').html( ($( "#spotsizeslider" ).slider( "values", 0 ) / 100) + 'mm (distance between dots )<br>Resultant Job Size: '+ physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm' );
 
 
 	//  Draw a rect showing outer dims of Engraving - engravings with white space to sides are tricky to visualise without
-	rectWidth = physwidth, rectHeight = physheight;
+	rectWidth = physwidth +spotSizeMul, rectHeight = physheight + spotSizeMul;
 	if (boundingBox) {
 		scene.remove( boundingBox );
 	}
 	BBmaterial = new THREE.LineDashedMaterial( { color: 0xcccccc, dashSize: 10, gapSize: 5, linewidth: 2 });
 	BBgeometry = new THREE.Geometry();
 	BBgeometry.vertices.push(
-		new THREE.Vector3( 0, 0, 0 ),
-		new THREE.Vector3( 0, rectHeight , 0 ),
-		new THREE.Vector3( rectWidth, rectHeight, 0 ),
-		new THREE.Vector3( rectWidth, 0, 0 ),
-		new THREE.Vector3( 0, 0, 0 )
+		new THREE.Vector3( -spotSizeMul, 0, 0 ),
+		new THREE.Vector3( -spotSizeMul, (rectHeight + 1) , 0 ),
+		new THREE.Vector3( (rectWidth + 1), (rectHeight +1), 0 ),
+		new THREE.Vector3( (rectWidth + 1), 0, 0 ),
+		new THREE.Vector3( -spotSizeMul, 0, 0 )
 	);
  	boundingBox= new THREE.Line( BBgeometry, BBmaterial );
 	boundingBox.translateX(laserxmax /2 * -1);

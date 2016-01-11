@@ -240,7 +240,7 @@ Send to Laser</button></div>
 			</div>
 				<input type="hidden" value="GCODE" id="fileName">
 				<hr style="clear: both;" />
-			<div class="btn btn-danger" onclick="controls.reset();"><i class="fa fa-street-view fa-lg"></i>Reset 3D View</div>
+
 
 			<!-- Div for popup Notifications -->
 			<div class='notifications bottom-left'></div>
@@ -252,7 +252,10 @@ Send to Laser</button></div>
 
 			<!-- Credits in bottom of left column -->
 			<p style="color: #aaa; font-size: .8em; margin-top: 20px;">
-			<a href="http://openhardwarecoza.wordpress.com.com">&copy; openhardwarecoza</a>
+			Support: <a href="http://openhardwarecoza.wordpress.com">&copy; openhardwarecoza</a><br>
+			<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJSWU"><img src="css/images/paypal.png" /></a><br>
+			<a href="https://github.com/openhardwarecoza/LaserWeb/issues">github.com/openhardwarecoza/LaserWeb/issues</a>
+
 			</p>
 
 		</div>
@@ -260,12 +263,21 @@ Send to Laser</button></div>
 		<!-- Center Column  -->
 		<div class="col-md-6 panel-transparent">
 
+
+			<div class="input-group" style="margin-bottom:10px; width: 100%;">
+				<div class="btn-group input-group  btn-group-justified">
+					<div class="btn-group" role="group"><a class="btn btn-sm btn-primary" onclick="controls.reset();"><i class="fa fa-street-view fa-lg"></i>Reset 3D View</a></div>
+					<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="flip"><i class="fa fa-exchange fa-lg" style="margin-right: 3px;"></i>Mirror</a></div>
+					<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="noneg"><i class="fa fa-wrench fa-lg" style="margin-right: 3px;"></i>Fix 0,0</a></div>
+					<div class="btn-group" role="group"><a class="btn btn-sm btn-success" id="bounding"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>
+				</div>
+			</div>
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
 
-				<span class="input-group-addon"  style="width: 100px;">Scale:</span>
+				<span class="input-group-addon"  >Scale:</span>
 				<div class="input-group">
 					<input type="text" class="form-control  input-sm" value="100" id="scaleFactor" style="text-align:right;">
-					<span class="input-group-addon"  style="width: 60px;">%</span>
+					<span class="input-group-addon"  >%</span>
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="scale"><i class="fa fa-arrows-alt fa-lg" style="margin-right: 3px;"></i>Resize</a></div>
 
@@ -276,20 +288,18 @@ Send to Laser</button></div>
 					<span class="input-group-addon"  style="width: 60px;">&deg;</span>
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="rotate"><i class="fa fa-refresh fa-lg" style="margin-right: 3px;"></i>Rotate</a></div>
-						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="bounding"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Draw Bounding Box</a></div>
 					</div>
 				</div>
-
 			</div>
 			<div class="input-group" style="margin-bottom:10px; width: 100%;">
-				<span class="input-group-addon"  style="width: 100px;">Translate:</span>
+				<span class="input-group-addon" >Translate:</span>
 				<div class="input-group">
 					<input type="text" class="form-control input-sm" value="0" id="XTRANS" style="text-align:right;">
-					<span class="input-group-addon"  style="width: 60px;">X</span>
+					<span class="input-group-addon"  >X</span>
 					<input type="text" class="form-control input-sm" value="0" id="YTRANS" style="text-align:right;">
-					<span class="input-group-addon"  style="width: 60px;">Y</span>
+					<span class="input-group-addon"  >Y</span>
 					<input type="text" class="form-control input-sm" value="0" id="ZTRANS" style="text-align:right;">
-					<span class="input-group-addon"  style="width: 60px;">Z</span>
+					<span class="input-group-addon"  >Z</span>
 					<input type="hidden" value="" id="BBXDIM">
 					<input type="hidden" value="" id="BBYDIM">
 					<input type="hidden" value="" id="BBXMIN">
@@ -299,13 +309,12 @@ Send to Laser</button></div>
 					<div class="input-group-btn">
 						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="translate"><i class="fa fa-arrows fa-lg" style="margin-right: 3px;"></i>Move</a></div>
 
-						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="flip"><i class="fa fa-exchange fa-lg" style="margin-right: 3px;"></i>Mirror</a></div>
-						<div class="btn-group" role="group"><a class="btn btn-sm btn-danger" id="noneg"><i class="fa fa-wrench fa-lg" style="margin-right: 3px;"></i>Fix 0,0</a></div>
+
 
 					</div>
 				</div>
 			</div>
-
+<div id="noWebGL"></div>
        </div>
         <div class="col-md-3 panel-transparent">
           <!-- Port Selection -->
@@ -361,6 +370,12 @@ Send</button>
 				<div style="width:100%; background-color:white; height:25px; float: right; border-radius: 4px; border: 1px solid #333333;" id="qStatusHolder">
 				<!-- Progress bar Queue status -->
 				<div id="qStatus" style="padding-left: 4px; padding-top: 2px; height:23px; width:0px; background-color:skyblue; border-radius: 4px;"></div>
+				<!-- Credits in bottom of left column -->
+
+				<p style="color: #aaa; font-size: .8em; margin-top: 20px; text-align:right;">
+				Found a bug? <br>
+				<a href="https://github.com/openhardwarecoza/LaserWeb/issues">github.com/openhardwarecoza/LaserWeb/issues</a>
+
 			</div>
         </div>
       </div>

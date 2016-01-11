@@ -756,6 +756,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 		// generate Z movement at this.tool.plunge speed
 		this.gcode += 'G1 F'+this.tool.plunge+' Z'+zPos+'\n';
 
+		// Firmware specific Sxxx params
 		if (firmware.indexOf('Grbl') == 0) {
 			 laserPwr = laserPwr.map(0, 100, 0, 255);
 			 this.gcode += 'M03 S'+laserPwr+'\n';
@@ -763,7 +764,6 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 			laserPwr = laserPwr.map(0, 100, 0, 1);
 			laserPwr = laserPwr.toFixed(0);
 			this.gcode += 'G1 S'+laserPwr+'\n';
-
 		} else {
 			 laserPwr = laserPwr.map(0, 100, 0, 255);
 			 this.gcode += 'M03 S'+laserPwr+'\n';

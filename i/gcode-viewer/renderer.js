@@ -5,10 +5,32 @@
 */
 
 function createScene(element) {
+
+
+  var canvas = !! window.CanvasRenderingContext2D;
+  var webgl = ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )();
+
+  if (webgl) {
+    $('#console').append('<hr><p class="pf" style="color: green;"><b>WebGL detected!</b><br> Continuing with best Laserweb 3D Viewer Experience</p><hr>');
+    $('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+    renderer = new THREE.WebGLRenderer({
+        autoClearColor: true
+    });
+
+  } else if (canvas) {
+
+    $('#console').append('<hr><p class="pf" style="color: red;"><b>CRITICAL ERROR:  No WebGL Support!</b><br> Laserweb may not work on this computer! Try another computer with WebGL support</p><br><u>Try the following:</u><br><ul><li>In the Chrome address bar, type: <b>chrome://flags</b> [Enter]</li><li>Enable the <b>Override software Rendering</b></li><li>Restart Chrome and try again</li></ul>Sorry! :(<hr>');
+    $('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+    $( "#noWebGL" ).append('<div style=" margin: auto;"><h1>No WebGL Support found!</h1></div><b>CRITICAL ERROR:</b><br> Laserweb may not work on this computer! <br>Try another computer with WebGL support</p><br><u>Try the following:</u><br><ul><li>In the Chrome address bar, type: <b>chrome://flags</b> [Enter]</li><li>Enable the <b>Override software Rendering</b></li><li>Restart Chrome and try again</li></ul>Sorry! :(<hr>');
+  };
+
     // renderer setup
     renderer = new THREE.WebGLRenderer({
         autoClearColor: true
     });
+
     renderer.setClearColor(0xffffff, 1);
     renderer.setSize(element.width(), (element.height() -30 ));
     element.append(renderer.domElement);

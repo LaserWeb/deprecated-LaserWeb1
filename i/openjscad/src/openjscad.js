@@ -736,8 +736,10 @@ OpenJsCad.AlertUserOfUncaughtExceptions = function() {
     message = message.replace(/^Uncaught /i, "");
     //alert(message+"\n\n("+url+" line "+line+")");
     console.log(message+"\n\n("+url+" line "+line+")");
-    $('#console').append('<p class="pf" style="color: #FF0000;"><b>Application Error:</b><br>'+message+" (from "+url+" line "+line+'</p>');
-    $('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+    if (webgl) { // Non web-gl means a LOT of application modules will print errors. Showing them to the user, causes unneccesary confusion, since the root cause is lack of WebGL
+      $('#console').append('<p class="pf" style="color: #FF0000;"><b>Application Error:</b><br>'+message+" (from "+url+" line "+line+'</p>');
+      $('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+    };
   };
 };
 
