@@ -2447,11 +2447,13 @@ function processSVG() {
 	//var svgfile = XMLS.serializeToString(svg);
 	SVGlaserFeed = $('#SVGfeedRate').val();
 	SVGlaserRapid = $('#SVGrapidRate').val();
+	SVGlaserPwr = $('#SVGlaserPwr').val();
 	document.getElementById("gcodepreview").value = svg2gcode(svg, {
 			feedRate: SVGlaserFeed,
 			seekRate: SVGlaserRapid,
 			bitWidth: 0.01,
 			scale: svgscale,
-			safeZ: 0.01
+			safeZ: 0.01,
+			laserpwr: SVGlaserPwr
 		});
 };
