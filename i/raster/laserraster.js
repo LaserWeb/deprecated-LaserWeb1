@@ -51,6 +51,10 @@ function figureIntensity(grey) {
 		intensity = intensity.map(0, 100, 0, 1);
 		//console.log('Mapping Intensity range for Smoothieware S0-S1');
 		intensity = intensity.toFixed(2);
+	} else if (firmware.indexOf('Lasaur') == 0) {
+		intensity = intensity.map(0, 100, 0, 255);
+		//console.log('Mapping Intensity range for Smoothieware S0-S1');
+		intensity = intensity.toFixed(0);
 	} else {
 		intensity = intensity.map(0, 100, 0, 100);
 		//console.log('Mapping Intensity range for S0-S100');
@@ -127,6 +131,10 @@ this.RasterNow = function( _callback){
     s += '; Laser Spot Size '+spotSize1+'mm\n';
     s += '; Laser Feedrate '+feedRate+'mm/min\n\n';
     s += 'G21\nG90\nG1 F'+feedRate+'\nG0 F'+rapidRate+'\n';
+		if (firmware.indexOf('Lasaur') == 0) {
+			intensity = intensity.map(0, 100, 0, 255);
+			s += 'M80\n'; // Air Assist on
+		};
 
     // Iterate through the Pixels
 
@@ -200,6 +208,10 @@ this.RasterNow = function( _callback){
 			};
 		};
 		dir = - dir; // Reverse direction for next row - makes us move in a more efficient zig zag down the image
+	};
+	if (firmware.indexOf('Lasaur') == 0) {
+		intensity = intensity.map(0, 100, 0, 255);
+		s += 'M81\n'; // Air Assist off
 	};
 
 	// Populate the GCode textarea
