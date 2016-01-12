@@ -1548,23 +1548,44 @@ $('#boxButton').on('click', function() {
   // New Library
   // open .svg (File Open Function)
 
+$('#96dpi').on('click', function() {
+	$("#svgScaleSlider").slider( "value", (25.4/96)*10000 );
+	setSVGDims();
+	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
+	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 10000) + 'mm ');
+});
+
+$('#90dpi').on('click', function() {
+	$("#svgScaleSlider").slider( "value", (25.4/90)*10000 );
+	setSVGDims();
+	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
+	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 10000) + 'mm ');
+});
+
+$('#72dpi').on('click', function() {
+	$("#svgScaleSlider").slider( "value", (25.4/72)*1000 );
+	setSVGDims();
+	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
+	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 10000) + 'mm ');
+});
+
 	$( "#svgScaleSlider" ).slider({
 			min: 0,
-			max: 200,
-			values: [ 100 ],
+			max: 20000,
+			value: [ 10000 ],
 			slide: function( event, ui ) {
 				setSVGDims();
-				svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
-				$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100) + 'mm ');
+				svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
+				$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 100) + 'mm ');
 				}
 	});
 
-	svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
-	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100) + 'mm ');
+	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
+	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 100) + 'mm ');
 
 
 	function setSVGDims() {
-		svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
+		svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 10000)
 		var width=$("#svgEngrave")[0].getBoundingClientRect().width;
 		var height=$("#svgEngrave")[0].getBoundingClientRect().height;
 		var physwidth = svgscale * width;
@@ -2185,5 +2206,5 @@ function processSVG() {
 	SVGlaserFeed = $('#SVGfeedRate').val();
 	SVGlaserRapid = $('#SVGrapidRate').val();
 	SVGlaserPwr = $('#SVGlaserPwr').val();
-	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.01, scale: svgscale, safeZ: 0.01, laserpwr: SVGlaserPwr });
+	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.1, scale: svgscale, safeZ: 0.01, laserpwr: SVGlaserPwr });
 };

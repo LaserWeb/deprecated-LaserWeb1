@@ -184,7 +184,7 @@
 			</div>
 
 			<div class="btn-group input-group  btn-group-justified">
-				<span class="input-group-addon"><i class="fa fa-rocket"></i>&nbsp;App</span>
+				<span class="input-group-addon"><i class="fa fa-rocket"></i>&nbsp;Apps</span>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">RASTER<input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">STL(Soon)<input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -914,23 +914,26 @@ Send</button>
 	    	<div class="modal-body">
 					<div class="well">
 						<label for="svgScale">Scale: </label>
-							 <span id="svgScaleValue" style="border:0;  font-weight:bold; background: transparent;" ></span>
-						</p>
+						<span id="svgScaleValue" style="border:0;  font-weight:bold; background: transparent;" ></span>
 						<div id="svgScaleSlider"></div>
 						<span id="svgsize" style="border:0;  font-weight:bold; background: transparent;" ></span>
+						<div class="btn-group input-group  btn-group-justified">
+							<div class="btn btn-info btn-xs" id="96dpi">96dpi (Apache)</div>
+							<div class="btn btn-info btn-xs" id="90dpi">90dpi (Inkscape)</div>
+							<div class="btn btn-info btn-xs" id="72dpi">72dpi (Adobe)</div>
+						</div>
 					</div>
+
 					<div class="input-group" style="margin-bottom:10px; width: 100%;">
 						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Cut (G1) Feedrate</span>
 						<input type="text" class="form-control" value="2000" id="SVGfeedRate">
 						<span class="input-group-addon"  style="width: 60px;">mm/min</span>
 					</div>
-					<br>
 					<div class="input-group" style="margin-bottom:10px; width: 100%;">
 						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Rapid (G0) Feedrate</span>
 						<input type="text" class="form-control" value="6000" id="SVGrapidRate">
 						<span class="input-group-addon"  style="width: 60px;">mm/min</span>
 					</div>
-					<br>
 					<div class="input-group" style="margin-bottom:10px; width: 100%;">
 						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-fire"style="margin-right: 20px;"></i>Laser Power</span>
 						<input type="text" class="form-control" value="100" id="SVGlaserPwr">

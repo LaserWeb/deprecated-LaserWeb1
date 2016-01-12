@@ -74,7 +74,6 @@ SVGReader = {
 
 
   parseChildren : function(domNode, parentNode) {
-    console.log(domNode);
     var childNodes = []
     for (var i=0; i<domNode.childNodes.length; i++) {
       var tag = domNode.childNodes[i]
