@@ -132,7 +132,6 @@ this.RasterNow = function( _callback){
     s += '; Laser Feedrate '+feedRate+'mm/min\n\n';
     s += 'G21\nG90\nG1 F'+feedRate+'\nG0 F'+rapidRate+'\n';
 		if (firmware.indexOf('Lasaur') == 0) {
-			intensity = intensity.map(0, 100, 0, 255);
 			s += 'M80\n'; // Air Assist on
 		};
 
@@ -210,7 +209,6 @@ this.RasterNow = function( _callback){
 		dir = - dir; // Reverse direction for next row - makes us move in a more efficient zig zag down the image
 	};
 	if (firmware.indexOf('Lasaur') == 0) {
-		intensity = intensity.map(0, 100, 0, 255);
 		s += 'M81\n'; // Air Assist off
 	};
 
