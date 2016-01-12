@@ -177,14 +177,14 @@
         <div class="col-md-3 panel-transparent">
           <!-- File Open Buttons -->
 			<div class="btn-group input-group  btn-group-justified">
-				<span class="input-group-addon"><i class="fa fa-folder-open"></i></span>
+				<span class="input-group-addon"><i class="fa fa-folder-open"></i>&nbsp;File</span>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">GCODE<input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button></div>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">DXF<input type="file" accept=".dxf" id="fileInputDXF" /></button></div>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">SVG<input type="file" accept=".svg" id="fileInputSVG" /></button></div>
 			</div>
 
 			<div class="btn-group input-group  btn-group-justified">
-				<span class="input-group-addon"><i class="fa fa-rocket"></i></span>
+				<span class="input-group-addon"><i class="fa fa-rocket"></i>&nbsp;App</span>
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">RASTER<input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm">STL(Soon)<input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
 				<div class="btn-group" role="group"><button type="button" class="btn btn-info btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -244,7 +244,7 @@
 			<div class="btn-group" role="group"><button type="button" id="pause" class="btn btn-default disabled">Pause</button></div>
 			<div class="btn-group" role="group"><button type="button" id="clearQ" class="btn btn-default disabled">Clear Q</button></div>
 			<div class="btn-group" role="group"><button type="button" class="btn btn-danger disabled" id="sendToLaser"><i class="fa fa-fire"style="margin-right: 8px;"></i>
-end to Laser</button></div>
+Send to Laser</button></div>
 			</div>
 			<input type="hidden" value="GCODE" id="fileName">
 			<hr style="clear: both;" />
@@ -372,8 +372,8 @@ Send</button>
 				</div>
 
 				<!-- Credits in bottom of left column -->
-				<p style="color: #aaa; font-size: .8em; margin-top: 20px; text-align:right;">
-					Found a bug? <br>
+				<p style="color: #aaa; font-size: .8em; margin-top: 200px; text-align:right;">
+					<i class="fa fa-bug"></i>Found a bug? Log a detailed issue on: <br>
 					<a href="https://github.com/openhardwarecoza/LaserWeb/issues">github.com/openhardwarecoza/LaserWeb/issues</a>
 				</p>
 
@@ -917,6 +917,7 @@ Send</button>
 							 <span id="svgScaleValue" style="border:0;  font-weight:bold; background: transparent;" ></span>
 						</p>
 						<div id="svgScaleSlider"></div>
+						<span id="svgsize" style="border:0;  font-weight:bold; background: transparent;" ></span>
 					</div>
 					<div class="input-group" style="margin-bottom:10px; width: 100%;">
 						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Cut (G1) Feedrate</span>
@@ -931,10 +932,15 @@ Send</button>
 					</div>
 					<br>
 					<div class="input-group" style="margin-bottom:10px; width: 100%;">
-						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Laser Power</span>
+						<span class="input-group-addon"  style="width: 100px;"><i class="fa fa-fire"style="margin-right: 20px;"></i>Laser Power</span>
 						<input type="text" class="form-control" value="100" id="SVGlaserPwr">
 						<span class="input-group-addon"  style="width: 60px;">%</span>
 					</div>
+					<center>
+						Imported Image Dimensions: <span id="svgdims">0px x 0 px</span></span><br>
+						Engraved Image Dimensions: <span id="svgphysdims">0mm x 0 mm</span></span><br>
+						<img id="origImage" style="border: 1px solid orange;  max-width:598px;">
+					</center>
 					<div id="work-area">
 						<div id="svgEngrave"></div>
 			    </div>

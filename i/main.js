@@ -5,6 +5,8 @@
 		Serial, DRO, Webcam: Andrew Hodel
 		Jog Widget:  Arthur Wolf and Kliment
 		3D Viewer:  John Lauer and Joe Walnes
+		SVG: Jordan Sitkin https://github.com/dustMason/Machine-Art
+		DXF: Andrew Hodel and https://github.com/gdsestimating/three-dxf
 
     LaserWeb - A Web Based Marlin Laser cutter Controller
     Copyright (C) 2015 Andrew Hodel & Peter van der Walt
@@ -179,7 +181,6 @@ $(document).ready(function() {
 			$('#choosePort').val('0');
 			$('#choosePort').change();
 		}
-
 	});
 
 	// Enable the machine control buttons once a port is selected
@@ -189,7 +190,6 @@ $(document).ready(function() {
     });
 
 	// Updater
-
 	$('#viewChangelog').click(function() {
 		$.get( "https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/changelog.txt", function( data ) {
 			var lines = data.split('\n');
@@ -199,19 +199,16 @@ $(document).ready(function() {
 		});
 		$('#changewidget').modal('toggle');
 	});
-
 	$('#updateGit').click(function() {
 		socket.emit('updateGit', 1);
 		$('#console').append('<hr><p class="pf" style="color: #000099 ;"><b>Checking for Updates on github.com/openhardwarecoza/LaserWeb...</b></p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
-
 	$('#upgradeGit').click(function() {
 		socket.emit('upgradeGit', 1);
 		$('#console').append('<hr><p class="pf" style="color: #000099 ;"><b>Upgrading LaserWeb Software...</b></p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
-
 	socket.on('updateStatus', function (data) {
 		$('#console').append('<p class="pf" style="color: #000 ;">'+data+'</p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -220,7 +217,6 @@ $(document).ready(function() {
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			$('#updateGit').show();
 			$('#upgradeGit').hide();
-
 		};
 		if (data.indexOf(' branch is behind') != -1) {
 			$('#console').append('<p class="pf" style="color: #990000 ;"><b>Updated version of LaserWeb Available</b></p>');
@@ -239,7 +235,6 @@ $(document).ready(function() {
 			$('#upgradeGit').show();
 		};
 	});
-
 	socket.on('upgradeStatus', function (data) {
 		$('#console').append('<p class="pf" style="color: #000 ;">'+data+'</p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -258,7 +253,6 @@ $(document).ready(function() {
 		laserxmax = data.xmax
 		laserymax = data.ymax
 
-
 		// Enable Webcam if found
 		if (data.showWebCam == true) {
 			// show the webcam and link
@@ -269,7 +263,6 @@ $(document).ready(function() {
 			$('#webcam').show();
 			$('#webcambutton').show();
 		}
-
 	});
 
 	// Serial / Queue / Management stuff
@@ -312,8 +305,6 @@ $(document).ready(function() {
 
 	});
 
-
-
 		// Keyboard interaction to above #sendCommand - press Shift+Enter to send commands
 		$('#command').keydown(function (e) {
 			if (e.shiftKey) {
@@ -329,9 +320,7 @@ $(document).ready(function() {
 
 	$('#clearJob').on('click', function() {
 		$('#gcodepreview').val('');
-
 	});
-
 
 	$('#clearQ').on('click', function() {
 		// if paused let user clear the command queue
@@ -357,8 +346,6 @@ $(document).ready(function() {
 
 
 	// Enable sendToLaser button, if we receive gcode in #gcodepreview
-
-
 	$('#gcodepreview').bind('input propertychange', function() {
 					$('#sendToLaser').addClass('disabled');
 			if(this.value.length){
@@ -460,7 +447,7 @@ $(document).ready(function() {
 	});
 
 */
-
+// End of Context Menu
 
 
 	$('#bounding').on('click', function() {
@@ -469,13 +456,11 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMAX').val()+' F2000\nG90' });
 		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMAX').val()+' F2000\nG90' });
 		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
-		// socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
 
 
 	// Gcode Rotate from http://ideegeniali.altervista.org/progetti/?p=gcoderotator
 	function processRot() {
-
 	 var gcode=document.getElementById("gcodepreview").value.split('\n');
 	  var a,b,x,y,xstart,xend,ystart,yend;
 	  var xy = new Array(2);
@@ -507,9 +492,9 @@ $(document).ready(function() {
 	      x  = Math.round(x*1000)/1000;
 	      y  = Math.round(y*1000)/1000;
 	      if (ystart > xstart) {
-		b=a.substring(0,xstart+1)+x+a.substring(xend,ystart+1)+y+a.substring(yend,a.length);
+					b=a.substring(0,xstart+1)+x+a.substring(xend,ystart+1)+y+a.substring(yend,a.length);
 	      } else {
-		b=a.substring(0,ystart+1)+y+a.substring(yend,xstart+1)+x+a.substring(xend,a.length);
+					b=a.substring(0,ystart+1)+y+a.substring(yend,xstart+1)+x+a.substring(xend,a.length);
 	      }
 	    }
 	    s += b + '\n';
@@ -528,11 +513,9 @@ $(document).ready(function() {
 		}
 	theOutput=document.getElementById("gcodepreview");
 	theOutput.value=s;
-
 	}
 
 	// *** Rectangular Polar Coordinates Conversion ***
-
 	function module(x,y) {
 	  return (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)));
 	}
@@ -562,18 +545,14 @@ $(document).ready(function() {
 	      var rotvalue=document.getElementById("rotAngle").value;
 	      arg_ = arg_ + (rotvalue*Math.PI/180);
 
-
-
 	  x=coorx(mod_,arg_);
 	  y=coory(mod_,arg_);
-
 
 	  var out = new Array(2);
 	  out[0] = x;
 	  out[1] = y;
 	  return out;
 	}
-
 
 	// Gcode Scaling and Translate: from http://eng-serve.com/cnc/gcode_scale.html -->
 	function translateaxis(value,match)
@@ -623,7 +602,6 @@ $(document).ready(function() {
 		theInput=theInput.replace(/[X|x]\s*-?[0-9|.]+/g,function(m){return translate("X",transX,m)});
 		theInput=theInput.replace(/[Y|y]\s*-?[0-9|.]+/g,function(m){return translate("Y",transY,m)});
 		theInput=theInput.replace(/[Z|z]\s*-?[0-9|.]+/g,function(m){return translate("Z",transZ,m)});
-
 
 		// I and J are always relative so no need to translate right?
 		//theInput=theInput.replace(/[I|i].+[0-9|.]+/g,function(m){return translate("I",transX,m)});
@@ -810,7 +788,6 @@ $(document).ready(function() {
 		document.getElementById('YTRANS').value = '0';
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
-
 	});
 
 	$('#flip').on('click', function() {
@@ -820,11 +797,9 @@ $(document).ready(function() {
 		document.getElementById('YTRANS').value = '0';
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
-		openGCodeFromText();
 	});
 
 	$('#rotate').on('click', function() {
-
 		processRot();
 		document.getElementById('scaleFactor').value = '100';
 		document.getElementById('XTRANS').value = '0';
@@ -832,9 +807,6 @@ $(document).ready(function() {
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
 	});
-
-
-
 
 	$('#noneg').on('click', function() {
 		console.log('Fixing 0x0 Offset to not be Negative.');
@@ -845,7 +817,6 @@ $(document).ready(function() {
 		document.getElementById('ZTRANS').value = '0';
 		openGCodeFromText();
 	});
-
 
 	// Context Menu Items
 	$('#rotate90').on('click', function() {
@@ -879,101 +850,75 @@ $(document).ready(function() {
 		processScale();
 		openGCodeFromText();
 	});
-
 	// End of Scaling Function
-
-
 
 	// Jog and machine control Buttons
 	$('#xM01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
-
 	$('#xM').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#xMTen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#xMCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#xP01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#xP').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#xPTen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#xPCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 X100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yP01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yP').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yPTen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yPCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yM01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y-0.1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yM').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y-1 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yMTen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y-10 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#yMCen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Y-100 F'+$('#jogSpeedXY').val()+'\nG90' });
 	});
-
 	$('#zP01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z0.1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
-
 	$('#zP').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
-
 	$('#zPTen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z10 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
-
 	$('#zM01').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z-0.1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
-
 	$('#zM').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z-1 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
-
 	$('#zMTen').on('click', function() {
 		socket.emit('gcodeLine', { line: 'G91\nG0 Z-10 F'+$('#jogSpeedZ').val()+'\nG90' });
 	});
-
 	$('#homeX').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
@@ -983,7 +928,6 @@ $(document).ready(function() {
 			socket.emit('gcodeLine', { line: 'G28 X0' });
 		}
 	});
-
 	$('#homeY').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
@@ -993,7 +937,6 @@ $(document).ready(function() {
 			socket.emit('gcodeLine', { line: 'G28 Y0' });
 		}
 	});
-
 	$('#homeZ').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
@@ -1003,7 +946,6 @@ $(document).ready(function() {
 			socket.emit('gcodeLine', { line: 'G28 Z0' });
 		}
 	});
-
 	$('#homeAll').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
 			socket.emit('gcodeLine', { line: 'G30' });
@@ -1045,24 +987,18 @@ $(document).ready(function() {
 	// Firmware Specific Buttons
 
 	// Grbl
-
 	$('#sendReset').on('click', function() {
 		socket.emit('doReset', 1);
 	});
-
 	$('#sendUnlock').on('click', function() {
 		socket.emit('gcodeLine', { line: '$X' });
 	});
-
-
 	$('#sendGrblHelp').on('click', function() {
 		socket.emit('gcodeLine', { line: '$' });
 	});
-
 	$('#sendGrblSettings').on('click', function() {
 		socket.emit('gcodeLine', { line: '$$' });
 	});
-
 
 	// Tabs for the CGode/Millcrum text edit blocks
 	$('#mcC').on('click', function() {
@@ -1115,29 +1051,24 @@ $(document).ready(function() {
 
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
-
-	//console.log("Creating Millcrum");
-	var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:'+$('#perpass').val()+',step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';
-	var mcCode = mcheader + document.getElementById('millcrumCode').value
-
-		// This sends the mc JS vars to mc.js and creates GCode
-		try {
-			eval(mcCode);
-		} catch (e) {
-			// log it to the alert window
-			console.log(e+'Millcrum Code Error:');
-		}
-
-		// Generate Gcode view and setup job for sending
-		document.getElementById('millcrumCode').value = mcCode;
-		openGCodeFromText();
-		gCodeToSend = document.getElementById('gcodepreview').value;
-				$('#console').append('<p class="pf" style="color: #000000;"><b>Incoming file Converted to GCode...</b></p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-		// Activate GCode Tab
-		$('#gcC').click();
-
-
+		//console.log("Creating Millcrum");
+		var mcheader = 'var tool = {units:"mm",diameter:0.1,passDepth:'+$('#perpass').val()+',step:1,rapid:'+$('#rapidSpeed').val()+',plunge:10000,cut:'+$('#cutSpeed').val()+',zClearance:0,returnHome:true};\n\n';
+		var mcCode = mcheader + document.getElementById('millcrumCode').value
+			// This sends the mc JS vars to mc.js and creates GCode
+			try {
+				eval(mcCode);
+			} catch (e) {
+				// log it to the alert window
+				console.log(e+'Millcrum Code Error:');
+			}
+			// Generate Gcode view and setup job for sending
+			document.getElementById('millcrumCode').value = mcCode;
+			openGCodeFromText();
+			gCodeToSend = document.getElementById('gcodepreview').value;
+					$('#console').append('<p class="pf" style="color: #000000;"><b>Incoming file Converted to GCode...</b></p>');
+					$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			// Activate GCode Tab
+			$('#gcC').click();
 	});
 
 	// Handle File Open buttons
@@ -1173,11 +1104,8 @@ $(document).ready(function() {
 				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>GCode File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
 			}
 		});
-
-
 
 	// open .dxf  (File Open Function)
 	odxf.addEventListener('change', function(e) {
@@ -1187,28 +1115,19 @@ $(document).ready(function() {
 		var r = new FileReader();
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
-
 			fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
 			dxf = new Dxf();
-
-
 			pwr = {};
 			cutSpeed = {};
 			row = [];
-
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
 			//NEW Dxf  -- experimental
 			var parser2 = new window.DxfParser();
 			var dxf2 = parser2.parseSync(r.result);
 			cadCanvas = new processDXF(dxf2);
-
 			//END NEW DXF
-
-
 			dxf.parseDxf(r.result);
-
 			var errStr = '';
 			if (dxf.invalidEntities.length > 0) {
 				for (var c=0; c<dxf.invalidEntities.length; c++) {
@@ -1216,13 +1135,11 @@ $(document).ready(function() {
 					}
 				errStr += '\n';
 			}
-
 			if (dxf.alerts.length > 0) {
 				for (var c=0; c<dxf.alerts.length; c++) {
 					errStr += dxf.alerts[c] + '\n\n';
 				}
 			}
-
 			if (errStr != '') {
 				console.log('DXF Errors:'+errStr);
 				$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
@@ -1232,7 +1149,6 @@ $(document).ready(function() {
 				s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
 				s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
 				s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
-
 				// convert polylines to millcrum
 				for (var c=0; c<dxf.polylines.length; c++) {
 					if (dxf.polylines[c].layer == '') {
@@ -1244,7 +1160,6 @@ $(document).ready(function() {
 					for (var p=0; p<dxf.polylines[c].points.length; p++) {
 						s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
 					}
-
 					//s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 					s += ']};\n';
 				}
@@ -1254,12 +1169,9 @@ $(document).ready(function() {
 					s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
 					s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
 					s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
-
 					//s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
 					s += ']};\n';
 				}
-
-
 				//console.log(dxf);
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
@@ -1268,7 +1180,6 @@ $(document).ready(function() {
 				for (var c=0; c<dxf.lines.length; c++) {
 					row[c] = dxf.polylines[c].layer
 				}
-
 
 				Array.prototype.unique = function()
 				{
@@ -1283,32 +1194,24 @@ $(document).ready(function() {
 					}
 					return r;
 				}
-
 				layers = [];
 				layers = row.unique();
 				//console.log(layers);
 				for (var c=0; c<layers.length; c++) {
 					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input class=simplebox name=sp'+c+' id=sp'+c+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+c+' id=pwr'+c+' value=100>&nbsp;%</td></tr>');
 				}
-
 			}
-
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
-
-
 			$('#generate').hide();
 			$('#dxfparamstomc').show();
 			$('#svgparamstomc').hide();
 			$('#cutParams').modal('toggle');
 			document.getElementById('fileName').value = fileName;
-
 	});
 
 			//});
 	$('#dxfparamstomc').on('click', function() {  // DXF job Params to MC
-
-
 				//console.log(layers);
 				// for each line/polyline, do:
 				for (var c=0; c<dxf.polylines.length; c++) {
@@ -1321,13 +1224,10 @@ $(document).ready(function() {
 				for (var c=0; c<dxf.lines.length; c++) {
 					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+','+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
 				}
-
 				s += '\nmc.get();\n';
-
 				// load the new millcrum code
 				document.getElementById('millcrumCode').value = s;
 				document.getElementById('gcodepreview').value = '';
-
 				$('#mcC').click();
 				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
@@ -1342,8 +1242,6 @@ $(document).ready(function() {
 				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
-
 	});
 
 
@@ -1613,13 +1511,8 @@ $('#generatePreview').on('click', function() {
 		$('#sendToLaser').addClass('disabled');
 		var gCurrentFile = null;
 		var gProcessor=null;
-
 		loadGeargen();
-
-
 		$('#openJSCADUI').modal('toggle');
-
-
 		document.getElementById('fileName').value = fileName;
 		$('#mainStatus').html('Status: Gear Generator loaded ...');
 		$('#sendToLaser').removeClass('disabled');
@@ -1630,7 +1523,6 @@ $('#generatePreview').on('click', function() {
 		//document.getElementById('fileInputMILL').value = '';
 		$('#console').append('<p class="pf" style="color: #000000;"><b>Gear Generator Complete...</b></p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
 });
 
 
@@ -1639,14 +1531,8 @@ $('#boxButton').on('click', function() {
 	$('#sendToLaser').addClass('disabled');
 	var gCurrentFile = null;
 	var gProcessor=null;
-
 	loadBoxgen();
-
-
-
 	$('#openJSCADUI').modal('toggle');
-
-
 	document.getElementById('fileName').value = fileName;
 	$('#mainStatus').html('Status: Gear Generator loaded ...');
 	$('#sendToLaser').removeClass('disabled');
@@ -1657,163 +1543,17 @@ $('#boxButton').on('click', function() {
 	//document.getElementById('fileInputMILL').value = '';
 	$('#console').append('<p class="pf" style="color: #000000;"><b>Gear Generator Complete...</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
 });
 
-/* // Taking out SVG support  - https://github.com/openhardwarecoza/LaserWeb/issues/27
-	// open .svg (File Open Function)
-	osvg.addEventListener('change', function(e) {
-
-    // Don't like having to do thi :(
-
-		$('.bottom-left').notify({
-			message: { text: 'Note: SVG is buggy at this time.  See https://github.com/openhardwarecoza/LaserWeb/issues/27 -  use DXF or GCODE if possible :(' },
-			type: 'danger'
-		}).show();
-
-		// :(
-
-		$('#svgparamstomc').show();
-		$('#dxfparamstomc').hide();
-
-		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: SVG</b></u></span><br>');
-		$('#sendToLaser').addClass('disabled');
-		var r = new FileReader();
-		r.readAsText(osvg.files[0]);
-		r.onload = function(e) {
-
-			var fileName = fileInputSVG.value.replace("C:\\fakepath\\", "");
-			svg = new Svg();
-			svg.process(r.result);
-			pwr = {};
-			cutSpeed = {};
-			row = [];
-
-			console.log('\n\nall paths',svg.paths);
-			console.log('svg units '+svg.units);
-
-			if (svg.alerts.length > 0) {
-				var errStr = '';
-				for (a in svg.alerts) {
-					errStr += svg.alerts[a]+'\n\n';
-				}
-				console.log('SVG Errors:'+errStr);
-				$('#console').append('<br>Parsing SVG:<br><p class="pf" style="color: #c95500;"><b><u>SVG Errors:</u></b><br>'+errStr+'</p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-				//doAlert(errStr, 'SVG Errors:');
-			}
-
-			// now that we have a proper path in absolute coordinates regardless of transforms, matrices or relative/absolute coordinates
-			// we can write out the millcrum (clean) code
-
-			// we need to flip all the y points because svg and cnc are reverse
-			// this way, regardless, what people draw is what they get on the machine
-			// that requires getting the actual min and max, moving everything into the positive
-			// then flipping the y
-
-			// millcrum code holder
-			s = '// Setup SVG Job';
-			s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
-			s += '// set the surface dimensions for the viewer, svg import specified '+svg.units+'\nmc.surface('+svg.width+','+svg.height+');\n\n\n';
-
-
-			for (var c=0; c<svg.paths.length; c++) {
-				$('#layers > tbody:last-child').append('<tr><td>Path'+[c]+'</td><td><input class=simplebox name=sp'+[c]+' id=sp'+[c]+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+[c]+' id=pwr'+[c]+' value=100>&nbsp;%</td></tr>');
-				}
-
-			$('#generate').hide();
-			$('#dxfparamstomc').hide();
-			$('#svgparamstomc').show();
-			$('#cutParams').modal('toggle');
-
-		}
-
-});
-
-	$('#svgparamstomc').on('click', function() {  // DXF job Params to MC
-
-		// now loop through the paths and write them to mc code
-		for (var c=0; c<svg.paths.length; c++) {
-			pwr[c] = $('#pwr'+[c]).val();
-			cutSpeed[c] = $('#sp'+[c]).val();
-			s += 'var polygon'+c+' = {type:\'polygon\',name:\'polygon'+c+'\',points:['
-			for (var p=0; p<svg.paths[c].length; p++) {
-				svg.paths[c][p][1] = svg.height-svg.paths[c][p][1];
-				s += '['+svg.paths[c][p][0]+','+svg.paths[c][p][1]+'],';
-			}
-			s += ']};\n';
-			s += 'mc.cut(\'centerOnPath\', polygon'+c+', '+$('#thickness').val()+','+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
-
-		}
-
-		s += 'mc.get();\n\n';
-
-		// load the new millcrum code
-		document.getElementById('millcrumCode').value = s;
-		document.getElementById('gcodepreview').value = '';
-
-			$('#mcC').click();
-			document.getElementById('fileName').value = fileName;
-			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
-			$('#sendToLaser').removeClass('disabled');
-			generate.click();
-			document.getElementById('fileInputGcode').value = '';
-			document.getElementById('fileInputDXF').value = '';
-			document.getElementById('fileInputSVG').value = '';
-			document.getElementById('fileInputMILL').value = '';
-			$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
-	});
-
-	// open .millcrum (File Open Function)
-	omc.addEventListener('change', function(e) {
-		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: MILLCRUM</b></u></span><br>');
-		$('#sendToLaser').addClass('disabled');
-		var r = new FileReader();
-		r.readAsText(omc.files[0]);
-		r.onload = function(e) {
-			// load the file
-			var fileName = fileInputMILL.value.replace("C:\\fakepath\\", "");
-			document.getElementById('gcodepreview').value = '';
-			document.getElementById('millcrumCode').value = this.result;
-			$('#mcC').click();
-			generate.click();
-
-			$('#gcC').click();
-
-			gCodeToSend = document.getElementById('gcodepreview').value;
-
-			document.getElementById('fileName').value = fileName;
-
-			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
-			$('#sendToLaser').removeClass('disabled');
-			document.getElementById('fileInputGcode').value = '';
-			document.getElementById('fileInputDXF').value = '';
-			document.getElementById('fileInputSVG').value = '';
-			document.getElementById('fileInputMILL').value = '';
-			$('#console').append('<p class="pf" style="color: #000000;"><b>MILLCRUM File Upload Complete...</b></p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
-		}
-	});*/
-
-
- // New Library
-	// open .svg (File Open Function)
-
-
-
-
-
-
-
+  // New Library
+  // open .svg (File Open Function)
 
 	$( "#svgScaleSlider" ).slider({
 			min: 0,
 			max: 200,
 			values: [ 100 ],
 			slide: function( event, ui ) {
+				setSVGDims();
 				svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
 				$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100) + 'mm ');
 				}
@@ -1823,9 +1563,43 @@ $('#boxButton').on('click', function() {
 	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100) + 'mm ');
 
 
+	function setSVGDims() {
+		svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
+		var width=$("#svgEngrave")[0].getBoundingClientRect().width;
+		var height=$("#svgEngrave")[0].getBoundingClientRect().height;
+		var physwidth = svgscale * width;
+		var physheight = svgscale * height;
+		//console.log('Width: '+width+',  Height: '+height+',  Scale: '+svgscale);
+		//console.log('Physical Width: '+physwidth+', Physical Height: '+physheight+',  Scale: '+svgscale);
+		$("#svgphysdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
+		$("#svgdims").text(width.toFixed(1)+'px x '+height.toFixed(1)+'px');
+		$('#svgsize').html('Resultant Job Size: '+ physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm' );
+
+
+		//  Draw a rect showing outer dims of Engraving - engravings with white space to sides are tricky to visualise without
+		rectWidth = physwidth +spotSizeMul, rectHeight = physheight + spotSizeMul;
+		if (boundingBox) {
+			scene.remove( boundingBox );
+		}
+		BBmaterial = new THREE.LineDashedMaterial( { color: 0xcccccc, dashSize: 10, gapSize: 5, linewidth: 2 });
+		BBgeometry = new THREE.Geometry();
+		BBgeometry.vertices.push(
+			new THREE.Vector3( 0, 0, 0 ),
+			new THREE.Vector3( 0, (physheight + 1) , 0 ),
+			new THREE.Vector3( (physwidth + 1), (physheight +1), 0 ),
+			new THREE.Vector3( (physwidth + 1), 0, 0 ),
+			new THREE.Vector3( 0, 0, 0 )
+		);
+	 	boundingBox= new THREE.Line( BBgeometry, BBmaterial );
+		boundingBox.translateX(laserxmax /2 * -1);
+		boundingBox.translateY(laserymax /2 * -1);
+	 	scene.add( boundingBox );
+		};
+
 $('#processSVG').on('click', function() {
 
 	processSVG();
+	$('#svgwidget').modal('toggle');
 	$('#gcC').click();
 	openGCodeFromText();
 	gCodeToSend = this.result;
@@ -1837,6 +1611,7 @@ $('#processSVG').on('click', function() {
 	//document.getElementById('fileInputMILL').value = '';
 	$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+	$('#noneg').click();
 });
 
 osvg.addEventListener('change', function(e) {
@@ -1860,49 +1635,12 @@ osvg.addEventListener('change', function(e) {
  			var svg = document.getElementById('svgEngrave');
 			svg.innerHTML = reader.result;
 			$('#svgwidget').modal('toggle');
-
+			setSVGDims();
 		};
-
 		reader.readAsText(selectedFile);
-
 	});
 
-
-	/*1
-	// open .millcrum (File Open Function)
-	omc.addEventListener('change', function(e) {
-		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: MILLCRUM</b></u></span><br>');
-		$('#sendToLaser').addClass('disabled');
-		var r = new FileReader();
-		r.readAsText(omc.files[0]);
-		r.onload = function(e) {
-			// load the file
-			var fileName = fileInputMILL.value.replace("C:\\fakepath\\", "");
-			document.getElementById('gcodepreview').value = '';
-			document.getElementById('millcrumCode').value = this.result;
-			$('#mcC').click();
-			generate.click();
-
-			$('#gcC').click();
-
-			gCodeToSend = document.getElementById('gcodepreview').value;
-
-			document.getElementById('fileName').value = fileName;
-
-			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
-			$('#sendToLaser').removeClass('disabled');
-			document.getElementById('fileInputGcode').value = '';
-			document.getElementById('fileInputDXF').value = '';
-			document.getElementById('fileInputSVG').value = '';
-			document.getElementById('fileInputMILL').value = '';
-			$('#console').append('<p class="pf" style="color: #000000;"><b>MILLCRUM File Upload Complete...</b></p>');
-			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-
-		}
-	}); */
-
 	// Handle File Save Button
-
 	$('#saveGcode').on('click', function() {
 		var textToWrite = document.getElementById("gcodepreview").value;
 		var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
@@ -2448,12 +2186,5 @@ function processSVG() {
 	SVGlaserFeed = $('#SVGfeedRate').val();
 	SVGlaserRapid = $('#SVGrapidRate').val();
 	SVGlaserPwr = $('#SVGlaserPwr').val();
-	document.getElementById("gcodepreview").value = svg2gcode(svg, {
-			feedRate: SVGlaserFeed,
-			seekRate: SVGlaserRapid,
-			bitWidth: 0.01,
-			scale: svgscale,
-			safeZ: 0.01,
-			laserpwr: SVGlaserPwr
-		});
+	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.01, scale: svgscale, safeZ: 0.01, laserpwr: SVGlaserPwr });
 };
