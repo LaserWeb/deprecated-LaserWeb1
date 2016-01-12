@@ -52,7 +52,7 @@ String.prototype.rtrim = function() {
 }
 
 firmware = '';
-
+var svgscale = 0;
 
 $(document).ready(function() {
 
@@ -153,7 +153,7 @@ $(document).ready(function() {
 			$('#sendToLaser').removeClass('disabled');
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
-			//document.getElementById('fileInputSVG').value = '';
+			document.getElementById('fileInputSVG').value = '';
 			//document.getElementById('fileInputMILL').value = '';
 			$('#console').append('<p class="pf" style="color: #000000;"><b>New data from API...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1109,6 +1109,10 @@ $(document).ready(function() {
 		handle: ".modal-header"
 	});
 
+	$("#svgwidget").draggable({
+		handle: ".modal-header"
+	});
+
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
 
@@ -1165,7 +1169,7 @@ $(document).ready(function() {
 				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
-				//document.getElementById('fileInputSVG').value = '';
+				document.getElementById('fileInputSVG').value = '';
 				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>GCode File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1334,7 +1338,7 @@ $(document).ready(function() {
 				generate.click();
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
-				//document.getElementById('fileInputSVG').value = '';
+				document.getElementById('fileInputSVG').value = '';
 				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1593,7 +1597,7 @@ $('#generatePreview').on('click', function() {
 	generate.click();
 	document.getElementById('fileInputGcode').value = '';
 	document.getElementById('fileInputDXF').value = '';
-	//document.getElementById('fileInputSVG').value = '';
+	document.getElementById('fileInputSVG').value = '';
 	//document.getElementById('fileInputMILL').value = '';
 	$('#console').append('<p class="pf" style="color: #000000;"><b>Preview from OpenJSCAD Complete...</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1622,7 +1626,7 @@ $('#generatePreview').on('click', function() {
 		generate.click();
 		document.getElementById('fileInputGcode').value = '';
 		document.getElementById('fileInputDXF').value = '';
-		//document.getElementById('fileInputSVG').value = '';
+		document.getElementById('fileInputSVG').value = '';
 		//document.getElementById('fileInputMILL').value = '';
 		$('#console').append('<p class="pf" style="color: #000000;"><b>Gear Generator Complete...</b></p>');
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1649,7 +1653,7 @@ $('#boxButton').on('click', function() {
 	generate.click();
 	document.getElementById('fileInputGcode').value = '';
 	document.getElementById('fileInputDXF').value = '';
-	//document.getElementById('fileInputSVG').value = '';
+	document.getElementById('fileInputSVG').value = '';
 	//document.getElementById('fileInputMILL').value = '';
 	$('#console').append('<p class="pf" style="color: #000000;"><b>Gear Generator Complete...</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
@@ -1793,6 +1797,109 @@ $('#boxButton').on('click', function() {
 
 		}
 	});*/
+
+
+ // New Library
+	// open .svg (File Open Function)
+
+
+
+
+
+
+
+
+	$( "#svgScaleSlider" ).slider({
+			min: 0,
+			max: 200,
+			values: [ 100 ],
+			slide: function( event, ui ) {
+				svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
+				$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100) + 'mm ');
+				}
+	});
+
+	svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100)
+	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "values", 0 ) / 100) + 'mm ');
+
+
+$('#processSVG').on('click', function() {
+
+	processSVG();
+	$('#gcC').click();
+	openGCodeFromText();
+	gCodeToSend = this.result;
+	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
+	$('#sendToLaser').removeClass('disabled');
+	document.getElementById('fileInputGcode').value = '';
+	document.getElementById('fileInputDXF').value = '';
+	document.getElementById('fileInputSVG').value = '';
+	//document.getElementById('fileInputMILL').value = '';
+	$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
+	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+});
+
+osvg.addEventListener('change', function(e) {
+	var fileInputSVG = document.getElementById('fileInputSVG');
+	var fileName = fileInputSVG.value.replace("C:\\fakepath\\", "");
+	document.getElementById('fileName').value = fileName;
+	$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: Svg</b></u></span><br>');
+	$('#sendToLaser').addClass('disabled');
+	document.getElementById('millcrumCode').value = '';
+	document.getElementById('gcodepreview').value = '';
+
+		var selectedFile = event.target.files[0];
+		var reader = new FileReader();
+		var r = new FileReader();
+		document.getElementById('fileInputSVG').value = '';
+
+		//var imgtag = document.getElementById("svgEngrave");
+		//imgtag.title = selectedFile.name;
+
+		reader.onload = function(event) {
+ 			var svg = document.getElementById('svgEngrave');
+			svg.innerHTML = reader.result;
+			$('#svgwidget').modal('toggle');
+
+		};
+
+		reader.readAsText(selectedFile);
+
+	});
+
+
+	/*1
+	// open .millcrum (File Open Function)
+	omc.addEventListener('change', function(e) {
+		$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: MILLCRUM</b></u></span><br>');
+		$('#sendToLaser').addClass('disabled');
+		var r = new FileReader();
+		r.readAsText(omc.files[0]);
+		r.onload = function(e) {
+			// load the file
+			var fileName = fileInputMILL.value.replace("C:\\fakepath\\", "");
+			document.getElementById('gcodepreview').value = '';
+			document.getElementById('millcrumCode').value = this.result;
+			$('#mcC').click();
+			generate.click();
+
+			$('#gcC').click();
+
+			gCodeToSend = document.getElementById('gcodepreview').value;
+
+			document.getElementById('fileName').value = fileName;
+
+			$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
+			$('#sendToLaser').removeClass('disabled');
+			document.getElementById('fileInputGcode').value = '';
+			document.getElementById('fileInputDXF').value = '';
+			document.getElementById('fileInputSVG').value = '';
+			document.getElementById('fileInputMILL').value = '';
+			$('#console').append('<p class="pf" style="color: #000000;"><b>MILLCRUM File Upload Complete...</b></p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+		}
+	}); */
 
 	// Handle File Save Button
 
@@ -2270,6 +2377,8 @@ $('#boxButton').on('click', function() {
 					setImgDims();
 					}
 		});
+
+
 });
 
 var boundingBox = null;
@@ -2323,4 +2432,27 @@ function gcodereceived() {
 	$('#openMachineControl').removeClass('disabled');
 	$('#sendCommand').removeClass('disabled');
 	$('#sendToLaser').removeClass('disabled');
+};
+
+
+// New SVG
+function processSVG() {
+	var XMLS = new XMLSerializer();
+	//var svg = document.getElementsByTagName('svg2')[0];
+	var svg = $('#svgEngrave').html();
+	var width=$("#svgEngrave")[0].getBoundingClientRect().width;
+	var height=$("#svgEngrave")[0].getBoundingClientRect().height;
+	console.log('Width: '+width+',  Height: '+height+',  Scale: '+svgscale);
+	//console.log(svg);
+	//var svgfile = XMLS.serializeToString(svg);
+	SVGlaserFeed = $('#SVGfeedRate').val();
+	SVGlaserRapid = $('#SVGrapidRate').val();
+	document.getElementById("gcodepreview").value = svg2gcode(svg, {
+			feedRate: SVGlaserFeed,
+			seekRate: SVGlaserRapid,
+			bitWidth: 0.01,
+			scale: svgscale,
+			safeZ: 0.01,
+			offsetY: 500
+		});
 };
