@@ -1,3 +1,5 @@
+11 Jan 2016:  Working (but early)  SVG cutting support is back
+10 Jan 2016:  Starting to port over to a new DXF library.  Nothing users can use yet... 
 8 Jan 2016: Added Automatic Update to UI
 8 Jan 2016: Massive code Cleanup, added Authors to various files, moved Changelog to seperate file (out of readme)
 7 Jan 2016: Added Beta proof of concept 3D printer support
