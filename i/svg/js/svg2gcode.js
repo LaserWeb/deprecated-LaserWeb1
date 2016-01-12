@@ -1,10 +1,7 @@
 // Author Jordan Sitkin https://github.com/dustMason/Machine-Art
 
-// add MAP function to the Numbers function
-Number.prototype.map = function (in_min, in_max, out_min, out_max) {
-  return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
+	intensity = 100;
+  laserpwr = 0;
 
 function svg2gcode(svg, settings) {
   // clean off any preceding whitespace
@@ -22,6 +19,9 @@ function svg2gcode(svg, settings) {
   settings.offsetY = settings.offsetY || 0;
   settings.laserpwr = settings.laserpwr || 100;
 
+
+  laserpwr = settings.laserpwr;
+  console.log(laserpwr);
 
   var scale = function(val) {
     return val * settings.scale;
@@ -111,24 +111,31 @@ function svg2gcode(svg, settings) {
 		  gcode.push('M81'); // Air Assist on
 	};
 
+  // add MAP function to the Numbers function
+  Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+    return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+
+
   // Firmware Specific Gcode Output
 	if (firmware.indexOf('Grbl') == 0) {
-		intensity = settings.laserpwr.map(0, 100, 0, 255);
+		intensity = laserpwr.map(0, 100, 0, 255);
 		//console.log('Mapping Intensity range for Grbl S0-S255');
 		intensity = intensity.toFixed(0);
 	} else if (firmware.indexOf('Smooth') == 0) {
-		intensity = settings.laserpwr.map(0, 100, 0, 1);
+		intensity = laserpwr.map(0, 100, 0, 1);
 		//console.log('Mapping Intensity range for Smoothieware S0-S1');
 		intensity = intensity.toFixed(2);
 	} else if (firmware.indexOf('Lasaur') == 0) {
-		intensity = settings.laserpwr.map(0, 100, 0, 255);
+		intensity = laserpwr.map(0, 100, 0, 255);
 		//console.log('Mapping Intensity range for Smoothieware S0-S1');
 		intensity = intensity.toFixed(0);
 	} else {
-		intensity = settings.laserpwr.map(0, 100, 0, 100);
+		intensity = laserpwr.map(0, 100, 0, 100);
 		//console.log('Mapping Intensity range for S0-S100');
 		intensity = intensity.toFixed(0);
 	}
+
 
   for (var pathIdx = 0, pathLength = paths.length; pathIdx < pathLength; pathIdx++) {
     path = paths[pathIdx];

@@ -764,9 +764,13 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 			laserPwr = laserPwr.map(0, 100, 0, 1);
 			laserPwr = laserPwr.toFixed(0);
 			this.gcode += 'G1 S'+laserPwr+'\n';
+		} else if (firmware.indexOf('Lasaur') == 0) {
+			laserPwr = laserPwr.map(0, 100, 0, 255);
+			laserPwr = laserPwr.toFixed(0);
+			this.gcode += 'G1 S'+laserPwr+'\n';
 		} else {
-			 laserPwr = laserPwr.map(0, 100, 0, 255);
-			 this.gcode += 'M03 S'+laserPwr+'\n';
+			laserPwr = laserPwr.map(0, 100, 0, 255);
+			this.gcode += 'M03 S'+laserPwr+'\n';
 		}
 
 		// loop through each point in the path
