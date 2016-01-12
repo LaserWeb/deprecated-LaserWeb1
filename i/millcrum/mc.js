@@ -898,14 +898,15 @@ Millcrum.prototype.get = function() {
 
 	this.gcode = s + this.gcode;
 
+	if (firmware.indexOf('Lasaur') == 0) {
+		this.gcode += 'M81\n'; // Air Assist on
+	};
+
 	// returnHome if set
 	// this needs to be moved outside of the object and at the end of all objects
 	if (this.tool.returnHome == true) {
 		this.gcode += '\n; RETURNING TO 0,0,0 BECAUSE this.tool.returnHome IS SET\n';
 		this.gcode += 'G0 F'+this.tool.rapid+' X0 Y0 Z0\n';
-		if (firmware.indexOf('Lasaur') == 0) {
-			s += 'M81\n'; // Air Assist on
-		};
 	}
 
 	//console.log(this.gcode);
