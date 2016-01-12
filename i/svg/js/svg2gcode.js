@@ -66,10 +66,8 @@ function svg2gcode(svg, settings) {
     paths[idx].bounds = bounds;
   }
 
-  if (settings.verticalSlices > 1 || settings.horizontalSlices > 1) {
+    if (settings.verticalSlices > 1 || settings.horizontalSlices > 1) {
     // break the job up into slices, work in small chunks
-    var totalWidth = maxX - minX;
-    var totalHeight = maxY - minY;
     var columnWidth = totalWidth / settings.verticalSlices;
     var rowHeight = totalHeight / settings.horizontalSlices;
     var sortedPaths = [];

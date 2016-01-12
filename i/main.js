@@ -2175,9 +2175,8 @@ function gcodereceived() {
 
 // New SVG
 function processSVG() {
-	var XMLS = new XMLSerializer();
-	//var svg = document.getElementsByTagName('svg2')[0];
 	var svg = $('#svgEngrave').html();
+	//console.log(svg);
 	var width=$("#svgEngrave")[0].getBoundingClientRect().width;
 	var height=$("#svgEngrave")[0].getBoundingClientRect().height;
 	console.log('Width: '+width+',  Height: '+height+',  Scale: '+svgscale);
