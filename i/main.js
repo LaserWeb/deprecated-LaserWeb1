@@ -2389,8 +2389,8 @@ function setImgDims() {
 	maxpwr = $( "#laserpwrslider" ).slider( "values", 1 );
 
 	var img = document.getElementById('origImage');
-	width = img.clientWidth;
-	height = img.clientHeight;
+	width = img.naturalWidth;
+	height = img.naturalHeight;
 	$("#dims").text(width+'px x '+height+'px');
 	$('#canvas-1').prop('width', (width*2));
 	$('#canvas-1').prop('height', (height*2));
@@ -2452,7 +2452,6 @@ function processSVG() {
 			seekRate: SVGlaserRapid,
 			bitWidth: 0.01,
 			scale: svgscale,
-			safeZ: 0.01,
-			offsetY: 500
+			safeZ: 0.01
 		});
 };

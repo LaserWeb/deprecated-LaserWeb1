@@ -1,3 +1,5 @@
+// Author Jordan Sitkin https://github.com/dustMason/Machine-Art
+
 function svg2gcode(svg, settings) {
   // clean off any preceding whitespace
   svg = svg.replace(/^[\n\r \t]/gm, '');

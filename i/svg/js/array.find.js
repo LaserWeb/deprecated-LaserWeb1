@@ -1,3 +1,5 @@
+// Author Jordan Sitkin https://github.com/dustMason/Machine-Art
+
 // if (Array.prototype.find) return;
 
 var find = function(predicate) {
