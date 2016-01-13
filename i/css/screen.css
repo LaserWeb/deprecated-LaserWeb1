@@ -62,6 +62,17 @@ textarea {
 	font-size: 10px;
 }
 
+#gcodelines {
+	height: 300px;
+	width: auto;
+	overflow-y: auto;
+	text-align: left;
+	background-color: #eee;
+	padding: 00px;
+	font-size: 9px;
+}
+
+
 #console p {
 	margin-top: 0px;
 	margin-bottom: 0px;

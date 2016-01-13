@@ -221,7 +221,7 @@
 						<div class="well well-sm"><p id="mainStatus">Status: Waiting for GCODE upload...</span></div>
 
 						<!-- Tabs -->
-						<ul class="nav nav-tabs nav-justified" role="tablist">
+						<ul class="nav nav-tabs nav-justified" role="tablist" style="display:none;">
 							<li id="mcA">
 								<a id="mcC" href="#">DXF->JS</a>
 							</li>
@@ -231,7 +231,19 @@
 						</ul>
 								<!-- Gcode Tab -->
 								<div id="gcPosition">
-									<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; " id="gcodepreview"></textarea>
+									<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; display :none; " id="gcodepreview"></textarea>
+										<div id="gcodelines">
+											<table class="table table-bordered table-hover table-striped" id="gcodelinestable">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>GCODE</th>
+													</tr>
+												</thead>
+												<tbody id="gcodelinestable">
+												</tbody>
+											</table>
+										</div>
 									<a class="btn btn-info" style="width: 100%; height: 36px; padding-bottom: 5px;"  id="saveGcode"><i class="fa fa-floppy-o fa-lg" style="margin-right: 20px;"></i>Save GCODE</a>
 
 								</div>
