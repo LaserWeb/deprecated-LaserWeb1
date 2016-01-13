@@ -1624,7 +1624,6 @@ $('#processSVG').on('click', function() {
 	$('#gcC').click();
 	openGCodeFromText();
 	gCodeToSend = this.result;
-	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 	$('#sendToLaser').removeClass('disabled');
 	document.getElementById('fileInputGcode').value = '';
 	document.getElementById('fileInputDXF').value = '';
@@ -1638,6 +1637,7 @@ $('#processSVG').on('click', function() {
 osvg.addEventListener('change', function(e) {
 	var fileInputSVG = document.getElementById('fileInputSVG');
 	var fileName = fileInputSVG.value.replace("C:\\fakepath\\", "");
+	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 	document.getElementById('fileName').value = fileName;
 	$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: Svg</b></u></span><br>');
 	$('#sendToLaser').addClass('disabled');
@@ -2207,4 +2207,5 @@ function processSVG() {
 	SVGlaserRapid = $('#SVGrapidRate').val();
 	SVGlaserPwr = $('#SVGlaserPwr').val();
 	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.1, scale: svgscale, safeZ: 0.01, laserpwr: SVGlaserPwr });
+	gCodeToSend = document.getElementById('gcodepreview').value;
 };
