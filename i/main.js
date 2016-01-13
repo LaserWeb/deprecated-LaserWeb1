@@ -371,6 +371,17 @@ $(document).ready(function() {
 		//$('#gcodepreview').val('');
 	});
 
+	// Send to laser button - start the job
+	$('#rasterWidgetSendRasterToLaser').on('click', function() {
+		socket.emit('clearQ', 1);
+		socket.emit('pause', 0);
+		$('#rasterWidgetSendRasterToLaser').addClass('disabled');
+		$('#pause').removeClass('disabled');
+		$('#mainStatus').html('Status: Lasering');
+		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
+		//$('#gcodepreview').val('');
+	});
+
 	// Sends single commands to laser (typed into #command)
 	$('#sendCommand').on('click', function() {
 		socket.emit('gcodeLine', { line: $('#command').val() });
@@ -2059,9 +2070,32 @@ osvg.addEventListener('change', function(e) {
 	// Raster support
 	var paperscript = {};
 
+	var rasterCalib = document.getElementById('rastercalibrationButton');
+		$('#rastercalibrationButton').on('click', function() {
+			$('#rasterwidget').modal('toggle');
+			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
+			rasterWidgetTitle.innerText = 'Raster Engraving Calibration';
+			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+			sendToLaserButton.style.display = "inline";
+			//uncomment the next 2 lines to enable the raster output attempt from laserraster.js
+			//var rasterOutput = document.getElementById("rasterOutput");
+			//rasterOutput.style.display = "inline";
+			//laserraster.js may have the code for that commented out, so check
+			var imgtag = document.getElementById("origImage");
+			imgtag.title = 'Calibration Image';
+			imgtag.src = 'raster/calibration.jpg';
+			setImgDims();
+		});
+
 	var fileImg = document.getElementById('fileImage');
 		fileImg.addEventListener('change', function(e) {
 			$('#rasterwidget').modal('toggle');
+			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
+			rasterWidgetTitle.innerText = 'Raster Engraving';
+			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+			sendToLaserButton.style.display = "none";
+			var rasterOutput = document.getElementById("rasterOutput");
+			rasterOutput.style.display = "none";
 			var selectedFile = event.target.files[0];
 			var reader = new FileReader();
 			document.getElementById('fileImage').value = '';
@@ -2182,7 +2216,12 @@ function setImgDims() {
 	};
 
 function gcodereceived() {
-	$('#rasterwidget').modal('toggle');
+	var rasterSendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+	if (rasterSendToLaserButton.style.display == "none") {
+		$('#rasterwidget').modal('toggle');
+	} else {
+		$('#rasterWidgetSendRasterToLaser').removeClass('disabled');
+	}
 	console.log('New Gcode');
 	$('#sendToLaser').removeClass('disabled');
 	openGCodeFromText();
