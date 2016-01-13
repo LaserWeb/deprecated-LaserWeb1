@@ -764,9 +764,13 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 			laserPwr = laserPwr.map(0, 100, 0, 1);
 			laserPwr = laserPwr.toFixed(0);
 			this.gcode += 'G1 S'+laserPwr+'\n';
+		} else if (firmware.indexOf('Lasaur') == 0) {
+			laserPwr = laserPwr.map(0, 100, 0, 255);
+			laserPwr = laserPwr.toFixed(0);
+			this.gcode += 'G1 S'+laserPwr+'\n';
 		} else {
-			 laserPwr = laserPwr.map(0, 100, 0, 255);
-			 this.gcode += 'M03 S'+laserPwr+'\n';
+			laserPwr = laserPwr.map(0, 100, 0, 255);
+			this.gcode += 'M03 S'+laserPwr+'\n';
 		}
 
 		// loop through each point in the path
@@ -890,9 +894,17 @@ Millcrum.prototype.get = function() {
 	// set absolute mode
 	s += '\n; SETTING ABSOLUTE POSITIONING\n';
 	s += 'G90\n';
+	if (firmware.indexOf('Lasaur') == 0) {
+		s += 'M80\n'; // Air Assist off
+	};
+
 	this.gcode += 'M02\n';
 
 	this.gcode = s + this.gcode;
+
+	if (firmware.indexOf('Lasaur') == 0) {
+		this.gcode += 'M81\n'; // Air Assist on
+	};
 
 	// returnHome if set
 	// this needs to be moved outside of the object and at the end of all objects

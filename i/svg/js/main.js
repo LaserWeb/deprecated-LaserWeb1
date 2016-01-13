@@ -1,8 +1,12 @@
+// Author Jordan Sitkin https://github.com/dustMason/Machine-Art
+
+// not used directly in laserweb, but this is where I ported the code from (peter van der walt)
+
 console.log('In svg main');
 
 var artworks = [
   './art/homer.svg',
-  './art/phone.svg'  
+  './art/phone.svg'
 ];
 
 var $svgElm = $("#svg"),

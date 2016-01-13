@@ -69,7 +69,6 @@ SVGReader = {
     node.stroke = [255,0,0];
     node.xformToWorld = [1,0,0,1,0,0]
     this.parseChildren(svgRootElement, node)
-
     return this.boundarys
   },
 
@@ -165,7 +164,7 @@ SVGReader = {
         // double check params
         for (var j=0; j<params.length; j++) {
           if ( isNaN(params[j]) ) {
-            $().uxmessage('warning', 'transform skipped; contains non-numbers');
+            console.log('warning', 'transform skipped; contains non-numbers');
             continue  // skip this transform
           }
         }
@@ -177,7 +176,7 @@ SVGReader = {
           } else if (params.length == 2) {
             xforms.push([1, 0, 0, 1, params[0], params[1]])
           } else {
-            $().uxmessage('warning', 'translate skipped; invalid num of params');
+            console.log('warning', 'translate skipped; invalid num of params');
           }
         // rotate
         } else if (xformKind == 'rotate') {
@@ -190,7 +189,7 @@ SVGReader = {
             var angle = params[0] * this.DEG_TO_RAD
             xforms.push([Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 0, 0])
           } else {
-            $().uxmessage('warning', 'rotate skipped; invalid num of params');
+            console.log('warning', 'rotate skipped; invalid num of params');
           }
         //scale
         } else if (xformKind == 'scale') {
@@ -199,7 +198,7 @@ SVGReader = {
           } else if (params.length == 2) {
             xforms.push([params[0], 0, 0, params[1], 0, 0])
           } else {
-            $().uxmessage('warning', 'scale skipped; invalid num of params');
+            console.log('warning', 'scale skipped; invalid num of params');
           }
         // matrix
         } else if (xformKind == 'matrix') {
@@ -212,7 +211,7 @@ SVGReader = {
             var angle = params[0]*this.DEG_TO_RAD
             xforms.push([1, 0, Math.tan(angle), 1, 0, 0])
           } else {
-            $().uxmessage('warning', 'skewX skipped; invalid num of params');
+            console.log('warning', 'skewX skipped; invalid num of params');
           }
         // skewY
         } else if (xformKind == 'skewY') {
@@ -220,7 +219,7 @@ SVGReader = {
             var angle = params[0]*this.DEG_TO_RAD
             xforms.push([1, Math.tan(angle), 0, 1, 0, 0])
           } else {
-            $().uxmessage('warning', 'skewY skipped; invalid num of params');
+            console.log('warning', 'skewY skipped; invalid num of params');
           }
         }
       }
@@ -332,7 +331,7 @@ SVGReader = {
         return a
 
       } else if (val.search(/^url\(/) != -1) {
-        $().uxmessage('error', "defs are not supported at the moment");
+        console.log('error', "defs are not supported at the moment");
       } else if (val == 'currentColor') {
         return currentColor
       } else if (val == 'none') {
@@ -412,7 +411,7 @@ SVGReader = {
         }
         return d
       } else {
-        $().uxmessage('error', "in __getPolyPath: odd number of verteces");
+        console.log('error', "in __getPolyPath: odd number of verteces");
       }
     },
 
@@ -553,7 +552,7 @@ SVGReader = {
     if (totalMaxScale != 0) {
       // adjust for possible transforms
       tolerance2 /= Math.pow(totalMaxScale, 2);
-      // $().uxmessage('notice', "tolerance2: " + tolerance2.toString());
+      // console.log('notice', "tolerance2: " + tolerance2.toString());
     }
 
     if ( typeof d == 'string') {
@@ -566,7 +565,7 @@ SVGReader = {
         }
       }
     }
-    //$().uxmessage('notice', "d: " + d.toString());
+    //console.log('notice', "d: " + d.toString());
 
     function nextIsNum () {
       return (d.length > 0) && (typeof(d[0]) === 'number');
@@ -576,7 +575,7 @@ SVGReader = {
       if (d.length > 0) {
         return d.shift();  // pop first item
       } else {
-        $().uxmessage('error', "in addPath: not enough parameters");
+        console.log('error', "in addPath: not enough parameters");
         return null;
       }
     }

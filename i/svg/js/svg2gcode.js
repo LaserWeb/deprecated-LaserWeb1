@@ -1,3 +1,8 @@
+// Author Jordan Sitkin https://github.com/dustMason/Machine-Art
+
+	var intensity = 100;
+  var svglaserpwr = 0;
+
 function svg2gcode(svg, settings) {
   // clean off any preceding whitespace
   svg = svg.replace(/^[\n\r \t]/gm, '');
@@ -8,12 +13,14 @@ function svg2gcode(svg, settings) {
   settings.feedRate = settings.feedRate || 1400;
   settings.seekRate = settings.seekRate || 1100;
   settings.bitWidth = settings.bitWidth || 1; // in mm
-
   settings.verticalSlices = settings.verticalSlices || 1;
   settings.horizontalSlices = settings.horizontalSlices || 1;
-
   settings.offsetX = settings.offsetX || 0;
   settings.offsetY = settings.offsetY || 0;
+  settings.laserpwr = settings.laserpwr || 100;
+
+  console.log('SVG Laser Power:  '+settings.laserpwr+'%');
+  var svglaserpwr = parseInt(settings.laserpwr, 10)
 
   var scale = function(val) {
     return val * settings.scale;
@@ -59,10 +66,8 @@ function svg2gcode(svg, settings) {
     paths[idx].bounds = bounds;
   }
 
-  if (settings.verticalSlices > 1 || settings.horizontalSlices > 1) {
+    if (settings.verticalSlices > 1 || settings.horizontalSlices > 1) {
     // break the job up into slices, work in small chunks
-    var totalWidth = maxX - minX;
-    var totalHeight = maxY - minY;
     var columnWidth = totalWidth / settings.verticalSlices;
     var rowHeight = totalHeight / settings.horizontalSlices;
     var sortedPaths = [];
@@ -99,6 +104,30 @@ function svg2gcode(svg, settings) {
     'M4'
   ];
 
+  if (firmware.indexOf('Lasaur') == 0) {
+		  gcode.push('M81'); // Air Assist on
+	};
+
+  // Firmware Specific Gcode Output
+	if (firmware.indexOf('Grbl') == 0) {
+		intensity = svglaserpwr.map(0, 100, 0, 255);
+		//console.log('Mapping Intensity range for Grbl S0-S255');
+		intensity = intensity.toFixed(0);
+	} else if (firmware.indexOf('Smooth') == 0) {
+		intensity = svglaserpwr.map(0, 100, 0, 1);
+		//console.log('Mapping Intensity range for Smoothieware S0-S1');
+		intensity = intensity.toFixed(2);
+	} else if (firmware.indexOf('Lasaur') == 0) {
+		intensity = svglaserpwr.map(0, 100, 0, 255);
+		//console.log('Mapping Intensity range for Smoothieware S0-S1');
+		intensity = intensity.toFixed(0);
+	} else {
+		intensity = svglaserpwr.map(0, 100, 0, 100);
+		//console.log('Mapping Intensity range for S0-S100');
+		intensity = intensity.toFixed(0);
+	}
+
+
   for (var pathIdx = 0, pathLength = paths.length; pathIdx < pathLength; pathIdx++) {
     path = paths[pathIdx];
 
@@ -124,7 +153,8 @@ function svg2gcode(svg, settings) {
       var localSegment = ['G1',
         'X' + scale(segment.x + settings.offsetX),
         'Y' + scale(-segment.y + settings.offsetY),
-        'F' + settings.feedRate
+        'F' + settings.feedRate,
+        'S' + intensity
       ].join(' ');
 
       // feed through the material
@@ -156,6 +186,9 @@ function svg2gcode(svg, settings) {
 
   // turn off the spindle
   // gcode.push('M5');
+  if (firmware.indexOf('Lasaur') == 0) {
+		  gcode.push('M81'); // Air Assist on
+	};
 
   // go home
   // gcode.push('G1 Z0 F300');
