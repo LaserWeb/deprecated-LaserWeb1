@@ -336,12 +336,12 @@ $(document).ready(function() {
 			// pause queue on server
 			socket.emit('pause', 1);
 			$('#pause').html('Unpause');
-			socket.emit('gcodeLine', { line: 'M80\n' });
-			socket.emit('gcodeLine', { line: 'M3\n' });
-			$('#clearQ').removeClass('disabled');
-		} else {
 			socket.emit('gcodeLine', { line: 'M81\n' });
 			socket.emit('gcodeLine', { line: 'M5\n' });
+			$('#clearQ').removeClass('disabled');
+		} else {
+			socket.emit('gcodeLine', { line: 'M80\n' });
+			socket.emit('gcodeLine', { line: 'M3\n' });
 			socket.emit('pause', 0);
 			$('#pause').html('Pause');
 			$('#clearQ').addClass('disabled');
