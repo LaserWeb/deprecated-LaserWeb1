@@ -303,7 +303,7 @@ DxfArrayScanner.prototype.next = function() {
 	this._pointer++;
 
 	group.value = parseGroupValue(group.code, this._data[this._pointer].trim());
-
+	
 	this._pointer++;
 
 	if(group.code === 0 && group.value === 'EOF') this._eof = true;
@@ -320,7 +320,7 @@ DxfArrayScanner.prototype.hasNext = function() {
 	if(this._eof) {
 		return false;
 	}
-
+	
 	// We need to be sure there are two lines available
 	if(this._pointer > this._data.length - 2) {
 		return false;
@@ -395,8 +395,8 @@ var log = require('loglevel');
 //log.setLevel('debug');
 //log.setLevel('info');
 //log.setLevel('warn');
-//log.setLevel('error');
-log.setLevel('silent');
+log.setLevel('error');
+//log.setLevel('silent');
 
 
 function DxfParser(stream) {}
@@ -406,7 +406,6 @@ DxfParser.prototype.parse = function(source, done) {
 };
 
 DxfParser.prototype.parseSync = function(source) {
-  console.log('in parseSync');
 	if(typeof(source) === 'string') {
 		return this._parse(source);
 	}else {
@@ -443,7 +442,6 @@ DxfParser.prototype.parseStream = function(stream, done) {
 };
 
 DxfParser.prototype._parse = function(dxfString) {
-  console.log('in _parse');
 	var scanner, curr, dxf = {}, lastHandle = 0;
 	var dxfLinesArray = dxfString.split(/\r\n|\r|\n/g);
 
@@ -541,9 +539,9 @@ DxfParser.prototype._parse = function(dxfString) {
 	 */
 	var parseBlocks = function() {
 		var blocks = {}, block;
-
+		
         curr = scanner.next();
-
+		
 		while(curr.value !== 'EOF') {
 			if(groupIs(0, 'ENDSEC')) {
 				break;
@@ -554,7 +552,10 @@ DxfParser.prototype._parse = function(dxfString) {
 				block = parseBlock();
 				log.debug('}');
 				ensureHandle(block);
-				blocks[block.handle] = block;
+                if(!block.name)
+                    log.error('block with handle "' + block.handle + '" is missing a name.');
+				else
+                    blocks[block.name] = block;
 			} else {
 				logUnhandledGroup(curr);
 				curr = scanner.next();
@@ -626,7 +627,7 @@ DxfParser.prototype._parse = function(dxfString) {
 					logUnhandledGroup(curr);
 					curr = scanner.next();
 			}
-
+			
 			if(groupIs(0, 'ENDBLK')) {
 				curr = scanner.next();
 				break;
@@ -787,6 +788,10 @@ DxfParser.prototype._parse = function(dxfString) {
 					viewPort.viewTwistAngle = curr.value;
 					curr = scanner.next();
 					break;
+                case 79:
+                    viewPort.orthographicType = curr.value;
+                    curr = scanner.next();
+                    break;
 				case 110:
 					viewPort.ucsOrigin = parsePoint();
 					break;
@@ -898,7 +903,7 @@ DxfParser.prototype._parse = function(dxfString) {
 	};
 
 	var parseLayers = function() {
-		var layersdxf = {},
+		var layers = {},
 			layerName,
 			layer = {};
 
@@ -938,9 +943,9 @@ DxfParser.prototype._parse = function(dxfString) {
 		// Note: do not call scanner.next() here,
 		//  parseLayerTable() needs the current group
 		log.debug('}');
-		layersdxf[layerName] = layer;
+		layers[layerName] = layer;
 
-		return layersdxf;
+		return layers;
 	};
 
 	var tableDefinitions = {
@@ -981,7 +986,7 @@ DxfParser.prototype._parse = function(dxfString) {
 				if(curr.value === endingOnValue) {
 					break;
 				}
-
+				
 				var entity;
 				// Supported entities here
 				if(curr.value === 'LWPOLYLINE') {
@@ -1106,10 +1111,9 @@ DxfParser.prototype._parse = function(dxfString) {
 				curr = scanner.next();
 				break;
 			case 100:
-				if(curr.value == 'AcDbEntity') {
-					curr = scanner.next();
-					break;
-				}
+                //ignore
+                curr = scanner.next();
+                break;
 			default:
 				logUnhandledGroup(curr);
 				curr = scanner.next();
@@ -1143,13 +1147,13 @@ DxfParser.prototype._parse = function(dxfString) {
 					curr = scanner.next();
 					break;
 				case 70: // flags
-					entity.curveFittingVertex = (curr.value | 1) !== 0;
-					entity.curveFitTangent = (curr.value | 2) !== 0;
-					entity.splineVertex = (curr.value | 8) !== 0;
-					entity.splineControlPoint = (curr.value | 16) !== 0;
-					entity.ThreeDPolylineVertex = (curr.value | 32) !== 0;
-					entity.ThreeDPolylineMesh = (curr.value | 64) !== 0;
-					entity.polyfaceMeshVertex = (curr.value | 128) !== 0;
+					entity.curveFittingVertex = (curr.value & 1) !== 0;
+					entity.curveFitTangent = (curr.value & 2) !== 0;
+					entity.splineVertex = (curr.value & 8) !== 0;
+					entity.splineControlPoint = (curr.value & 16) !== 0;
+					entity.threeDPolylineVertex = (curr.value & 32) !== 0;
+					entity.threeDPolylineMesh = (curr.value & 64) !== 0;
+					entity.polyfaceMeshVertex = (curr.value & 128) !== 0;
 					curr = scanner.next();
 					break;
 				case 50: // curve fit tangent direction
@@ -1168,12 +1172,12 @@ DxfParser.prototype._parse = function(dxfString) {
 	};
 
 	var parseSeqEnd = function() {
-		var entity = { type: curr.value };
-    curr = scanner.next();
-		while(curr != 'EOF') {
-			if (curr.code == 0) break;
-			checkCommonEntityProperties(entity);
-		}
+        var entity = { type: curr.value };
+        curr = scanner.next();
+        while(curr != 'EOF') {
+            if (curr.code == 0) break;
+            checkCommonEntityProperties(entity);
+        }
 
 		return entity;
 	};
@@ -1218,7 +1222,7 @@ DxfParser.prototype._parse = function(dxfString) {
 			var vertex = {};
 			while(curr !== 'EOF') {
 				if(curr.code === 0 || vertexIsFinished) break;
-
+	
 				switch(curr.code) {
 					case 10: // X
 						if(vertexIsStarted) {
@@ -1488,12 +1492,22 @@ DxfParser.prototype._parse = function(dxfString) {
 				case 20: // always 0
 				case 30: // elevation
 				case 39: // thickness
+                    entity.thickness = curr.value;
+					curr = scanner.next();
+					break;
 				case 40: // start width
 				case 41: // end width
 					curr = scanner.next();
 					break;
-				case 70: // 1 = Closed shape, 128 = plinegen?, 0 = default
-					entity.shape = (curr.value | 1) !== 0;
+				case 70:
+					entity.shape = (curr.value & 1) !== 0;
+                    entity.includesCurveFitVertices = (curr.value & 2) !== 0;
+                    entity.includesSplineFitVertices = (curr.value & 4) !== 0;
+                    entity.is3dPolyline = (curr.value & 8) !== 0;
+                    entity.is3dPolygonMesh = (curr.value & 16) !== 0;
+                    entity.is3dPolygonMeshClosed = (curr.value & 32) !== 0; // 32 = The polygon mesh is closed in the N direction
+                    entity.isPolyfaceMesh = (curr.value & 64) !== 0;
+                    entity.hasContinuousLinetypePattern = (curr.value & 128) !== 0;
 					curr = scanner.next();
 					break;
 				case 71: // Polygon mesh M vertex count
@@ -1503,17 +1517,8 @@ DxfParser.prototype._parse = function(dxfString) {
 				case 75: // Curves and smooth surface type
 					curr = scanner.next();
 					break;
-				case 210: // X extrusion direction
-					log.debug(curr.value);
-					curr = scanner.next();
-					break;
-				case 220: // Y extrusion direction
-				case 230: // Z extrusion direction
-					curr = scanner.next();
-					break;
-				case 100: // Subclass marker
-					log.debug(scanner.value);
-					checkCommonEntityProperties(entity);
+				case 210:
+                    extrusionDirection = parsePoint();
 					break;
 				default:
 					checkCommonEntityProperties(entity);
@@ -1583,12 +1588,10 @@ DxfParser.prototype._parse = function(dxfString) {
 					break;
 				case 50: // start angle
 					entity.startAngle = Math.PI / 180 * curr.value;
-          entity.startAngleDeg = curr.value;
 					curr = scanner.next();
 					break;
 				case 51: // end angle
 					endAngle = Math.PI / 180 * curr.value;
-          entity.endAngleDeg = curr.value;
 					if(endAngle < entity.startAngle)
 						entity.angleLength = endAngle + 2 * Math.PI - entity.startAngle;
 					else
@@ -1753,11 +1756,11 @@ DxfParser.prototype._parse = function(dxfString) {
 
 		return entity;
 	};
-
+	
 	var ensureHandle = function(entity) {
 		if(!entity) throw new TypeError('entity cannot be undefined or null');
-
-		if(!entity.handle) entity.handle = lastHandle++;
+		
+		if(!entity.handle) entity.handle = lastHandle++; 
 	};
 
 	parseAll();
@@ -1897,7 +1900,7 @@ module.exports = DxfParser;
                 storedLevel = /loglevel=([^;]+)/.exec(window.document.cookie)[1];
             } catch (ignore) {}
         }
-
+        
         if (self.levels[storedLevel] === undefined) {
             storedLevel = "WARN";
         }
