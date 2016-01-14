@@ -181,7 +181,7 @@ function openGCodeFromText() {
 	$("#gcodelinestbody").empty();
 	var lines = $('#gcodepreview').val().split('\n');
 	for(var i = 0;i < lines.length;i++){
-	    $('#gcodelinestable > tbody:last-child').append('<tr><td>'+[i]+'</td><td>'+lines[i]+'</td></tr>');//code here using lines[i] which will give you each line
+	    $('#gcodelinestable > tbody:last-child').append('<tr id="tr'+[1]+'"><td>'+[i]+'</td><td>'+lines[i]+'</td></tr>');//code here using lines[i] which will give you each line
 	}
 
 }

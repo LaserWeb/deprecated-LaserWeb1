@@ -69,7 +69,13 @@ textarea {
 	text-align: left;
 	background-color: #eee;
 	padding: 00px;
-	font-size: 9px;
+	font-size: 10px;
+  font-weight: 500;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #990000;
+  color: #ffffff;
 }
 
 

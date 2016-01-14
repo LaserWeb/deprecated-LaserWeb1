@@ -218,7 +218,9 @@
 						</div>
 
 						<!-- Status of Job Preparation -->
-						<div class="well well-sm"><p id="mainStatus">Status: Waiting for GCODE upload...</span></div>
+						<div class="alert alert-dismissible alert-success">
+  						<div id="mainStatus">Status: Waiting for GCODE upload...</div>
+						</div>
 
 						<!-- Tabs -->
 						<ul class="nav nav-tabs nav-justified" role="tablist" style="display:none;">
@@ -233,7 +235,7 @@
 								<div id="gcPosition">
 									<textarea style="height: 300px; width: 100%; overflow: auto; border: 2px solid orange; margin: 10px; display :none; " id="gcodepreview"></textarea>
 										<div id="gcodelines">
-											<table class="table table-bordered table-hover table-striped" id="gcodelinestable">
+											<table class="table table-hover table-striped table-condensed" id="gcodelinestable"
 												<thead>
 													<tr>
 														<th>#</th>
@@ -258,11 +260,14 @@
 
 			<!-- Job Control Buttons -->
 			<div class="btn-group input-group  btn-group-justified">
-			<!-- div class="btn-group" role="group"><button type="button" id="clearJob" class="btn btn-default">Clear GCODE</button></div -->
-			<div class="btn-group" role="group"><button type="button" id="pause" class="btn btn-default disabled">Pause</button></div>
-			<div class="btn-group" role="group"><button type="button" id="clearQ" class="btn btn-default disabled">Clear Q</button></div>
-			<div class="btn-group" role="group"><button type="button" class="btn btn-danger disabled" id="sendToLaser"><i class="fa fa-fire"style="margin-right: 8px;"></i>
-Send to Laser</button></div>
+				<!-- div class="btn-group" role="group"><button type="button" id="clearJob" class="btn btn-default">Clear GCODE</button></div -->
+				<div class="btn-group" role="group"><button type="button" id="pause" class="btn btn-default disabled">Pause</button></div>
+				<div class="btn-group" role="group"><button type="button" id="clearQ" class="btn btn-default disabled">Clear Q</button></div>
+			</div>
+			<div class="btn-group input-group  btn-group-justified">
+				<div class="btn-group" role="group"><button type="button" class="btn btn-danger disabled" id="sendToLaser" style="">
+					<i class="fa fa-fire"style="margin-right: 8px;"></i>Send to Laser</button>
+				</div>
 			</div>
 			<input type="hidden" value="GCODE" id="fileName">
 			<hr style="clear: both;" />
