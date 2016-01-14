@@ -178,7 +178,7 @@ function openGCodeFromText() {
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
 	// Pretty Gcode Viewer
-	$("#gcodelinestable").empty();
+	$("#gcodelinestbody").empty();
 	var lines = $('#gcodepreview').val().split('\n');
 	for(var i = 0;i < lines.length;i++){
 	    $('#gcodelinestable > tbody:last-child').append('<tr><td>'+[i]+'</td><td>'+lines[i]+'</td></tr>');//code here using lines[i] which will give you each line
