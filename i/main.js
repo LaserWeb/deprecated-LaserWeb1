@@ -336,8 +336,12 @@ $(document).ready(function() {
 			// pause queue on server
 			socket.emit('pause', 1);
 			$('#pause').html('Unpause');
+			socket.emit('gcodeLine', { line: 'M81\n' });
+			socket.emit('gcodeLine', { line: 'M5\n' });
 			$('#clearQ').removeClass('disabled');
 		} else {
+			socket.emit('gcodeLine', { line: 'M80\n' });
+			socket.emit('gcodeLine', { line: 'M3\n' });
 			socket.emit('pause', 0);
 			$('#pause').html('Pause');
 			$('#clearQ').addClass('disabled');
@@ -365,6 +369,17 @@ $(document).ready(function() {
 		socket.emit('clearQ', 1);
 		socket.emit('pause', 0);
 		$('#sendToLaser').addClass('disabled');
+		$('#pause').removeClass('disabled');
+		$('#mainStatus').html('Status: Lasering');
+		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
+		//$('#gcodepreview').val('');
+	});
+
+	// Send to laser button - start the job
+	$('#rasterWidgetSendRasterToLaser').on('click', function() {
+		socket.emit('clearQ', 1);
+		socket.emit('pause', 0);
+		$('#rasterWidgetSendRasterToLaser').addClass('disabled');
 		$('#pause').removeClass('disabled');
 		$('#mainStatus').html('Status: Lasering');
 		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
@@ -1624,7 +1639,6 @@ $('#processSVG').on('click', function() {
 	$('#gcC').click();
 	openGCodeFromText();
 	gCodeToSend = this.result;
-	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 	$('#sendToLaser').removeClass('disabled');
 	document.getElementById('fileInputGcode').value = '';
 	document.getElementById('fileInputDXF').value = '';
@@ -1638,6 +1652,7 @@ $('#processSVG').on('click', function() {
 osvg.addEventListener('change', function(e) {
 	var fileInputSVG = document.getElementById('fileInputSVG');
 	var fileName = fileInputSVG.value.replace("C:\\fakepath\\", "");
+	$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 	document.getElementById('fileName').value = fileName;
 	$('#console').append('<br><span style="color: #060606;"><u><b>New Job Loaded: Svg</b></u></span><br>');
 	$('#sendToLaser').addClass('disabled');
@@ -2059,9 +2074,32 @@ osvg.addEventListener('change', function(e) {
 	// Raster support
 	var paperscript = {};
 
+	var rasterCalib = document.getElementById('rastercalibrationButton');
+		$('#rastercalibrationButton').on('click', function() {
+			$('#rasterwidget').modal('toggle');
+			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
+			rasterWidgetTitle.innerText = 'Raster Engraving Calibration';
+			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+			sendToLaserButton.style.display = "inline";
+			//uncomment the next 2 lines to enable the raster output attempt from laserraster.js
+			//var rasterOutput = document.getElementById("rasterOutput");
+			//rasterOutput.style.display = "inline";
+			//laserraster.js may have the code for that commented out, so check
+			var imgtag = document.getElementById("origImage");
+			imgtag.title = 'Calibration Image';
+			imgtag.src = 'raster/calibration.jpg';
+			setImgDims();
+		});
+
 	var fileImg = document.getElementById('fileImage');
 		fileImg.addEventListener('change', function(e) {
 			$('#rasterwidget').modal('toggle');
+			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
+			rasterWidgetTitle.innerText = 'Raster Engraving';
+			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+			sendToLaserButton.style.display = "none";
+			var rasterOutput = document.getElementById("rasterOutput");
+			rasterOutput.style.display = "none";
 			var selectedFile = event.target.files[0];
 			var reader = new FileReader();
 			document.getElementById('fileImage').value = '';
@@ -2182,7 +2220,12 @@ function setImgDims() {
 	};
 
 function gcodereceived() {
-	$('#rasterwidget').modal('toggle');
+	var rasterSendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+	if (rasterSendToLaserButton.style.display == "none") {
+		$('#rasterwidget').modal('toggle');
+	} else {
+		$('#rasterWidgetSendRasterToLaser').removeClass('disabled');
+	}
 	console.log('New Gcode');
 	$('#sendToLaser').removeClass('disabled');
 	openGCodeFromText();
@@ -2207,4 +2250,5 @@ function processSVG() {
 	SVGlaserRapid = $('#SVGrapidRate').val();
 	SVGlaserPwr = $('#SVGlaserPwr').val();
 	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.1, scale: svgscale, safeZ: 0.01, laserpwr: SVGlaserPwr });
+	gCodeToSend = document.getElementById('gcodepreview').value;
 };

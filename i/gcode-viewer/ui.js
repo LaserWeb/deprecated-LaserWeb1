@@ -176,6 +176,14 @@ function openGCodeFromText() {
 	var elapsed = (currentTime - startTime);
 	$('#console').append('<p class="pf" style="color: #009900;"><b>3D Render completed in '+elapsed+' ms</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+
+	// Pretty Gcode Viewer
+	$("#gcodelinestbody").empty();
+	var lines = $('#gcodepreview').val().split('\n');
+	for(var i = 0;i < lines.length;i++){
+	    $('#gcodelinestable > tbody:last-child').append('<tr id="tr'+[1]+'"><td>'+[i]+'</td><td>'+lines[i]+'</td></tr>');//code here using lines[i] which will give you each line
+	}
+
 }
 
 function makeSprite(scene, rendererType, vals) {

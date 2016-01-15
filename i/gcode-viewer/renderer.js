@@ -31,7 +31,7 @@ function createScene(element) {
         autoClearColor: true
     });
 
-    renderer.setClearColor(0xffffff, 1);
+    renderer.setClearColor(0xffffff, 1);  // Background color of viewer
     renderer.setSize(element.width(), (element.height() -30 ));
     element.append(renderer.domElement);
     renderer.clear();

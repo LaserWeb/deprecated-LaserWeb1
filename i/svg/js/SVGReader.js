@@ -42,7 +42,7 @@ SVGReader = {
     // each subpath is a list of verteces
   style : {},
     // style at current parsing position
-  tolerance : 0.1,
+  tolerance : 0.05,
     // max tollerance when tesselating curvy shapes
 
 
