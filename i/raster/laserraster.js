@@ -63,6 +63,21 @@ function figureIntensity(grey) {
 	return intensity
 }
 
+function figureSpeed(grey) {
+	blackRate = globals.blackSpeed;
+	whiteRate = globals.whiteSpeed;
+	speed = grayLevel * 100;
+	//console.log('Figure speed for brightness');
+
+	if (parseFloat(speed) > 0) {
+		speed = speed.map(0, 100, parseInt(blackRate,10), parseInt(whiteRate,10));
+	} else {
+		speed = 0;
+	};
+	speed = speed.toFixed(0);
+	return speed
+}
+
 // add MAP function to the Numbers function
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
   return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -98,7 +113,7 @@ this.RasterNow = function( _callback){
   raster.visible = false;
   var gridSize = 1;
   var spacing = 1;
-
+	var speed = feedRate;
 	// Log it as a sanity check
 	console.log('Constraining Laser power between '+minIntensity+'% and '+maxIntensity+'%');
 	console.log('Height: '+imgheight+'px, Width: '+imgwidth+'px');
@@ -184,9 +199,13 @@ this.RasterNow = function( _callback){
 				c++;
 				xm = 0;
 				//console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
-
 				if (lastIntensity > 0) {
-					s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' \n';
+					if (useVariableSpeed) {
+						speed = figureSpeed(grayLevel);
+						s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' F'+speed+'\n';
+					} else {
+						s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' \n';
+					}
 				} else {
 					s += 'G0 X'+posx+' Y'+gcodey+' S0\n';
 				}
