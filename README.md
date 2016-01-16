@@ -105,7 +105,7 @@ The software is now installed.
 
 To start the software:
 
-    1.	Start a windows command prompt by typing "cmd" in the search box a t the bottom of the windows desktop screen (do not 				type the quotes)
+    1.	Start a windows command prompt by typing "cmd" in windows search (do not type the quotes) 
     2.	In the command prompt window type "cd\laserweb" at the command prompt (do not type the quotes)
     3.	In the command prompt window type "node server" at the command prompt (do not type the quotes)
     4.	Start the google Chrome web browser (software is only tested to work with Chrome)
