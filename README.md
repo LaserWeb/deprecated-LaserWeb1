@@ -90,9 +90,9 @@ Step by step install for windows users:
 
 Prerequisites:
 
-1.Download and install Node.js version node-v0.12.7 from https://nodejs.org/download/release/v0.12.7/
-2. Install Google Chrome if not already installed
-3. Download and install Git For Windows from https://git-scm.com/download/win
+	1.Download and install Node.js version node-v0.12.7 from https://nodejs.org/download/release/v0.12.7/
+	2. Install Google Chrome if not already installed
+	3. Download and install Git For Windows from https://git-scm.com/download/win
 
 LaserWeb install instructions:
 
