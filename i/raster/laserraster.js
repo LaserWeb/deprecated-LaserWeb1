@@ -86,6 +86,9 @@ this.RasterNow = function( _callback){
   imgwidth = globals.imgW;
   feedRate = globals.feed;
   rapidRate = globals.rapid;
+  blackRate = globals.blackSpeed;
+  whiteRate = globals.whiteSpeed;
+  useVariableSpeed = globals.variableSpeed;
 	minIntensity = globals.minpwr2;
 	maxIntensity = globals.maxpwr2;
 	spotSize1 = globals.spotSize;
@@ -102,6 +105,9 @@ this.RasterNow = function( _callback){
 	console.log('Spot Size: '+spotSize1+'mm');
 	console.log('Raster Width: '+raster.width+' Height: '+raster.height);
 	console.log('G0: '+rapidRate+' mm/min, G1: '+feedRate+' mm/min');
+	if (useVariableSpeed) {
+		console.log('Black speed: ' + blackRate + ' Whitespeed: ' + whiteRate);
+	}
 
 
   // As the web is asynchronous, we need to wait for the raster to load before we can perform any operation on its pixels.
