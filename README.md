@@ -97,9 +97,10 @@ Prerequisites:
 LaserWeb install instructions:
 
 	1.  Start a windows command prompt by typing "cmd" in windows search (do not type the quotes)
-	2   Type "git clone https://github.com/openhardwarecoza/LaserWeb.git" (do not type the quotes)
-	3.  Type "cd LaserWeb" (do not type the quotes)
-	4.  Type "npm install" (do not type the quotes)
+	2.	Type "cd\" (do not type the quotes)
+	3.	Type "git clone https://github.com/openhardwarecoza/LaserWeb.git" (do not type the quotes)
+	4.  Type "cd LaserWeb" (do not type the quotes)
+	5.  Type "npm install" (do not type the quotes)
 
 The software is now installed.
 
