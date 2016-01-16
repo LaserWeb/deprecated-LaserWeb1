@@ -1040,29 +1040,11 @@ $(document).ready(function() {
 		$('#webcamwidget').modal('toggle');
 	});
 
-	$("#webcamwidget").draggable({
-		handle: ".modal-header"
+	$('.modal.draggable>.modal-dialog').draggable({
+    cursor: 'move',
+    handle: '.modal-header'
 	});
-
-	$("#cutParams").draggable({
-		handle: ".modal-header"
-	});
-
-	$("#machineControl").draggable({
-		handle: ".modal-header"
-	});
-
-	$("#openJSCADUI").draggable({
-		handle: ".modal-header"
-	});
-
-	$("#rasterwidget").draggable({
-		handle: ".modal-header"
-	});
-
-	$("#svgwidget").draggable({
-		handle: ".modal-header"
-	});
+	$('.modal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 
 	// handle generate click (Created GCode)
 	generate.addEventListener("click", function() {
