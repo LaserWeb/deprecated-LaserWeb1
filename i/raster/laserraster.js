@@ -63,19 +63,15 @@ function figureIntensity(grey) {
 	return intensity
 }
 
-function figureSpeed(grey) {
+function figureSpeed(passedGrey) {
 	blackRate = globals.blackSpeed;
 	whiteRate = globals.whiteSpeed;
-	speed = grayLevel * 100;
+	var calcspeed = passedGrey * 100;
 	//console.log('Figure speed for brightness');
 
-	if (parseFloat(speed) > 0) {
-		speed = speed.map(0, 100, parseInt(blackRate,10), parseInt(whiteRate,10));
-	} else {
-		speed = 0;
-	};
-	speed = speed.toFixed(0);
-	return speed
+	calcspeed = calcspeed.map(0, 100, parseInt(blackRate,10), parseInt(whiteRate,10));
+	calcspeed = calcspeed.toFixed(0);
+	return calcspeed
 }
 
 // add MAP function to the Numbers function
@@ -150,6 +146,10 @@ this.RasterNow = function( _callback){
     s += '; Firmware: '+firmware+'\n';
     s += '; Laser Min: '+minIntensity+'%\n';
     s += '; Laser Max: '+maxIntensity+'%\n';
+	if (useVariableSpeed) {
+		s += '; Black Speed: '+blackRate+'mm/min\n';
+		s += '; White Speed: '+whiteRate+'mm/min\n';
+	}
     s += '; Laser Spot Size '+spotSize1+'mm\n';
     s += '; Laser Feedrate '+feedRate+'mm/min\n\n';
 
@@ -191,6 +191,8 @@ this.RasterNow = function( _callback){
 			//
 			if (lastGrey != grayLevel) {
 				intensity = figureIntensity(grayLevel);
+				speed = figureSpeed(lastGrey);
+				lastGrey = grayLevel;
 			};
 			// Can't miss the first pixel (;
 			if (px == 0) lastPosx = posx;
@@ -201,7 +203,6 @@ this.RasterNow = function( _callback){
 				//console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
 				if (lastIntensity > 0) {
 					if (useVariableSpeed) {
-						speed = figureSpeed(grayLevel);
 						s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' F'+speed+'\n';
 					} else {
 						s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' \n';
