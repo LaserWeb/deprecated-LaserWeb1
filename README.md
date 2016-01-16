@@ -85,12 +85,32 @@ NB:  MAKE SURE THE BOARD IS PLUGGED IN BEFORE STARTING LASERWEB. LaserWeb connec
 
 On Windows 7 and above, please use the following instructions. We are assuming from a vanilla Windows installation so your mileage may vary depending on things you already have installed. If you find conflicts, please let us know via a GitHub Issue
 
-1. Starting with a vanilla Windows 7 (or higher, should be fine) installation
-2. Download and install Node.js version node-v0.12.7 (NOTE:  At the time of writing SerialPort is not supported on Node,js 4.0+) from https://nodejs.org/download/release/v0.12.7/
-3. Open a command prompt and 'cd' to where you want to install LaserWeb (for example 'cd c:\users\Peter\Desktop')
-4.  git clone https://github.com/openhardwarecoza/LaserWeb.git
-5.  cd LaserWeb
-6.  npm install  (ignore any errors about socket.io failing to find vcbuild.exe, it has a built in fallback to pure JS when that happens, so its still fine.)
+
+Step by step install for windows users:
+
+Prerequisites:
+
+1.Download and install Node.js version node-v0.12.7 from https://nodejs.org/download/release/v0.12.7/
+2. Install Google Chrome if not already installed
+3. Download and install Git For Windows from https://git-scm.com/download/win
+
+LaserWeb install instructions:
+
+3.  Start a windows command prompt by typing "cmd" in the search box a t the bottom of the windows desktop screen (do not type     the quotes)
+4.  Type "git clone https://github.com/openhardwarecoza/LaserWeb.git" (do not type the quotes)
+5.  Type "cd LaserWeb" (do not type the quotes)
+6.  Type "npm install" (do not type the quotes)(ignore any errors about socket.io failing to find vcbuild.exe, it has a built     in fallback to pure JS when that happens, so its still fine.)Download the ZIP file from        	        https://www.github.com/openhardwarecoza/laserweb
+The software is now installed.
+
+To start the software:
+
+    Start a windows command prompt by typing "cmd" in the search box a t the bottom of the windows desktop screen (do not type     the quotes)
+    In the command prompt window type "cd\laserweb" at the command prompt (do not type the quotes)
+    In the command prompt window type "node server" at the command prompt (do not type the quotes)
+    Start the google Chrome web browser (software is only tested to work with Chrome)
+    At the top of the Chrome window type "localhost:8000" in the web address bar (do not type the quotes)
+
+You should now see the software in the Chrome browser window.
 
 ## Vagrant
 
