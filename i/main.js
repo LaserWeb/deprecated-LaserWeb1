@@ -2116,7 +2116,6 @@ osvg.addEventListener('change', function(e) {
 		minpwr = $( "#laserpwrslider" ).slider( "values", 0 );
 		maxpwr = $( "#laserpwrslider" ).slider( "values", 1 );
 
-
 		$( "#spotsizeslider" ).slider({
 				min: 0,
 				max: 250,
@@ -2128,6 +2127,31 @@ osvg.addEventListener('change', function(e) {
 				}
 		});
 
+		$( "#laservariablespeedslider" ).slider({
+				range:true,
+				min: 0,
+				max: 100,
+				values: [ 20, 80 ],
+				slide: function( event, ui ) {
+					$('#rasterNow').removeClass('disabled');
+					laserRapid = $('#rapidRate').val();
+					$('#laservariablespeed').html( $( "#laservariablespeedslider" ).slider( "values", 0 )*laserRapid/100.0 + ' - ' + $( "#laservariablespeedslider" ).slider( "values", 1 )*laserRapid/100.0);
+				}
+		});
+		$('#laservariablespeed').html( $( "#laservariablespeedslider" ).slider( "values", 0 )*$('#rapidRate').val()/100.0 + ' - ' + $( "#laservariablespeedslider" ).slider( "values", 1 )*$('#rapidRate').val()/100.0);
+
+		$("#useRasterBlackWhiteSpeeds").change( function() {
+			if($('#useRasterBlackWhiteSpeeds').prop('checked')) {
+				$("#blackwhitespeedsection").show();
+			} else {
+				$("#blackwhitespeedsection").hide();
+			}
+		});
+		
+		$("#rapidRate").change( function() {
+			$('#laservariablespeed').html( $( "#laservariablespeedslider" ).slider( "values", 0 )*$('#rapidRate').val()/100.0 + ' - ' + $( "#laservariablespeedslider" ).slider( "values", 1 )*$('#rapidRate').val()/100.0);
+		});
+
 		$('#spotsize').html(':  '+ ($( "#spotsizeslider" ).slider( "values", 0 ) / 100) + 'mm ');
 		spotSizeMul = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 
@@ -2136,6 +2160,8 @@ osvg.addEventListener('change', function(e) {
 			spotSize = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 			laserFeed = $('#feedRate').val();
 			laserRapid = $('#rapidRate').val();
+			blackspeed = $( "#laservariablespeedslider" ).slider( "values", 0 )*laserRapid/100.0; 
+			whitespeed = $( "#laservariablespeedslider" ).slider( "values", 1 )*laserRapid/100.0;
 			window.globals = {
 				  completed: function() { gcodereceived(); },
 					minpwr2: [minpwr],
@@ -2144,6 +2170,9 @@ osvg.addEventListener('change', function(e) {
 					imgH: [height],
 					imgW: [width],
 					feed: [laserFeed],
+					blackSpeed: [blackspeed],
+					whiteSpeed: [whitespeed],
+					variableSpeed: [$('#useRasterBlackWhiteSpeeds').prop('checked')],
 					rapid: [laserRapid]
 			};
 			window.paper.RasterNow(function() {
@@ -2168,7 +2197,6 @@ function setImgDims() {
 	spotSizeMul = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 	minpwr = $( "#laserpwrslider" ).slider( "values", 0 );
 	maxpwr = $( "#laserpwrslider" ).slider( "values", 1 );
-
 	var img = document.getElementById('origImage');
 	width = img.naturalWidth;
 	height = img.naturalHeight;
@@ -2181,7 +2209,6 @@ function setImgDims() {
 	var physheight = spotSizeMul * (height);
 	$("#physdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
 	$('#spotsize').html( ($( "#spotsizeslider" ).slider( "values", 0 ) / 100) + 'mm (distance between dots )<br>Resultant Job Size: '+ physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm' );
-
 
 	//  Draw a rect showing outer dims of Engraving - engravings with white space to sides are tricky to visualise without
 	rectWidth = physwidth +spotSizeMul, rectHeight = physheight + spotSizeMul;

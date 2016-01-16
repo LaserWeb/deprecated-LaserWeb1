@@ -856,16 +856,22 @@
 	        <h4 class="modal-title" id="rasterModalLabel">Raster Engraving</h4>
 	      </div>
 	      <div class="modal-body">
-						<div class="well">
+						<div class="">
 							<label for="laserpwrsliderlbl">Constrain Laser Power: </label>
-								 <span id="laserpwr" style="border:0;  font-weight:bold; background: transparent;" ></span>
-							</p>
+							<span id="laserpwr" style="border:0;  font-weight:bold; background: transparent;" ></span>
 							<div id="laserpwrslider"></div>
+						</div>
+						<br/>
+						The speed settings for black and white are expirimental. It would override your engrave speed. Check here if you wish to use them. 
+						<input type="checkbox" value="1" id="useRasterBlackWhiteSpeeds" />
+						<div class="" id="blackwhitespeedsection" style="display: none;">
+							<label for="laservariablespeedlbl">Speeds for black and white compared to rapid: </label>
+							<span id="laservariablespeed" style="border:0;  font-weight:bold; background: transparent;" ></span>						</p>
+							<div id="laservariablespeedslider"></div>
 						</div>
 						<div class="well">
 							<label for="spotsizesliderlbl">Zoom/Resolution: </label>
 								 <span id="spotsize" style="border:0;  font-weight:bold; background: transparent;" ></span>
-							</p>
 							<div id="spotsizeslider"></div>
 						</div>
 						<div class="input-group" style="margin-bottom:10px; width: 100%;">
