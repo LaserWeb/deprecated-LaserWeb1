@@ -1,3 +1,4 @@
+16 Jan 2016:	Updated install instructions for Windows based users
 12 Jan 2016:  SVG support with scaling, laser power, feed and seek all live now!  Go test!
 11 Jan 2016:  Working (but early)  SVG cutting support is back
 10 Jan 2016:  Starting to port over to a new DXF library.  Nothing users can use yet... 
