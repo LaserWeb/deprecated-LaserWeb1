@@ -99,7 +99,9 @@ LaserWeb install instructions:
 	1.  Start a windows command prompt by typing "cmd" in the search box a t the bottom of the windows desktop screen (do not 				type the quotes)
 	2   Type "git clone https://github.com/openhardwarecoza/LaserWeb.git" (do not type the quotes)
 	3.  Type "cd LaserWeb" (do not type the quotes)
-	4.  Type "npm install" (do not type the quotes)(ignore any errors about socket.io failing to find vcbuild.exe, it has a 					built in fallback to pure JS when that happens, so its still fine.)Download the ZIP file from        	        								https://www.github.com/openhardwarecoza/laserweb
+	4.  Type "npm install" (do not type the quotes)
+			(ignore any errors about socket.io failing to find vcbuild.exe, it has a
+			built in fallback to pure JS when that happens, so its still fine.)Download the ZIP file from        	        								https://www.github.com/openhardwarecoza/laserweb
 
 The software is now installed.
 
