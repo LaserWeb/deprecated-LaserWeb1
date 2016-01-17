@@ -1935,20 +1935,27 @@ osvg.addEventListener('change', function(e) {
 		} else {
 			// this is a waiting temp status
 			var fs = data.split(/[TB]/);
-			var t = fs[1].split('/');
-			var b = fs[2].split('/');
-			t[0] = t[0].slice(1);
-			b[0] = b[0].slice(1);
-			for (var i=0; i<2; i++) {
-				t[i] = t[i].trim();
+			if (fs[1]) {
+				var t = fs[1].split('/');
+				t[0] = t[0].slice(1);
+				for (var i=0; i<2; i++) {
+					t[i] = t[i].trim();
+				}
+				$('#eTC').html(t[0]+'C');
+				g2.refresh(t[0]);
+				$('#eTS').html(t[1]+'C');
+			};
+
+			if (fs[2]) {
+				var b = fs[2].split('/');
+				b[0] = b[0].slice(1);
+				for (var i=0; i<2; i++) {
 				b[i] = b[i].trim();
-			}
-			$('#eTC').html(t[0]+'C');
-			g2.refresh(t[0]);
-			$('#eTS').html(t[1]+'C');
-			$('#bTC').html(b[0]+'C');
-			g3.refresh(b[0]);
-			$('#bTS').html(b[1]+'C');
+				}
+				$('#bTC').html(b[0]+'C');
+				g3.refresh(b[0]);
+				$('#bTS').html(b[1]+'C');
+			};
 		}
 	});
 
@@ -2147,7 +2154,7 @@ osvg.addEventListener('change', function(e) {
 				$("#blackwhitespeedsection").hide();
 			}
 		});
-		
+
 		$("#rapidRate").change( function() {
 			$('#laservariablespeed').html( $( "#laservariablespeedslider" ).slider( "values", 0 )*$('#rapidRate').val()/100.0 + ' - ' + $( "#laservariablespeedslider" ).slider( "values", 1 )*$('#rapidRate').val()/100.0);
 		});
@@ -2160,7 +2167,7 @@ osvg.addEventListener('change', function(e) {
 			spotSize = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
 			laserFeed = $('#feedRate').val();
 			laserRapid = $('#rapidRate').val();
-			blackspeed = $( "#laservariablespeedslider" ).slider( "values", 0 )*laserRapid/100.0; 
+			blackspeed = $( "#laservariablespeedslider" ).slider( "values", 0 )*laserRapid/100.0;
 			whitespeed = $( "#laservariablespeedslider" ).slider( "values", 1 )*laserRapid/100.0;
 			window.globals = {
 				  completed: function() { gcodereceived(); },
