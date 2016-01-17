@@ -328,7 +328,7 @@ $(document).ready(function() {
 		$('#sendToLaser').removeClass('disabled');
 		$('#pause').removeClass('disabled');
 		// must clear queue first, then unpause (click) because unpause does a sendFirstQ on server
-		$('#pause').click();
+
 	});
 
 	$('#pause').on('click', function() {

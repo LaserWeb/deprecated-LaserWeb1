@@ -190,7 +190,6 @@ serialport.list(function (err, ports) {
 			}
 		});
 
-
 	}(i)
 	}
 
@@ -204,7 +203,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	//console.log('Port '+port+' got newline from serial: '+data);
+	console.log('Port '+port+' got newline from serial: '+data);
 
 
 	// Try to determine Firmware in use and set up queryloop
@@ -223,7 +222,6 @@ function serialData(data, port) {
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
-
 	}
 
 	if (data.indexOf('Grbl') == 0) { // Found Grbl
@@ -240,7 +238,6 @@ function serialData(data, port) {
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
-
 	}
 
 	if (data.indexOf('Marlin') != -1) { // Found Marlin
@@ -256,7 +253,6 @@ function serialData(data, port) {
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
-
 	}
 
 	if (data.indexOf('Repetier') != -1) { //found Repetier
@@ -265,7 +261,7 @@ function serialData(data, port) {
 		}, 1000);
     setInterval(function() {
       sp[port].handle.write("M105\n"); //for Repetier
-    }, 1000);
+    }, 1001);
 
     data = data.replace(/_/g,' ');
 		data = data.replace(/:/g,' ');
@@ -278,7 +274,6 @@ function serialData(data, port) {
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
-
 	}
 
 	if (data.indexOf('LPC1769') != -1 || data.indexOf('LPC1768') != -1) { //  found a Smoothie or AZSMZ type Board
@@ -296,7 +291,6 @@ function serialData(data, port) {
       chalk.blue(firmware)
       );
 		sp[port].firmware = firmware;
-
 	}
 
 	// End of Queryloop
@@ -426,7 +420,6 @@ function serialData(data, port) {
 		// remove first
 		sp[port].lastSerialWrite.shift();
 
-
 	} else {
 		// other is grey
 		emitToPortSockets(port, 'serialRead', {c:2,l:data});
@@ -439,9 +432,7 @@ function serialData(data, port) {
 
 	// update q status
 	emitToPortSockets(port, 'qStatus', {'currentLength':sp[port].q.length, 'currentMax':sp[port].qCurrentMax});
-
 	sp[port].lastSerialReadLine = data;
-
 }
 
 var currentSocketPort = {};
