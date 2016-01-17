@@ -203,7 +203,7 @@ function emitToPortSockets(port, evt, obj) {
 
 function serialData(data, port) {
 	// new line of data terminated with \n
-	console.log('Port '+port+' got newline from serial: '+data);
+	//console.log('Port '+port+' got newline from serial: '+data);
 
 
 	// Try to determine Firmware in use and set up queryloop
@@ -256,12 +256,12 @@ function serialData(data, port) {
 	}
 
 	if (data.indexOf('Repetier') != -1) { //found Repetier
-		setInterval(function() {
-			sp[port].handle.write("M114\n"); //for Repetier
-		}, 1000);
-    setInterval(function() {
-      sp[port].handle.write("M105\n"); //for Repetier
-    }, 1001);
+		//setInterval(function() {
+		//	sp[port].handle.write("M114\n"); //for Repetier
+		//}, 1000);
+    //setInterval(function() {
+    //  sp[port].handle.write("M105\n"); //for Repetier
+    //}, 1001);
 
     data = data.replace(/_/g,' ');
 		data = data.replace(/:/g,' ');
@@ -388,12 +388,20 @@ function serialData(data, port) {
 		// remove first
 		sp[port].lastSerialWrite.shift();
 
-	} else if (data.indexOf('rs') == 0) {
+	} else if (data.indexOf('rs') == 0) { //Marlin
 		// handle resend
 		// resend last
 		sp[port].handle.write(sp[port].lastSerialWrite[-1]);
 
 		console.log(chalk.red('rs (resend) from printer, resending'));
+
+  } else if (data.indexOf('Resend') == 0) {  // Repetier
+ 	  // handle resend
+		// resend last
+    if (sp[port].lastSerialWrite[-1]) {
+		    sp[port].handle.write(sp[port].lastSerialWrite[-1]);
+    };
+		console.log(chalk.red('Resend (resend) from printer, resending: '+sp[port].lastSerialWrite[-1]));
 
 	} else if (data.indexOf('!!') == 0) {
 
@@ -423,6 +431,7 @@ function serialData(data, port) {
 	} else {
 		// other is grey
 		emitToPortSockets(port, 'serialRead', {c:2,l:data});
+    console.log('Port '+port+' serial received but ignored: '+data);
 	}
 
 	if (sp[port].q.length == 0) {
