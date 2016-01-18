@@ -74,8 +74,8 @@ textarea {
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #990000;
-  color: #ffffff;
+  background-color: #ffc299;
+  color: #000;
 }
 
 
