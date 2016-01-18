@@ -41,25 +41,25 @@ var util = require('util');
 var http = require('http');
 var chalk = require('chalk');
 
-console.error(chalk.green('***************************************************************'));
-console.error(chalk.green('*                        Notice:                              *'));
-console.error(chalk.green('***************************************************************'));
-console.error(chalk.green('*'),chalk.white('    Remember to update (: !!!                              '), chalk.green('*'));
-console.error(chalk.green('* 1.  Run ./update.sh or git pull                             *'));
-console.error(chalk.green('* 2.  or check the commit log on                              *'));
-console.error(chalk.green('*'), chalk.yellow('https://github.com/openhardwarecoza/LaserWeb/commits/master'), chalk.green('*'));
-console.error(chalk.green('***************************************************************'));
+console.log(chalk.green('***************************************************************'));
+console.log(chalk.green('*                        Notice:                              *'));
+console.log(chalk.green('***************************************************************'));
+console.log(chalk.green('*'),chalk.white('    Remember to update (: !!!                              '), chalk.green('*'));
+console.log(chalk.green('* 1.  Run ./update.sh or git pull                             *'));
+console.log(chalk.green('* 2.  or check the commit log on                              *'));
+console.log(chalk.green('*'), chalk.yellow('https://github.com/openhardwarecoza/LaserWeb/commits/master'), chalk.green('*'));
+console.log(chalk.green('***************************************************************'));
 
 
 // Lets add a message so users know where to point their browser
 require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.error(chalk.green('*'),chalk.white('Access the LaserWeb User Interface:                        '), chalk.green('*'));
-    console.error(chalk.green('* 1. Open Chrome                                              *'));
-    console.error(chalk.green('* 2. Go to :                                                  *'));
-    console.error(chalk.green('*'), chalk.yellow('   http://'+add+':'+config.webPort+'/                                  '), chalk.green('*'));
-    console.error(chalk.green('***************************************************************'));
-    console.error(chalk.green(' '));
-    console.error(chalk.green(' '));
+    console.log(chalk.green('*'),chalk.white('Access the LaserWeb User Interface:                        '), chalk.green('*'));
+    console.log(chalk.green('* 1. Open Chrome                                              *'));
+    console.log(chalk.green('* 2. Go to :                                                  *'));
+    console.log(chalk.green('*'), chalk.yellow('   http://'+add+':'+config.webPort+'/                                  '), chalk.green('*'));
+    console.log(chalk.green('***************************************************************'));
+    console.log(chalk.green(' '));
+    console.log(chalk.green(' '));
 })
 
 // test for webcam
@@ -67,7 +67,8 @@ config.showWebCam = false;
 
 http.get('http://127.0.0.1:8080', function(res) {
 	// valid response, enable webcam
-	console.log(chalk.green('Enabling webcam Widget'));
+	console.log(chalk.green('INFO:'),
+  chalk.yellow(' Enabling webcam Widget'));
 	config.showWebCam = true;
 }).on('socket', function(socket) {
 	// 2 second timeout on this socket
@@ -77,8 +78,9 @@ http.get('http://127.0.0.1:8080', function(res) {
 	});
 }).on('error', function(e) {
 	console.error(
-		chalk.red('Error connecting to webcam:'),
-		chalk.gray(e.message),
+    chalk.red('ERROR:'),
+		chalk.yellow('Error connecting to webcam:'),
+		chalk.blue(e.message),
     chalk.red('- Disabling Webcam Widget')
 	);
 });
@@ -92,7 +94,7 @@ function handler (req, res) {
 
   if (req.url.indexOf('/api/upload') == 0 && req.method == 'POST') {
 		// this is a gcode upload, probably from jscut
-		console.log(chalk.green('API - New GCODE via POST'));
+		console.log(chalk.green('INFO:'), chalk.yellow(' API - New GCODE via POST'));
 		var b = '';
 		req.on('data', function (data) {
 			b += data;
@@ -110,7 +112,7 @@ function handler (req, res) {
 	} else {
   	fileServer.serve(req, res, function (err, result) {
   		if (err) {
-  			console.error(chalk.red('fileServer error:'+req.url+' : '), err.message);
+  			console.error(chalk.red('ERROR:'), chalk.yellow(' fileServer error:'+req.url+' : '), err.message);
   		}
   	});
   }
@@ -129,7 +131,7 @@ serialport.list(function (err, ports) {
 
   if (fs.existsSync('/dev/ttyAMA0')) {
   		(ports = ports || []).push({comName:'/dev/ttyAMA0',manufacturer: undefined,pnpId: 'raspberryPi__GPIO'});
-  		console.log('adding /dev/ttyAMA0 because it is enabled in config.js, you may need to enable it in the os - http://www.hobbytronics.co.uk/raspberry-pi-serial-port');
+  		console.log(chalk.green('INFO:'), chalk.yellow('adding /dev/ttyAMA0 because it is enabled in config.js, you may need to enable it in the os - http://www.hobbytronics.co.uk/raspberry-pi-serial-port'));
   	}
 
 	allPorts = ports;
@@ -173,7 +175,7 @@ serialport.list(function (err, ports) {
       var errMsg2 = 'Error Input/output';
 			if (error.message.slice(0, errMsg.length) === errMsg) {
 				console.error(
-					chalk.red('Could not connect to device:'),
+					chalk.red('ERROR:'), chalk.yellow(' Could not connect to device:'),
 					chalk.blue(sp[i].port)
 				);
       } else if (error.message.slice(0, errMsg2.length) === errMsg2 ) {
@@ -184,7 +186,7 @@ serialport.list(function (err, ports) {
 				//);
       } else {
         console.error(
-          chalk.red('SerialPort Failure:'),
+          chalk.red('ERROR:'), chalk/yellow(' SerialPort Failure:'),
           chalk.blue(sp[i].port));
         throw error
 			}
@@ -215,8 +217,8 @@ function serialData(data, port) {
 		var lasaurGrblVersion = firmwareVersion[2]+' '+firmwareVersion[4];
 		var firmware = lasaurGrblVersion;
 		//	console.log(chalk.green('Firmware Detected:  '+firmware));
-    console.log(chalk.red('Found device: '),
-      chalk.green(sp[port].manufacturer),
+    console.log(chalk.green('INFO:'), chalk.yellow(' Found device: '),
+      chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
@@ -231,8 +233,8 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(\s+)/);
 		var lasaurGrblVersion = firmwareVersion[0]+' '+firmwareVersion[2];
 		var firmware = lasaurGrblVersion;
-    console.log(chalk.red('Found device: '),
-      chalk.green(sp[port].manufacturer),
+    console.log(chalk.green('INFO:'), chalk.yellow(' Found device: '),
+      chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
@@ -246,8 +248,8 @@ function serialData(data, port) {
 		}, 1000);
 		var firmwareVersion = data.split(/(:+)/);
 		var firmware = firmwareVersion[2];
-    console.log(chalk.red('Found device: '),
-      chalk.green(sp[port].manufacturer),
+    console.log(chalk.green('INFO:'), chalk.yellow(' Found device: '),
+      chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
@@ -267,8 +269,8 @@ function serialData(data, port) {
 		data = data.replace(/:/g,' ');
 		var firmwareVersion = data.split(/(\s+)/);
 		var firmware = firmwareVersion[4]+' '+firmwareVersion[6];
-    console.log(chalk.red('Found device: '),
-      chalk.green(sp[port].manufacturer),
+    console.log(chalk.green('INFO:'), chalk.yellow(' Found device: '),
+      chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
@@ -284,8 +286,8 @@ function serialData(data, port) {
 		var firmwareVersion = data.split(/(,+)/);
 		var smoothieVersion = 'Smoothie'+firmwareVersion[14]+''+firmwareVersion[2];
 		var firmware = smoothieVersion;
-    console.log(chalk.red('Found device: '),
-      chalk.green(sp[port].manufacturer),
+    console.log(chalk.green('INFO:'), chalk.yellow(' Found device: '),
+      chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
       chalk.blue(firmware)
@@ -393,15 +395,19 @@ function serialData(data, port) {
 		// resend last
 		sp[port].handle.write(sp[port].lastSerialWrite[-1]);
 
-		console.log(chalk.red('rs (resend) from printer, resending'));
+		console.log(chalk.red('ERROR:'), chalk.yellow(' rs (resend) from printer, resending'));
 
   } else if (data.indexOf('Resend') == 0) {  // Repetier
  	  // handle resend
 		// resend last
     if (sp[port].lastSerialWrite[-1]) {
 		    sp[port].handle.write(sp[port].lastSerialWrite[-1]);
-    };
-		console.log(chalk.red('Resend (resend) from printer, resending: '+sp[port].lastSerialWrite[-1]));
+        console.log(chalk.red('ERROR:'), chalk.yellow(' (resend) from printer, resending: '), chalk.blue(+sp[port].lastSerialWrite[-1]));
+    } else {
+        console.log(chalk.red('ERROR:'), chalk.yellow(' (resend) from printer  Queue Empty.  '));
+    }
+    ;
+
 
 	} else if (data.indexOf('!!') == 0) {
 
@@ -411,19 +417,30 @@ function serialData(data, port) {
 		// remove first
 		sp[port].lastSerialWrite.shift();
 
-		console.log(chalk.red('!! (error) from printer'));
+		console.log(chalk.red('ERROR:'), chalk.yellow(' !! alarm) from machine'));
 
-	} else if (data.indexOf('error') == 0) {
-
+	} else if (data.indexOf('error') == 0) { //Marlin
+ 
 		// error is red
 		emitToPortSockets(port, 'serialRead', {c:1,l:data});
-
+    console.log(chalk.red('ERROR:'), chalk.yellow(' Error from machine:'), chalk.blue(data));
 		// run another line from the q
 		if (sp[port].q.length > 0) {
 			// there are remaining lines in the q
 			// write one
 			sendFirstQ(port);
 		}
+
+  } else if (data.indexOf('Error') == 0) {  //Repetier
+    // error is red
+    emitToPortSockets(port, 'serialRead', {c:1,l:data});
+    console.log(chalk.red('ERROR:'), chalk.yellow(' Error from machine:'), chalk.blue(data));
+    // run another line from the q
+    if (sp[port].q.length > 0) {
+      // there are remaining lines in the q
+      // write one
+      sendFirstQ(port);
+    }
 
 		// remove first
 		sp[port].lastSerialWrite.shift();
@@ -436,7 +453,9 @@ function serialData(data, port) {
   else {
    // other is grey
    emitToPortSockets(port, 'serialRead', {c:2,l:data});
-   console.log(chalk.yellow('Ignored: Port'),
+   console.log(chalk.yellow('WARN:'),
+   chalk.gray('Ignored:'), chalk.yellow(' Port'),
+
    chalk.blue(sp[port].port),
    chalk.yellow('said: '),
    chalk.blue(data));
@@ -586,7 +605,8 @@ io.sockets.on('connection', function (socket) {
 		console.log(
       //chalk.yellow('switching from '),
       //chalk.blue(currentSocketPort[socket.id]),
-      chalk.yellow('Now interacting with '),
+      chalk.green('INFO:'),
+      chalk.yellow(' Now interacting with '),
       //chalk.blue(data),
       chalk.blue(sp[data].port),
 		  chalk.yellow(' running '),
