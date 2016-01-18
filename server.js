@@ -420,7 +420,7 @@ function serialData(data, port) {
 		console.log(chalk.red('ERROR:'), chalk.yellow(' !! alarm) from machine'));
 
 	} else if (data.indexOf('error') == 0) { //Marlin
- 
+
 		// error is red
 		emitToPortSockets(port, 'serialRead', {c:1,l:data});
     console.log(chalk.red('ERROR:'), chalk.yellow(' Error from machine:'), chalk.blue(data));
@@ -641,7 +641,7 @@ io.sockets.on('connection', function (socket) {
       child.stdout.on('data', function(data) {
       //console.log(data);
       socket.emit('updateStatus', data);
-      console.log(chalk.blue(data));
+      console.log(chalk.green('INFO:'), chalk.yellow('Git Refresh'), chalk.blue(data));
     });
   });
 
@@ -653,7 +653,7 @@ io.sockets.on('connection', function (socket) {
       child.stdout.on('data', function(data) {
       //console.log(data);
       socket.emit('updateStatus', data);
-      console.log(chalk.blue(data));
+      console.log(chalk.green('INFO:'), chalk.yellow('Git Update'), chalk.blue(data));
     });
   });
 
