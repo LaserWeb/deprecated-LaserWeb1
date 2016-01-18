@@ -164,6 +164,19 @@ textarea {
 .navbar-xs .navbar-primary .navbar { min-height:28px; height: 28px; }
 .navbar-xs .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 28px; }
 .navbar-xs .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }
-.navbar-sm .navbar-primary .navbar { min-height:40px; height: 40px; }
-.navbar-sm .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 40px; }
-.navbar-sm .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 40px; }
+.navbar-sm .navbar-primary .navbar { min-height:28px; height: 28px; }
+.navbar-sm .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 28px; }
+.navbar-sm .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }
+
+.navbar {
+  min-height: 28px;
+  margin-bottom: 23px;
+  border: 1px solid transparent;
+}
+
+.navbar-brand {
+  float: left;
+  font-size: 17px;
+  line-height: 23px;
+  height: 28px;
+}
