@@ -7,6 +7,8 @@
 
 // This is a simplified and updated version of http://gcode.joewalnes.com/ that works with the latest version of Three.js (v68).
 // Updated with code from http://chilipeppr.com/tinyg's 3D viewer to support more CNC type Gcode
+var tototaltimemax = '';
+totaltimemax = 0;
 
 function GCodeParser(handlers) {
             handlers = handlers || {};
@@ -757,6 +759,8 @@ function GCodeParser(handlers) {
                 p2.timeMins = timeMinutes;
                 p2.timeMinsSum = totalTime;
 
+                //console.log('Total Time'+totalTime);
+                totaltimemax += (timeMinutes * 60);
                 //console.log("calculating distance. dist:", dist, "totalDist:", totalDist, "feedrate:", args.feedrate, "timeMinsToExecute:", timeMinutes, "totalTime:", totalTime, "p1:", p1, "p2:", p2, "args:", args);
 
             }
@@ -1104,10 +1108,16 @@ function GCodeParser(handlers) {
 			var dY = bbbox2.max.y-bbbox2.min.y;
 			var dZ = bbbox2.max.z-bbbox2.min.z;
 
+      function toTimeString(seconds) {
+        return (new Date(seconds * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
+      }
+
+      console.log(totaltimemax +'  seconds estimated');
 
 			$('#console').append('<span style="color: #060606;"><b>Min Dimensions<br> X:</b> '+bbbox2.min.x+' <b>Y:</b> '+bbbox2.min.y+' <b>Z:</b> '+bbbox2.min.z+'</span><br>');
 			$('#console').append('<span style="color: #060606;"><b>Max Dimensions<br> X:</b> '+bbbox2.max.x+' <b>Y:</b> '+bbbox2.max.y+' <b>Z:</b> '+bbbox2.max.z+'</span><br>');
-			$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br>');
+			$('#console').append('<span style="color: #060606;"><b>Total Dimensions<br> X:</b> '+dX+' <b>Y:</b> '+dY+' <b>Z:</b> '+dZ+'</span><br><br>');
+      $('#console').append('<span style="color: #060606;"><b>Estimated Job Time: </b> '+toTimeString(totaltimemax)+'</span><br><br>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			document.getElementById('BBXDIM').value = dX;
 			document.getElementById('BBYDIM').value = dY;
