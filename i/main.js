@@ -1546,73 +1546,22 @@ $('#boxButton').on('click', function() {
   // open .svg (File Open Function)
 
 $('#96dpi').on('click', function() {
-	$("#svgScaleSlider").slider( "value", (25.4/96)*10000 );
-	setSVGDims();
-	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
-	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 10000) + 'mm ');
+	svgscale = ((25.4/72))
+	$('#svgScaleValue').html('  1px = '+ (svgscale) + 'mm ');
 });
 
 $('#90dpi').on('click', function() {
-	$("#svgScaleSlider").slider( "value", (25.4/90)*10000 );
-	setSVGDims();
-	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
-	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 10000) + 'mm ');
+	svgscale = ((25.4/90))
+	$('#svgScaleValue').html('  1px = '+ (svgscale) + 'mm ');
 });
 
 $('#72dpi').on('click', function() {
-	$("#svgScaleSlider").slider( "value", (25.4/72)*1000 );
-	setSVGDims();
-	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
-	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 10000) + 'mm ');
+	svgscale = ((25.4/72))
+	$('#svgScaleValue').html('  1px = '+ (svgscale) + 'mm ');
 });
 
-	$( "#svgScaleSlider" ).slider({
-			min: 0,
-			max: 20000,
-			value: [ 10000 ],
-			slide: function( event, ui ) {
-				setSVGDims();
-				svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
-				$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 100) + 'mm ');
-				}
-	});
+	$('#svgScaleValue').html('  1px = '+ (svgscale) + 'mm ');
 
-	svgscale = ($( "#svgScaleSlider" ).slider( "value" ) / 10000)
-	$('#svgScaleValue').html('  1px = '+ ($( "#svgScaleSlider" ).slider( "value" ) / 100) + 'mm ');
-
-
-	function setSVGDims() {
-		svgscale = ($( "#svgScaleSlider" ).slider( "values", 0 ) / 10000)
-		var width=$("#svgEngrave")[0].getBoundingClientRect().width;
-		var height=$("#svgEngrave")[0].getBoundingClientRect().height;
-		var physwidth = svgscale * width;
-		var physheight = svgscale * height;
-		//console.log('Width: '+width+',  Height: '+height+',  Scale: '+svgscale);
-		//console.log('Physical Width: '+physwidth+', Physical Height: '+physheight+',  Scale: '+svgscale);
-		$("#svgphysdims").text(physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm');
-		$("#svgdims").text(width.toFixed(1)+'px x '+height.toFixed(1)+'px');
-		$('#svgsize').html('Resultant Job Size: '+ physwidth.toFixed(1)+'mm x '+physheight.toFixed(1)+'mm' );
-
-
-		//  Draw a rect showing outer dims of Engraving - engravings with white space to sides are tricky to visualise without
-		rectWidth = physwidth +spotSizeMul, rectHeight = physheight + spotSizeMul;
-		if (boundingBox) {
-			scene.remove( boundingBox );
-		}
-		BBmaterial = new THREE.LineDashedMaterial( { color: 0xcccccc, dashSize: 10, gapSize: 5, linewidth: 2 });
-		BBgeometry = new THREE.Geometry();
-		BBgeometry.vertices.push(
-			new THREE.Vector3( 0, 0, 0 ),
-			new THREE.Vector3( 0, (physheight + 1) , 0 ),
-			new THREE.Vector3( (physwidth + 1), (physheight +1), 0 ),
-			new THREE.Vector3( (physwidth + 1), 0, 0 ),
-			new THREE.Vector3( 0, 0, 0 )
-		);
-	 	boundingBox= new THREE.Line( BBgeometry, BBmaterial );
-		boundingBox.translateX(laserxmax /2 * -1);
-		boundingBox.translateY(laserymax /2 * -1);
-	 	scene.add( boundingBox );
-		};
 
 $('#processSVG').on('click', function() {
 
@@ -1653,7 +1602,6 @@ osvg.addEventListener('change', function(e) {
  			var svg = document.getElementById('svgEngrave');
 			svg.innerHTML = reader.result;
 			$('#svgwidget').modal('toggle');
-			setSVGDims();
 		};
 		reader.readAsText(selectedFile);
 	});
@@ -2259,14 +2207,13 @@ function gcodereceived() {
 function processSVG() {
 	var svg = $('#svgEngrave').html();
 	//console.log(svg);
-	var width=$("#svgEngrave")[0].getBoundingClientRect().width;
-	var height=$("#svgEngrave")[0].getBoundingClientRect().height;
-	console.log('Width: '+width+',  Height: '+height+',  Scale: '+svgscale);
+	console.log('Scale: '+svgscale);
 	//console.log(svg);
 	//var svgfile = XMLS.serializeToString(svg);
 	SVGlaserFeed = $('#SVGfeedRate').val();
 	SVGlaserRapid = $('#SVGrapidRate').val();
 	SVGlaserPwr = $('#SVGlaserPwr').val();
-	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.1, scale: svgscale, safeZ: 0.01, laserpwr: SVGlaserPwr });
+	SVGlaserScale = svgscale * ($('#SVGscaleval').val() / 100);
+	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.1, scale: SVGlaserScale, safeZ: 0.01, laserpwr: SVGlaserPwr });
 	gCodeToSend = document.getElementById('gcodepreview').value;
 };

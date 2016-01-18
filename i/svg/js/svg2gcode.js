@@ -25,6 +25,7 @@ function svg2gcode(svg, settings) {
   var scale = function(val) {
     return val * settings.scale;
   };
+
   var paths = SVGReader.parse(svg, {}).allcolors,
       gcode,
       path,
@@ -135,7 +136,8 @@ function svg2gcode(svg, settings) {
     gcode.push(['G0',
       'X' + scale(path[0].x + settings.offsetX),
       'Y' + scale(-path[0].y + settings.offsetY),
-      'F' + settings.seekRate
+      'F' + settings.seekRate,
+			'; Seek to 0'
     ].join(' '));
 
 
@@ -194,7 +196,5 @@ function svg2gcode(svg, settings) {
   // gcode.push('G1 Z0 F300');
   //
   gcode.push('G0 Z' + settings.safeZ);
-  gcode.push('G0 X0 Y0 F800');
-
   return gcode.join('\n');
 }
