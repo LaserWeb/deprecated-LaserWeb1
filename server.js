@@ -428,11 +428,19 @@ function serialData(data, port) {
 		// remove first
 		sp[port].lastSerialWrite.shift();
 
-	} else {
-		// other is grey
+	} else if (data.indexOf('wait') == 0) {
+		// wait is grey
 		emitToPortSockets(port, 'serialRead', {c:2,l:data});
-    console.log('Port '+port+' serial received but ignored: '+data);
 	}
+
+  else {
+   // other is grey
+   emitToPortSockets(port, 'serialRead', {c:2,l:data});
+   console.log(chalk.yellow('Ignored: Port'),
+   chalk.blue(sp[port].port),
+   chalk.yellow('said: '),
+   chalk.blue(data));
+ }
 
 	if (sp[port].q.length == 0) {
 		// reset max once queue is done
@@ -606,24 +614,26 @@ io.sockets.on('connection', function (socket) {
 	});
 
   socket.on('updateGit', function(data) {
-    console.log(chalk.yellow('Check for Updates'));
+    console.log(chalk.yellow('\nChecking for Updates'));
 
     var child = require('child_process').exec('git remote update; git status');
       // use event hooks to provide a callback to execute when data are available:
       child.stdout.on('data', function(data) {
       //console.log(data);
       socket.emit('updateStatus', data);
+      console.log(chalk.blue(data));
     });
   });
 
   socket.on('upgradeGit', function(data) {
-    console.log(chalk.yellow('Check for Updates'));
+    console.log(chalk.yellow('\nExecuting Updates'));
 
     var child = require('child_process').exec('git pull');
       // use event hooks to provide a callback to execute when data are available:
       child.stdout.on('data', function(data) {
       //console.log(data);
       socket.emit('updateStatus', data);
+      console.log(chalk.blue(data));
     });
   });
 
