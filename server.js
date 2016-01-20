@@ -41,6 +41,14 @@ var util = require('util');
 var http = require('http');
 var chalk = require('chalk');
 
+
+// Debug Parameters in command line
+var args = process.argv.slice(2);
+if (args[0].indexOf('--debug') == 0) { // add --debug <firmwarestring>
+    console.log(chalk.yellow('WARN:'), chalk.blue('Forcing debug testing with specific Firmware String: '), chalk.yellow(args[1]));
+    var debugfirmware = args[1];
+};
+
 console.log(chalk.green('***************************************************************'));
 console.log(chalk.green('*                        Notice:                              *'));
 console.log(chalk.green('***************************************************************'));
@@ -505,6 +513,10 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('firstLoad', function(data) {
 		socket.emit('config', config);
+    if (args[0].indexOf('--debug') == 0) {
+      socket.emit('firmware', debugfirmware);
+      console.log(chalk.yellow('WARN:'), chalk.blue('Forcing debug testing with specific Firmware String: '), chalk.yellow(args[1]));
+    };
 	});
 
 	// emit all ports to ui
