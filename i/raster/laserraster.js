@@ -48,7 +48,7 @@ function figureIntensity(grey) {
 		//console.log('Mapping Intensity range for Grbl S0-S255');
 		intensity = intensity.toFixed(0);
 	} else if (firmware.indexOf('Smooth') == 0) {
-		intensity = intensity.map(0, 100, 0, 1);
+		intensity = intensity.map(0, 100, 0, 100)/100;
 		//console.log('Mapping Intensity range for Smoothieware S0-S1');
 		intensity = intensity.toFixed(2);
 	} else if (firmware.indexOf('Lasaur') == 0) {
