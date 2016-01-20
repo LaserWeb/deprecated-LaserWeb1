@@ -43,10 +43,12 @@ var chalk = require('chalk');
 
 
 // Debug Parameters in command line
-var args = process.argv.slice(2);
-if (args[0].indexOf('--debug') == 0) { // add --debug <firmwarestring>
-    console.log(chalk.yellow('WARN:'), chalk.blue('Forcing debug testing with specific Firmware String: '), chalk.yellow(args[1]));
-    var debugfirmware = args[1];
+args = process.argv.slice(2);
+if (args[0]) {
+  if (args[0].indexOf('--debug') == 0) { // add --debug <firmwarestring>
+      console.log(chalk.yellow('WARN:'), chalk.blue('Forcing debug testing with specific Firmware String: '), chalk.yellow(args[1]));
+      var debugfirmware = args[1];
+  };
 };
 
 console.log(chalk.green('***************************************************************'));
