@@ -10,8 +10,10 @@ https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45DXEXK9LJS
 
 ## Community:  
 Looking for a nice community of Laser users who like hacking their machines?
-Join the "K40 LASER CUTTING ENGRAVING MACHINE" Community on Google Plus - its their inspiration you have to thank for me creating LaserWeb in the first place. 
+Join the ***K40 LASER CUTTING ENGRAVING MACHINE*** Community on Google Plus - its their inspiration you have to thank for me creating LaserWeb in the first place. 
 Join over on https://plus.google.com/communities/118113483589382049502 
+
+Another great community resource is the Google group ***Opensource Laser*** at https://groups.google.com/forum/#!forum/opensource-laser
 
 
 ## NB NOTE: BROWSER SUPPORT:

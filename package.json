@@ -1,6 +1,6 @@
 {
   "name": "laserweb",
-  "description": "a fully featured web ui for reprap and other 3d printers",
+  "description": "a fully featured web ui for laser cutter/engravers, reprap and other 3d printers",
   "contributors": [
     {
       "name": "Peter van der Walt",
