@@ -515,9 +515,11 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('firstLoad', function(data) {
 		socket.emit('config', config);
-    if (args[0].indexOf('--debug') == 0) {
-      socket.emit('firmware', debugfirmware);
-      console.log(chalk.yellow('WARN:'), chalk.blue('Forcing debug testing with specific Firmware String: '), chalk.yellow(args[1]));
+    if (args[0]) {
+      if (args[0].indexOf('--debug') == 0) {
+        socket.emit('firmware', debugfirmware);
+        console.log(chalk.yellow('WARN:'), chalk.blue('Forcing debug testing with specific Firmware String: '), chalk.yellow(args[1]));
+      };
     };
 	});
 
