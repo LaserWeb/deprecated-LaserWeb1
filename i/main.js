@@ -60,7 +60,7 @@ $(document).ready(function() {
 
 	// Tooltips
 	$('.btn').tooltip();
-	
+
 
 	$('#3dpmode').click(function() {
     var $this = $(this);
@@ -143,6 +143,41 @@ $(document).ready(function() {
 
 	// Tell server.js we have started
 	socket.emit('firstLoad', 1);
+
+	var localSettings = []; // locally stored presets
+
+	socket.on('machinesettings', function (data) {
+		// incoming presets
+		localSettings = data.machines;
+		loadMachineSettings(data.exists);
+		console.log(localSettings);
+	});
+
+
+	function loadMachineSettings(exists) {
+		// {"machine":[{"name":"Freeburn2","opts":[{"o":"laserxmax","v":"600"},{"o":"laserymax","v":"400"},{"o":"startgcode","v":"\nG91\nG21"},{"o":"endgcode","v":""},{"o":"laseron","v":"M03"},{"o":"laseroff","v":"M5"},{"o":"Laser0","v":"0"},{"o":"laser100","v":"255"},{"o":"button1","v":"M106"}]}]}
+		$('#selectPreset').html('<option value="0">machines presets</option>');
+		for (c in localSettings['machines']) {
+			$('#selectPreset').append('<option value="'+(Number(c)+Number(1))+'">'+localSettings['machines'][c].name+'</option>');
+		}
+
+		//console.log('exists: '+exists);
+
+		if (exists == -2) {
+			// select newly created preset (last as it was added)
+			$('#selectPreset').val($('#selectPreset option').last().val());
+		} else if (exists >= 0) {
+			// select updated preset
+			$('#selectPreset option').each(function() {
+				if (Number($(this).val()) == Number(exists)+1) {
+					// set selected to this option
+					$(this).prop('selected', true);
+				}
+			});
+		}
+		// exists == -1 if this is the first load or delete
+
+	}
 
 	// API for GCode Upload
 	socket.on('gcodeFromAPI', function (data) {
@@ -1043,6 +1078,14 @@ $(document).ready(function() {
 	$('#webcambutton').on('click', function() {
 		$('#webcamwidget').modal('toggle');
 	});
+
+	// Toggle modal for machine settings
+	$('#machinesetbtn').on('click', function() {
+		$('#settingswidget').modal('toggle');
+	});
+
+
+
 
 	$('.modal.draggable>.modal-dialog').draggable({
     cursor: 'move',
