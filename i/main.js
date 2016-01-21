@@ -153,6 +153,72 @@ $(document).ready(function() {
 		console.log(localSettings);
 	});
 
+		// handle preset changes
+		$('#selectPreset').on('change', function(e) {
+			console.log('Select Preset');
+			defaultSlicer = 'machines';
+			if ($('#selectPreset').val() > 0) {
+				// this is a valid preset
+				var preset = localSettings[defaultSlicer][Number($('#selectPreset').val())-1].opts;
+				for (c in preset) {
+					// update values
+					$('[name="slOptsArray-'+preset[c].o+'"]').val(preset[c].v);
+				}
+
+				// reset changed options color to black
+				$('[name|="slOptsArray"]').css('color','black');
+
+				// enable Delete Preset
+				$('#deletePreset').removeClass('disabled');
+
+			} else {
+				// disable Delete Preset
+				$('#deletePreset').addClass('disabled');
+			}
+		});
+
+
+
+	// handle preset changes
+		$('#selectPreset').on('change', function(e) {
+
+			if ($('#selectPreset').val() > 0) {
+				// this is a valid preset
+				var preset = localSettings['machines'][Number($('#selectPreset').val())-1].opts;
+				for (c in preset) {
+					// update values
+					//$('[name="slOptsArray-'+preset[c].o+'"]').val(preset[c].v);
+					console.log(preset[c]);
+				}
+
+				// reset changed options color to black
+				$('[name|="slOptsArray"]').css('color','black');
+
+				// enable Delete Preset
+				$('#deletePreset').removeClass('disabled');
+
+			} else {
+				// disable Delete Preset
+				$('#deletePreset').addClass('disabled');
+			}
+		});
+
+		// delete selected preset
+	$('#deletePreset').on('click', function() {
+
+		if ($('#selectPreset option:selected').val() == 0) {
+			// this is the slicer presets option, can't be updated
+			alert('select a preset to delete first');
+		}
+
+		socket.emit('deletePreset', {'default':'machines', 'name': $('#selectPreset :selected').html()});
+
+		// disable Update and Delete Preset
+		$('#updatePreset').addClass('disabled');
+		$('#deletePreset').addClass('disabled');
+
+	});
+
 
 	function loadMachineSettings(exists) {
 		// {"machine":[{"name":"Freeburn2","opts":[{"o":"laserxmax","v":"600"},{"o":"laserymax","v":"400"},{"o":"startgcode","v":"\nG91\nG21"},{"o":"endgcode","v":""},{"o":"laseron","v":"M03"},{"o":"laseroff","v":"M5"},{"o":"Laser0","v":"0"},{"o":"laser100","v":"255"},{"o":"button1","v":"M106"}]}]}
@@ -161,7 +227,7 @@ $(document).ready(function() {
 			$('#selectPreset').append('<option value="'+(Number(c)+Number(1))+'">'+localSettings['machines'][c].name+'</option>');
 		}
 
-		//console.log('exists: '+exists);
+		console.log('exists: '+exists);
 
 		if (exists == -2) {
 			// select newly created preset (last as it was added)

@@ -538,88 +538,44 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('machinesettings', {exists:-1,machines:cSettings});
   });
 
-	socket.on('deletePreset', function(data) {
-		// delete preset
-		// format:
-		// {"machine":[{"name":"Freeburn2","opts":[{"o":"laserxmax","v":"600"},{"o":"laserymax","v":"400"},{"o":"startgcode","v":"\nG91\nG21"},{"o":"endgcode","v":""},{"o":"laseron","v":"M03"},{"o":"laseroff","v":"M5"},{"o":"Laser0","v":"0"},{"o":"laser100","v":"255"},{"o":"button1","v":"M106"}]}]}
 
-		fs.readFile('machines', function(err, cSettings) {
-			if (err) {
-				console.log('problem reading Machine Profiles, using none');
-			} else {
-				cSettings = JSON.parse(cSettings);
-			}
+  socket.on('deletePreset', function(data) {
+    //console.log('DATA: '+util.inspect(data, {showHidden: false, depth: null}))
+  		// delete preset
+  		// format:
+  		// {slicerName:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}],slicer2Name:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}]}
+  	 //console.log('Deleting');
+  		fs.readFile('machines', function(err, cSettings) {
+  			if (err) {
+  				console.log('problem reading presets, using none');
+  			} else {
+  				cSettings = JSON.parse(cSettings);
+          //console.log('CSettings:  '+util.inspect(cSettings[data.default], {showHidden: false, depth: null}));
+  			}
 
-			// check the cSettings[slicer] array to see if this named preset already exists
-			for (c in cSettings[data.machine]) {
-				if (cSettings[data.machine][c].name == data.name) {
-					// found a match, delete it
-					cSettings[data.machine].splice(c,1);
-				}
-			}
+  			// check the cPresets[slicer] array to see if this named preset already exists
+  			for (c in cSettings[data.default]) {
 
-			fs.writeFile('presets', JSON.stringify(cSettings), function(err) {
-				if (err) {
-					// return error
-					socket.emit('serverError', 'error writing to Machine Profiles');
-				} else {
-					socket.emit('machinesettings', {exists:-1,machines:cSettings});
-				}
-			});
+  				if (cSettings[data.default][c].name == data.name) {
+  					// found a match, delete it
+            console.log(chalk.yellow('WARN: '), chalk.white('Deleting Machine Profile'), chalk.blue(cSettings[data.default][c].name));
+  					cSettings[data.default].splice(c,1);
+            socket.emit('machinesettings', {exists:-1,machines:cSettings});
+  				}
+  			}
 
-		});
+  			fs.writeFile('machines', JSON.stringify(cSettings), function(err) {
+  				if (err) {
+  					// return error
+  					socket.emit('serverError', 'error writing to presets');
+  				} else {
+  					socket.emit('machinesettings', {exists:-1,machines:cSettings});
+  				}
+  			});
 
-	});
+  		});
 
-	socket.on('savePreset', function(data) {
-		// save presets
-		// format:
-		// {slicerName:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}],slicer2Name:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}]}
-
-		fs.readFile('machines', function(err, cSettings) {
-			if (err) {
-				console.log('problem reading Machine Profiles, using none');
-				cSettings = {machine:[]};
-			} else {
-				cSettings = JSON.parse(cSettings);
-			}
-
-			// check the cSettings[slicer] array to see if this named preset already exists
-			var exists = -1;
-			for (c in cSettings[data.machine]) {
-				if (cSettings[data.machine][c].name == data.name) {
-					if (data.isNew) {
-						// return error because that already exists
-						socket.emit('serverError', 'that preset name is already used');
-						return;
-					} else {
-						// found a match, update it
-						cSettings[data.machine][c].opts = data.opts;
-						exists = c;
-					}
-				}
-			}
-
-			if (exists == -1) {
-				// add as a new preset
-				cSettings[data.machine].push({name:data.name,opts:data.opts});
-				// set for return value of new
-				exists = -2;
-			}
-
-			fs.writeFile('presets', JSON.stringify(cSettings), function(err) {
-				if (err) {
-					// return error
-					socket.emit('serverError', 'error writing to presets');
-				} else {
-					socket.emit('presets', {exists:exists,mnachines:cSettings});
-				}
-			});
-
-		});
-
-	});
-
+  	});
 
 	socket.on('doReset', function (data) {
 		// soft reset for grbl, send ctrl-x ascii \030
