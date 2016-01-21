@@ -539,6 +539,55 @@ io.sockets.on('connection', function (socket) {
   });
 
 
+  socket.on('savePreset', function(data) {
+  		// save presets
+  		// format:
+  		// {slicerName:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}],slicer2Name:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}]}
+
+  		fs.readFile('machines', function(err, cSettings) {
+  			if (err) {
+  				console.log('problem reading presets, using none');
+  				cSettings = {machines:[]};
+  			} else {
+  				cSettings = JSON.parse(cSettings);
+  			}
+
+  			// check the cPresets[slicer] array to see if this named preset already exists
+  			var exists = -1;
+  			for (c in cSettings[data.default]) {
+  				if (cSettings[data.default][c].name == data.name) {
+  					if (data.isNew) {
+  						// return error because that already exists
+  						socket.emit('serverError', 'that preset name is already used');
+  						return;
+  					} else {
+  						// found a match, update it
+  						cSettings[data.default][c].opts = data.opts;
+  						exists = c;
+  					}
+  				}
+  			}
+
+  			if (exists == -1) {
+  				// add as a new preset
+  				cSettings[data.default].push({name:data.name,opts:data.opts});
+  				// set for return value of new
+  				exists = -2;
+  			}
+
+  			fs.writeFile('machines', JSON.stringify(cSettings), function(err) {
+  				if (err) {
+  					// return error
+  					socket.emit('serverError', 'error writing to presets');
+  				} else {
+  					socket.emit('machinesettings', {exists:exists,machines:cSettings});
+  				}
+  			});
+
+  		});
+
+  	});
+
   socket.on('deletePreset', function(data) {
     //console.log('DATA: '+util.inspect(data, {showHidden: false, depth: null}))
   		// delete preset

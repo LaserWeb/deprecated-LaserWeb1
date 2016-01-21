@@ -177,6 +177,55 @@ $(document).ready(function() {
 			}
 		});
 
+		// create new preset
+			$('#newPreset').on('click', function() {
+
+				if ($('#newPresetName').val() == '') {
+					alert('You must type a name for a preset to save it.');
+					return;
+				}
+
+				var opts = [];
+				jQuery.each($('[name|="slOptsArray"]').serializeArray(), function( c, field ) {
+					field.name = field.name.slice(12);
+					//console.log(field.name, field.value);
+					opts.push({o:field.name, v:field.value});
+				});
+
+				socket.emit('savePreset', {'default':'machines', 'name': $('#newPresetName').val(), 'opts': opts, isNew:true});
+
+				// clear field
+				$('#newPresetName').val('');
+
+				// reset changed options color to black
+				$('[name|="slOptsArray"]').css('color','black');
+
+			});
+
+			// update selected preset
+	$('#updatePreset').on('click', function() {
+
+		if ($('#selectPreset option:selected').val() == 0) {
+			// this is the slicer presets option, can't be updated
+			alert('select a preset to update first');
+		}
+
+		var opts = [];
+		jQuery.each($('[name|="slOptsArray"]').serializeArray(), function( c, field ) {
+			field.name = field.name.slice(12);
+			//console.log(field.name, field.value);
+			opts.push({o:field.name, v:field.value});
+		});
+
+		socket.emit('savePreset', {'default':'machines', 'name': $('#selectPreset :selected').html(), 'opts': opts, isNew:false});
+
+		// reset changed options color to black
+		$('[name|="slOptsArray"]').css('color','black');
+
+		// disable Update Preset
+		$('#updatePreset').addClass('disabled');
+
+	});
 
 
 	// handle preset changes
