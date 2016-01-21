@@ -1090,7 +1090,7 @@ $(document).ready(function() {
 	});
 	$('#homeX').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
-			socket.emit('gcodeLine', { line: 'G30' });
+			socket.emit('gcodeLine', { line: '~\nG30' });
 		} else if (firmware.indexOf('Grbl') == 0) {
 			socket.emit('gcodeLine', { line: '$H' });
 		} else {
@@ -1099,7 +1099,7 @@ $(document).ready(function() {
 	});
 	$('#homeY').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
-			socket.emit('gcodeLine', { line: 'G30' });
+			socket.emit('gcodeLine', { line: '~\nG30' });
 		} else if (firmware.indexOf('Grbl') == 0) {
 			socket.emit('gcodeLine', { line: '$H' });
 		} else {
@@ -1108,7 +1108,7 @@ $(document).ready(function() {
 	});
 	$('#homeZ').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
-			socket.emit('gcodeLine', { line: 'G30' });
+			socket.emit('gcodeLine', { line: '~\nG30' });
 		} else if (firmware.indexOf('Grbl') == 0) {
 			socket.emit('gcodeLine', { line: '$H' });
 		} else {
@@ -1117,7 +1117,7 @@ $(document).ready(function() {
 	});
 	$('#homeAll').on('click', function() {
 		if (firmware.indexOf('Lasaur') == 0) {
-			socket.emit('gcodeLine', { line: 'G30' });
+			socket.emit('gcodeLine', { line: '~\nG30' });
 		} else if (firmware.indexOf('Grbl') == 0) {
 			socket.emit('gcodeLine', { line: '$H' });
 		} else {

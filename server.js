@@ -692,6 +692,12 @@ io.sockets.on('connection', function (socket) {
 			if (sp[currentSocketPort[socket.id]].q.length == nl.length) {
 				// there was no previous q so write a line
 				sendFirstQ(currentSocketPort[socket.id]);
+
+        if (sp[currentSocketPort[socket.id]].firmware.indexOf('Lasaur') === 0) {
+          if (nl[0] === '~' && nl.length > 1) {
+            sendFirstQ(currentSocketPort[socket.id]);
+          }
+        }
 			}
 
 		} else {
