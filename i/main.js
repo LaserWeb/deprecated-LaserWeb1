@@ -1038,6 +1038,24 @@ $(document).ready(function() {
 		socket.emit('gcodeLine', { line: 'M107' });
 	});
 
+
+	$('#AirOn').on('click', function() {
+		if (firmware.indexOf('Lasaur') == 0) {
+			socket.emit('gcodeLine', { line: 'M80' });
+		} else if (firmware.indexOf('Grbl') == 0) {
+			socket.emit('gcodeLine', { line: 'M8' });
+		}
+	});
+
+
+	$('#AirOff').on('click', function() {
+		if (firmware.indexOf('Lasaur') == 0) {
+			socket.emit('gcodeLine', { line: 'M81' });
+		} else if (firmware.indexOf('Grbl') == 0) {
+			socket.emit('gcodeLine', { line: 'M9' });
+		}
+	});
+
 	// Firmware Specific Buttons
 
 	// Grbl
