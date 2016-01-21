@@ -1,1 +1,1 @@
-{"machines":[{"name":"Freeburn2","opts":[{"o":"laserxmax","v":"600"},{"o":"laserymax","v":"400"},{"o":"startgcode","v":"\nG91\nG21"},{"o":"endgcode","v":""},{"o":"laseron","v":"M03"},{"o":"laseroff","v":"M5"},{"o":"Laser0","v":"0"},{"o":"laser100","v":"255"},{"o":"button1","v":"M106"}]}]}
+{"machines":[{"name":"Freeburn4","opts":[]}]}
