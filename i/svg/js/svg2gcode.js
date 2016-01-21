@@ -160,7 +160,13 @@ function svg2gcode(svg, settings) {
       ].join(' ');
 
       // feed through the material
+			if (firmware.indexOf('Grbl') == 0) {
+				gcode.push('M3');
+			);
       gcode.push(localSegment);
+			if (firmware.indexOf('Grbl') == 0) {
+				gcode.push('M5');
+			);
       // localPath.push(localSegment);
 
       // if the path is not closed, reverse it, drop to the next cut depth and cut
