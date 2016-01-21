@@ -56,6 +56,9 @@ String.prototype.rtrim = function() {
 firmware = '';
 var svgscale = 0;
 
+var gcodePreamble = [];
+var gcodePostamble = [];
+
 $(document).ready(function() {
 
 	// Tooltips
@@ -289,8 +292,11 @@ $(document).ready(function() {
 		if (webgl) {
 			$('#updateGit').click(); // Check for updates on startup - very nb - I add code to Laserweb so often!
 		};
-		laserxmax = data.xmax
-		laserymax = data.ymax
+		laserxmax = data.xmax;
+		laserymax = data.ymax;
+
+		gcodePreamble = data.gcodePreamble;
+		gcodePostamble = data.gcodePostamble;
 
 		// Enable Webcam if found
 		if (data.showWebCam == true) {
@@ -2279,6 +2285,15 @@ function processSVG() {
 	SVGlaserRapid = $('#SVGrapidRate').val();
 	SVGlaserPwr = $('#SVGlaserPwr').val();
 	SVGlaserScale = svgscale * ($('#SVGscaleval').val() / 100);
-	document.getElementById("gcodepreview").value = svg2gcode(svg, { feedRate: SVGlaserFeed, seekRate: SVGlaserRapid, bitWidth: 0.1, scale: SVGlaserScale, safeZ: 0.01, laserpwr: SVGlaserPwr });
+	document.getElementById("gcodepreview").value = svg2gcode(svg, {
+		feedRate: SVGlaserFeed,
+		seekRate: SVGlaserRapid,
+		bitWidth: 0.1,
+		scale: SVGlaserScale,
+		safeZ: 0.01,
+		laserpwr: SVGlaserPwr,
+		gcodePreamble: gcodePreamble,
+		gcodePostamble: gcodePostamble
+	});
 	gCodeToSend = document.getElementById('gcodepreview').value;
 };

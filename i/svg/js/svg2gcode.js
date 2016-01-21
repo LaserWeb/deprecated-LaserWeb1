@@ -18,6 +18,13 @@ function svg2gcode(svg, settings) {
   settings.offsetX = settings.offsetX || 0;
   settings.offsetY = settings.offsetY || 0;
   settings.laserpwr = settings.laserpwr || 100;
+  settings.gcodePreamble = settings.gcodePreamble || [
+    'G90',
+    'G0 Z' + settings.safeZ,
+    'G82',
+    'M4'
+  ];
+  settings.gcodePostamble = settings.gcodePostamble || [];
 
   console.log('SVG Laser Power:  '+settings.laserpwr+'%');
   var svglaserpwr = parseInt(settings.laserpwr, 10)
@@ -98,12 +105,7 @@ function svg2gcode(svg, settings) {
     paths = [].concat.apply([], paths);
   }
 
-  gcode = [
-    'G90',
-    'G0 Z' + settings.safeZ,
-    'G82',
-    'M4'
-  ];
+  gcode = settings.gcodePreamble.slice(0);
 
   if (firmware.indexOf('Lasaur') == 0) {
 		  gcode.push('M81'); // Air Assist on
@@ -202,5 +204,8 @@ function svg2gcode(svg, settings) {
   // gcode.push('G1 Z0 F300');
   //
   gcode.push('G0 Z' + settings.safeZ);
+
+  gcode = gcode.concat(settings.gcodePostamble);
+
   return gcode.join('\n');
 }
