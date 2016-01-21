@@ -58,6 +58,10 @@ var svgscale = 0;
 
 $(document).ready(function() {
 
+	// Tooltips
+	$('.btn').tooltip();
+	
+
 	$('#3dpmode').click(function() {
     var $this = $(this);
     // $this will contain a reference to the checkbox
