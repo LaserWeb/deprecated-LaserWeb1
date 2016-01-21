@@ -335,8 +335,8 @@ function serialData(data, port) {
 		return;
 	}
 
-	if (config.firmware) {
-		if (config.firmware.indexOf('Lasaur') == 0) {
+	if (sp[port].firmware) {
+		if (sp[port].firmware.indexOf('Lasaur') == 0) {
 		       if (data.indexOf('N') !=-1 || data.indexOf('E') !=-1 || data.indexOf('U') !=-1 || data.indexOf('B') !=-1 || data.indexOf('B') !=-1 || data.indexOf('T') !=-1 || data.indexOf('P') !=-1 || data.indexOf('L') !=-1 || data.indexOf('R') !=-1  || data.indexOf('D') !=-1 || data.indexOf('C') !=-1 || data.indexOf('V') !=-1   ) {
 			emitToPortSockets(port, 'posStatusL', data);
 			sp[port].lastSerialReadLine = data;
