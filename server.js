@@ -513,7 +513,10 @@ function sendFirstQ(port) {
 var queuePause = 0;
 io.sockets.on('connection', function (socket) {
 
-	socket.on('firstLoad', function(data) {
+	// emit all ports to ui
+	socket.emit('ports', allPorts);
+
+  socket.on('firstLoad', function(data) {
 		socket.emit('config', config);
     if (args[0]) {
       if (args[0].indexOf('--debug') == 0) {
@@ -523,8 +526,99 @@ io.sockets.on('connection', function (socket) {
     };
 	});
 
-	// emit all ports to ui
-	socket.emit('ports', allPorts);
+  // Save Machine Settings to JSON and re-use
+	fs.readFile('machines', function(err, cSettings) {
+    if (err) {
+			console.log('problem reading Machine Profiles, using none');
+			cSettings = {machines:[]};
+		} else {
+			cSettings = JSON.parse(cSettings);
+      console.log(chalk.green('INFO:'), chalk.yellow('Machine Profiles read from file'));
+		}
+		socket.emit('machinesettings', {exists:-1,machines:cSettings});
+  });
+
+	socket.on('deletePreset', function(data) {
+		// delete preset
+		// format:
+		// {"machine":[{"name":"Freeburn2","opts":[{"o":"laserxmax","v":"600"},{"o":"laserymax","v":"400"},{"o":"startgcode","v":"\nG91\nG21"},{"o":"endgcode","v":""},{"o":"laseron","v":"M03"},{"o":"laseroff","v":"M5"},{"o":"Laser0","v":"0"},{"o":"laser100","v":"255"},{"o":"button1","v":"M106"}]}]}
+
+		fs.readFile('machines', function(err, cSettings) {
+			if (err) {
+				console.log('problem reading Machine Profiles, using none');
+			} else {
+				cSettings = JSON.parse(cSettings);
+			}
+
+			// check the cSettings[slicer] array to see if this named preset already exists
+			for (c in cSettings[data.machine]) {
+				if (cSettings[data.machine][c].name == data.name) {
+					// found a match, delete it
+					cSettings[data.machine].splice(c,1);
+				}
+			}
+
+			fs.writeFile('presets', JSON.stringify(cSettings), function(err) {
+				if (err) {
+					// return error
+					socket.emit('serverError', 'error writing to Machine Profiles');
+				} else {
+					socket.emit('machinesettings', {exists:-1,machines:cSettings});
+				}
+			});
+
+		});
+
+	});
+
+	socket.on('savePreset', function(data) {
+		// save presets
+		// format:
+		// {slicerName:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}],slicer2Name:[{name:'preset_name',opts:[{o:'optName':v:'optValue'}]}]}
+
+		fs.readFile('machines', function(err, cSettings) {
+			if (err) {
+				console.log('problem reading Machine Profiles, using none');
+				cSettings = {machine:[]};
+			} else {
+				cSettings = JSON.parse(cSettings);
+			}
+
+			// check the cSettings[slicer] array to see if this named preset already exists
+			var exists = -1;
+			for (c in cSettings[data.machine]) {
+				if (cSettings[data.machine][c].name == data.name) {
+					if (data.isNew) {
+						// return error because that already exists
+						socket.emit('serverError', 'that preset name is already used');
+						return;
+					} else {
+						// found a match, update it
+						cSettings[data.machine][c].opts = data.opts;
+						exists = c;
+					}
+				}
+			}
+
+			if (exists == -1) {
+				// add as a new preset
+				cSettings[data.machine].push({name:data.name,opts:data.opts});
+				// set for return value of new
+				exists = -2;
+			}
+
+			fs.writeFile('presets', JSON.stringify(cSettings), function(err) {
+				if (err) {
+					// return error
+					socket.emit('serverError', 'error writing to presets');
+				} else {
+					socket.emit('presets', {exists:exists,mnachines:cSettings});
+				}
+			});
+
+		});
+
+	});
 
 
 	socket.on('doReset', function (data) {
@@ -557,8 +651,6 @@ io.sockets.on('connection', function (socket) {
 			sendFirstQ(currentSocketPort[socket.id]);
 		}
 	});
-
-
 
 	// gcode print
 	socket.on('printGcode', function (data) {

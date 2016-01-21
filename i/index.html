@@ -352,7 +352,7 @@
 								<option val="no">Select a serial port</option>
 							</select>
 							<div class="input-group-btn">
-								<div class="btn-group" role="group"><a class="btn btn-danger" id="scale"><i class="fa fa-sliders fa-lg" style="margin-right: 8px;"></i>Settings</a></div>
+								<div class="btn-group" role="group"><a class="btn btn-danger" id="machinesetbtn"><i class="fa fa-sliders fa-lg" style="margin-right: 8px;"></i>Settings</a></div>
 							</div>
 						</div>
 
@@ -742,7 +742,7 @@
 
 
 	<!-- Cutting Parameters for DXF/SVG Widget (modal) -->
-	<div class="modal fade draggable" id="cutParams" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade draggable" id="cutParams" tabindex="-1" role="dialog" aria-labelledby="cuttinglabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -799,7 +799,7 @@
 
 
 	<!-- OpenJSCAD Widget (modal) -->
-	<div class="modal fade draggable" id="openJSCADUI" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade draggable" id="openJSCADUI" tabindex="-1" role="dialog" aria-labelledby="jscadlabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -837,7 +837,6 @@
 				  <div id="jsDXF" style="display: none;">
 				    <textarea id="dxf" style="width: 565px; height: 400px;"></textarea>
 				  </div>
-				</ul>
 				</div>
 	      <div class="modal-footer">
 	        <!-- button type="button" class="btn btn-default" id="generate" style="display: none;" data-dismiss="modal">Prepare GCODE</button>
@@ -871,7 +870,7 @@
 							(Note:  This overrides your engrave speed)
 							<center>
 								<label for="laservariablespeedlbl">Feedrate for Lightest shade (white) and for darkest shade (black)</label><br>
-								<span id="laservariablespeed" style="border:0;  font-weight:bold; background: transparent;" ></span><span>&nbsp;mm/min</span></p>
+								<span id="laservariablespeed" style="border:0;  font-weight:bold; background: transparent;" ></span><span>&nbsp;mm/min</span>
 							</center>
 							<div id="laservariablespeedslider"></div>
 						</div>
@@ -894,12 +893,12 @@
 						<br>
 						<center>
 							<a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a>
-							<button type="button" class="btn btn-danger disabled" id="rasterWidgetSendRasterToLaser"><i class="fa fa-fire"style="margin-right: 8px;"></i>Send to Laser</button>
+							<button type="button" class="btn btn-danger disabled" id="rasterWidgetSendRasterToLaser"><i class="fa fa-fire" style="margin-right: 8px;"></i>Send to Laser</button>
 						</center>
 						</div>
 						<center>
-							Imported Image Dimensions: <span id="dims">0px x 0 px</span></span><br>
-							Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span></span><br>
+							Imported Image Dimensions: <span id="dims">0px x 0 px</span><br>
+							Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span><br>
 							<img id="origImage" style="border: 1px solid orange;  max-width:598px;">
 						</center>
 							<hr>
@@ -947,7 +946,7 @@
 					<div style="display: none; margin-top: 10px; width: 100%; height: 100%px; float: left; clear: both;" id="webcam">
 						<a id="wcLink" target="_blank" href="#"><img id="wcImg" width="320" height="240" /></a>
 					</div>
-		  </div>
+		  	</div>
 	      <div class="modal-footer">
 	        <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
 	      </div>
@@ -965,7 +964,7 @@
 	        <h4 class="modal-title" id="myModalLabel">SVG Import</h4>
 	      </div>
 	    	<div class="modal-body">
-					<i class="fa fa-info fa-lg"></i>&nbsp;NB: Set the DPI - Then configure the scale, Feedrate and Laser Power to the job at hand
+					<span><i class="fa fa-info fa-lg"></i>&nbsp;NB: Set the DPI - Then configure the scale, Feedrate and Laser Power to the job at hand</span>
 					<table class="table table-hover table-condensed">
 						<tr><td>
 						<div class="btn-group input-group  btn-group-justified">
@@ -998,24 +997,65 @@
 						<input type="text" class="form-control" value="100" id="SVGlaserPwr" style="text-align:center;">
 						<span class="input-group-addon"  style="width: 60px;">%</span>
 					</div>
-				</td></tr><table>
+				</td></tr></table>
 					<center>
 						<div class="btn btn-danger" id="processSVG"><i class="fa fa-picture-o fa-lg"></i>Prepare for Laser Cutting</div><br>
 						<label for="svgScale">Resolution derived from DPI: </label>
 						<span id="svgScaleValue" style="border:0;  font-weight:bold; background: transparent;" ></span>
-						<img id="origImage" style="border: 1px solid orange;  max-width:598px;">
+						<img id="origImage" style="border: 1px solid orange;  max-width:598px;" />
 					</center>
 					<div id="work-area">
 						<div id="svgEngrave"></div>
 			    </div>
 				</div>
 	      <div class="modal-footer">
-	        <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
+					<div>Foot</div>
+	      </div>
+			</div>
+		</div>
+	</div>
+		<!-- End of SVG Widget (modal) -->
+
+
+	<!-- Machine Settings Widget (modal) -->
+	<div class="modal fade draggable" id="settingswidget" tabindex="-1" role="dialog" aria-labelledby="Machinesettings" aria-hidden="true">
+	<div class="modal-dialog" style="width: 600px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Machine Settings</h4>
+				</div>
+				<div class="modal-body">
+
+					<p style="margin: 10px; font-size: 12px; color: #999;">Save the current settings with the name you type in the field, an existing name will overwrite the old preset.</p>
+					<div class="input-group">
+						<input type="text" class="form-control" id="newPresetName">
+						<span class="input-group-btn">
+							<button id="newPreset" class="btn btn-default" type="button">Create New Preset</button>
+						</span>
+					</div><!-- /input-group -->
+
+					<select class="form-control" id="selectPreset" style="margin-top: 10px; margin-bottom: 10px;">
+						<option value="0">presets</option>
+					</select>
+
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button id="updatePreset" class="btn btn-default disabled" type="button">Update Preset</button>
+							<button id="deletePreset" class="btn btn-default disabled" type="button">Delete Preset</button>
+						</span>
+					</div><!-- /input-group -->
+
+				</div>
+				<div class="modal-footer">
+					<!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- End of SVG Widget (modal) -->
+	<!-- End of Machine Settings Widget (modal) -->
+</div>
+
 
 
 	<!-- Load an empty 3d GCode viewer grid -->
