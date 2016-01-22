@@ -2131,7 +2131,7 @@ osvg.addEventListener('change', function(e) {
 				$('#limit_status_btn').hide();
 				$('#zeroWork').hide();
 				$('#motorsOff').hide();
-				$('#FanGrp').hide();
+				$('#FanGrp').show();
 				$('#xhomelabel').html("");
 				$('#yhomelabel').html("");
 				$('#zhomelabel').html("");
