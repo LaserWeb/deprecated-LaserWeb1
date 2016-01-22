@@ -215,3 +215,38 @@ textarea {
 #rasterProgressShroud h1 {
 	text-align: center;
 }
+
+#renderprogressholder {
+	position: relative;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 12px;
+	background-color: white;
+	z-index: 999;
+	height: 100%;
+	display: none;
+}
+
+#renderprogressholder .progress {
+	position: relative;
+	top: 0;
+	bottom: 0;
+	height: 26px;
+	width: 300px;
+	margin: auto;
+	left: 0;
+	right: 0
+  -webkit-transition: none !important;
+  transition: none !important;;
+}
+
+#renderprogressholder .progress-bar {
+  -webkit-transition: none !important;
+  transition: none !important;;
+}
+
+
+#renderprogressholder h1 {
+	text-align: center;
+}

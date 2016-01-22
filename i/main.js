@@ -1699,7 +1699,7 @@ $('#generatePreview').on('click', function() {
 		document.getElementById('fileName').value = fileName;
 		$('#mainStatus').html('Status: Gear Generator loaded ...');
 		$('#sendToLaser').removeClass('disabled');
-		generate.click();
+		//generate.click();
 		document.getElementById('fileInputGcode').value = '';
 		document.getElementById('fileInputDXF').value = '';
 		document.getElementById('fileInputSVG').value = '';
@@ -1719,7 +1719,7 @@ $('#boxButton').on('click', function() {
 	document.getElementById('fileName').value = fileName;
 	$('#mainStatus').html('Status: Gear Generator loaded ...');
 	$('#sendToLaser').removeClass('disabled');
-	generate.click();
+	//generate.click();
 	document.getElementById('fileInputGcode').value = '';
 	document.getElementById('fileInputDXF').value = '';
 	document.getElementById('fileInputSVG').value = '';
@@ -1754,7 +1754,8 @@ $('#processSVG').on('click', function() {
 	processSVG();
 	$('#svgwidget').modal('toggle');
 	$('#gcC').click();
-	openGCodeFromText();
+	$('#noneg').click();
+	//openGCodeFromText();
 	gCodeToSend = this.result;
 	$('#sendToLaser').removeClass('disabled');
 	document.getElementById('fileInputGcode').value = '';
@@ -1763,7 +1764,7 @@ $('#processSVG').on('click', function() {
 	//document.getElementById('fileInputMILL').value = '';
 	$('#console').append('<p class="pf" style="color: #000000;"><b>SVG File Upload Complete...</b></p>');
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-	$('#noneg').click();
+	//$('#noneg').click();
 });
 
 osvg.addEventListener('change', function(e) {
@@ -2219,7 +2220,7 @@ osvg.addEventListener('change', function(e) {
 		fileImg.addEventListener('change', function(e) {
 			$('#rasterProgressShroud').hide();
 			$('#rasterparams').show();
-			$('#rasterwidget').modal('toggle');
+			$('#rasterwidget').modal('show');
 						var rasterWidgetTitle = document.getElementById("rasterModalLabel");
 			rasterWidgetTitle.innerText = 'Raster Engraving';
 			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
@@ -2383,6 +2384,7 @@ function gcodereceived() {
 	}
 	console.log('New Gcode');
 	$('#sendToLaser').removeClass('disabled');
+	$('#rasterwidget').modal('hide');
 	openGCodeFromText();
 	gCodeToSend = document.getElementById('gcodepreview').value;
 	$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');

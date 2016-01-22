@@ -279,7 +279,7 @@ Rasterizer.prototype.rasterInterval = function() {
 		//console.log('[Rasterizer] ', progress, '% done');
 		} else {
 		this.onFinish();
-
+    $('#rasterwidget').modal('hide');
 		window.clearInterval(this.rasterIntervalTimer);
 	}
 };

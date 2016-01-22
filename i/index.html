@@ -186,7 +186,7 @@
         <span class="input-group-addon"><i class="fa fa-rocket"></i>&nbsp;Apps</span>
         <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Open BMP/JPEG/PNG and convert to Raster. Note: Use low resolution grayscale for best performance">RASTER<input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
         <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" id="rastercalibrationButton" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Calibrate your grayscale values for actual materials">CALIBRATE</button></div>  <!-- Raster -->
-        <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Applications to generate popularly cut widgets like gears and boxes. More to come...">
+        <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
             <span>JSCAD</span>
             <span class="caret"></span>
@@ -336,7 +336,13 @@
           </div>
         </div>
       </div>
+
+      <div id="renderprogressholder">
+        <div class="progress-bar" role="progressbar" id="renderProgress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">0%</div>
+      </div>
+
       <div id="noWebGL"></div> <!-- Fallback Div to display instead of the threejs viewer, if the browser doesnt support WebGL  -->
+
     </div>
     <div class="col-md-3 panel-transparent">
       <!-- Port Selection -->

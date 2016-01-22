@@ -18,6 +18,7 @@ function GCodeParser(handlers) {
             isUnitsMm = true;
 
             parseLine = function (text, info) {
+              //console.log('parseLine: '+text+', '+info);
                 //text = text.replace(/;.*$/, '').trim(); // Remove comments
                 //text = text.replace(/\(.*$/, '').trim(); // Remove comments
                 //text = text.replace(/<!--.*?-->/, '').trim(); // Remove comments
@@ -186,20 +187,99 @@ function GCodeParser(handlers) {
                 }
             }
 
+
+            this.parse = function(gcode) {
+              $('#renderprogressholder').show();
+              $("#gcodelinestbody").empty();
+              lines = gcode.split(/\r{0,1}\n/);
+              count = lines.length;
+              maxTimePerChunk = 500;
+              index = 0;
+
+              function now() {
+                  return new Date().getTime();
+              }
+
+              function doChunk() {
+                //console.log('Render line: '+index)
+                  var startTime = now();
+                  while (index < count && (now() - startTime) <= maxTimePerChunk) {
+                      // callback called with args (value, index, array)
+                      //fn.call(context, array[index], index, array);
+                      var progress = Math.round((index / count) * 100.0);
+                      $('#renderprogressholder .progress-bar').width(progress + "%");
+                      $('#renderprogressholder .progress-bar').text(progress + "%");
+                       //console.log('[GCODE PARSE]   Line:'+i+' of '+lines.length);
+						          if (parseLine(lines[index], index) === false) {
+                        //break;
+                      }
+                      $('#gcodelinestable > tbody:last-child').append('<tr id="tr'+[index]+'"><td>'+[index]+'</td><td>'+lines[index]+'</td></tr>');//code here using lines[i] which will give you each line
+                      ++index;
+                  }
+                  if (index < count) {
+                      // set Timeout for async iteration
+                      setTimeout(doChunk, 1);
+                  } else {
+                    console.log('[GCODE PARSE] Done  ');
+                    $('#renderprogressholder').hide();
+                    object =  drawobject();
+                    object.translateX(laserxmax /2 * -1);
+                    object.translateY(laserymax /2 * -1);
+                    scene.add(object);
+                  }
+              }
+              doChunk();
+          }
+
+/*
             this.parse = function (gcode) {
-                var lines = gcode.split(/\r{0,1}\n/);
-                for (var i = 0; i < lines.length; i++) {
+              $('#renderprogressholder').show();
+              this.lines = gcode.split(/\r{0,1}\n/);
+              this.currentIndex = 0;
+              this.timer = null;
+              this.count = this.lines.length;
+              //  this.timer = window.setInterval(this.loop.bind(this), 10);
+              timer = window.setInterval(parseloop.bind(this), 1);
+            };
+
+            parseloop = function () {
+               if (this.currentIndex < this.count) {
+                 var progress = Math.round((this.currentIndex / this.count) * 100.0);
+                 $('#renderprogressholder .progress-bar').width(progress + "%");
+                 $('#renderprogressholder .progress-bar').text(progress + "%");
                   //console.log('[GCODE PARSE]   Line:'+i+' of '+lines.length);
                   // Good spot to report on progress
-                    if (parseLine(lines[i], i) === false) {
-                        break;
+                    if (parseLine(this.lines[this.currentIndex], this.currentIndex) === false) {
+                        //break;
                     }
-                }
-            }
+                    this.currentIndex++
+                } else {
+                console.log('[GCODE PARSE] Done  ');
+                window.clearInterval(timer);
+                $('#renderprogressholder').hide();
+                object =  drawobject();
+                object.translateX(laserxmax /2 * -1);
+                object.translateY(laserymax /2 * -1);
+                scene.add(object);
+                //parsestop();
+              }
+            };
+*/
+           /* this.parse = function (gcode) {
+               var lines = gcode.split(/\r{0,1}\n/);
+              for (var i = 0; i < lines.length; i++) {
+                //console.log('[GCODE PARSE]   Line:'+i+' of '+lines.length);
+                 // Good spot to report on progress
+                    if (parseLine(lines[i], i) === false) {
+                         break;
+                    }
+                 }
+            } */
         };
         colorG0: 0x00ff00;
         colorG1: 0x0000ff;
         colorG2: 0x999900;
+
 
     createObjectFromGCode = function (gcode, indxMax) {
               //debugger;
@@ -236,13 +316,13 @@ function GCodeParser(handlers) {
               // its own userData info
               // G2/G3 moves are their own child of lots of lines so
               // that even the simulator can follow along better
-              var new3dObj = new THREE.Group();
-              var plane = "G17"; //set default plane to G17 - Assume G17 if no plane specified in gcode.
-              var layers = [];
-              var layer = undefined;
-              var lines = [];
-              var totalDist = 0;
-              var bbbox = {
+              new3dObj = new THREE.Group();
+              plane = "G17"; //set default plane to G17 - Assume G17 if no plane specified in gcode.
+              layers = [];
+              layer = undefined;
+              lines = [];
+              totalDist = 0;
+              bbbox = {
                   min: {
                       x: 100000,
                       y: 100000,
@@ -254,7 +334,7 @@ function GCodeParser(handlers) {
                       z: -100000
                   }
               };
-              var bbbox2 = {
+              bbbox2 = {
                   min: {
                       x: 100000,
                       y: 100000,
@@ -1030,6 +1110,9 @@ function GCodeParser(handlers) {
 
             parser.parse(gcode);
 
+          };
+
+          function drawobject() {
             // set what units we're using in the gcode
             //console.log('setting units from parser to 3dviewer. parser:', parser, "this:", this);
             isUnitsMm = parser.isUnitsMm;
@@ -1154,7 +1237,7 @@ function GCodeParser(handlers) {
             //console.log("final object:", object);
 
             return object;
-        }
+    };
 
 		function convertLineGeometryToBufferGeometry(lineGeometry, color) {
 

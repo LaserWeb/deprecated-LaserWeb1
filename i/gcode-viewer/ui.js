@@ -32,11 +32,15 @@ function createObject(gcode) {
   if (object) {
         scene.remove(object);
     }
-  object = createObjectFromGCode(gcode);
-	object.translateX(laserxmax /2 * -1);
-	object.translateY(laserymax /2 * -1);
 
-    scene.add(object);
+	//Create the object
+	createObjectFromGCode(gcode);
+//  object =  drawobject();
+
+	//object.translateX(laserxmax /2 * -1);
+	//object.translateY(laserymax /2 * -1);
+
+    //scene.add(object);
 		//console.log('[VIEWER] - added Object');
  if (cylinder) {
         scene.remove(cylinder);
@@ -159,6 +163,7 @@ function createObject(gcode) {
 	}
 
 function openGCodeFromText() {
+	$('#renderprogressholder .progress-bar').width(0);
 	//console.log('Starting Gcode Render');
 	var startTime = Date.now();
 	var gcode = $('#gcodepreview').val();
@@ -182,11 +187,9 @@ function openGCodeFromText() {
 	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 
 	// Pretty Gcode Viewer
-	$("#gcodelinestbody").empty();
-	var lines = $('#gcodepreview').val().split('\n');
-	for(var i = 0;i < lines.length;i++){
-	    $('#gcodelinestable > tbody:last-child').append('<tr id="tr'+[1]+'"><td>'+[i]+'</td><td>'+lines[i]+'</td></tr>');//code here using lines[i] which will give you each line
-	}
+	//$("#gcodelinestbody").empty();
+
+  // rest of gcodelinestbody is written by the doChunk on gcode-parser
 
 }
 
