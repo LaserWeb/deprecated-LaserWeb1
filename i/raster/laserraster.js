@@ -203,14 +203,14 @@ this.RasterNow = function( _callback){
 				//console.log('From: '+lastPosx+', '+lastPosy+'  - To: '+posx+', '+posy+' at '+lastIntensity+'%');
 				if (lastIntensity > 0) {
 					if (useVariableSpeed) {
-						s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' F'+speed+'\n';
+						s += 'G1 X'+endPosx+' Y'+gcodey+' S'+lastIntensity+' F'+speed+'\n';
 					} else {
-						s += 'G1 X'+posx+' Y'+gcodey+' S'+lastIntensity+' \n';
+						s += 'G1 X'+endPosx+' Y'+gcodey+' S'+lastIntensity+' \n';
 					}
 					// This will hopefully get rid of black marks at the end of a line segment
 					// It seems that some controllers dwell at a spot between gcode moves
 					// If this does not work, switch to G1 to endPosx and then G0 to posx
-					s += 'G1 S0\n'; 
+					s += 'G1 X'+posx+' Y'+gcodey+' S0\n';
 				} else {
 					s += 'G0 X'+posx+' Y'+gcodey+' S0\n';
 				}
