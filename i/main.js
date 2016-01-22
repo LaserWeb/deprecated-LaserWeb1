@@ -2298,35 +2298,35 @@ osvg.addEventListener('change', function(e) {
 
 		$('#rasterNow').on('click', function() {
 			$('#rasterWidgetSendRasterToLaser').addClass('disabled');
-			spotSize = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
-			laserFeed = $('#feedRate').val();
-			laserRapid = $('#rapidRate').val();
-			blackspeed = $( "#laservariablespeedslider" ).slider( "values", 0 )*laserRapid/100.0;
-			whitespeed = $( "#laservariablespeedslider" ).slider( "values", 1 )*laserRapid/100.0;
-			window.globals = {
-				  completed: function() { gcodereceived(); },
-					minpwr2: [minpwr],
-					maxpwr2: [maxpwr],
-					spotSize: [spotSize],
-					imgH: [height],
-					imgW: [width],
-					feed: [laserFeed],
-					blackSpeed: [blackspeed],
-					whiteSpeed: [whitespeed],
-					variableSpeed: [$('#useRasterBlackWhiteSpeeds').prop('checked')],
-					rapid: [laserRapid]
-			};
-			window.paper.RasterNow(function() {
-				gcodereceived();
+			var spotSize = $( "#spotsizeslider" ).slider( "values", 0 ) / 100;
+			var laserFeed = $('#feedRate').val();
+			var laserRapid = $('#rapidRate').val();
+			var blackspeed = $( "#laservariablespeedslider" ).slider( "values", 0 ) * laserRapid / 100.0;
+			var whitespeed = $( "#laservariablespeedslider" ).slider( "values", 1 ) * laserRapid / 100.0;
+			var useVariableSpeed = $('#useRasterBlackWhiteSpeeds').prop('checked');
+
+			window.paper.RasterNow({
+				firmware: firmware,
+			  completed: gcodereceived,
+				minIntensity: [minpwr],
+				maxIntensity: [maxpwr],
+				spotSize1: [spotSize],
+				imgheight: [height],
+				imgwidth: [width],
+				feedRate: [laserFeed],
+				blackRate: [blackspeed],
+				whiteRate: [whitespeed],
+				useVariableSpeed: [useVariableSpeed],
+				rapidRate: [laserRapid]
 			});
 		});
 
 		$('#spotSize').bind('input propertychange', function() {
-					//console.log('empty');
-					// Todo if empty
-					if(this.value.length){
+				//console.log('empty');
+				// Todo if empty
+				if(this.value.length){
 					setImgDims();
-					}
+				}
 		});
 
 
