@@ -118,9 +118,9 @@ Rasterizer.prototype.figureIntensity = function() {
     //console.log('Mapping Intensity range for Grbl S0-S255');
     intensity = intensity.toFixed(0);
   } else if (this.config.firmware.indexOf('Smooth') == 0) {
-    intensity = intensity / 100;
+    intensity = intensity;
     //console.log('Mapping Intensity range for Smoothieware S0-S1');
-    intensity = intensity.toFixed(2);
+    intensity = intensity.toFixed(1);
   } else if (this.config.firmware.indexOf('Lasaur') == 0) {
     intensity = intensity.map(0, 100, 0, 255);
     //console.log('Mapping Intensity range for Smoothieware S0-S1');
@@ -232,7 +232,7 @@ Rasterizer.prototype.rasterRow = function(y) {
         // This will hopefully get rid of black marks at the end of a line segment
         // It seems that some controllers dwell at a spot between gcode moves
         // If this does not work, switch to G1 to this.endPosx and then G0 to posx
-        this.result += 'G1 S0\n';
+        //this.result += 'G1 S0\n';
       } else {
         this.result += 'G0 X{0} Y{1} S0\n'.format(posx, gcodey);
       }
