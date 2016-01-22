@@ -2199,7 +2199,7 @@ osvg.addEventListener('change', function(e) {
 
 	var rasterCalib = document.getElementById('rastercalibrationButton');
 		$('#rastercalibrationButton').on('click', function() {
-			$('#rasterwidget').modal('toggle');
+			$('#rasterwidget').modal('show');
 			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
 			rasterWidgetTitle.innerText = 'Raster Engraving Calibration';
 			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
@@ -2377,7 +2377,7 @@ function setImgDims() {
 function gcodereceived() {
 	var rasterSendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
 	if (rasterSendToLaserButton.style.display == "none") {
-		$('#rasterwidget').modal('toggle');
+		$('#rasterwidget').modal('hide');
 	} else {
 		$('#rasterWidgetSendRasterToLaser').removeClass('disabled');
 	}

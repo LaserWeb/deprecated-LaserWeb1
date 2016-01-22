@@ -189,6 +189,8 @@ function GCodeParser(handlers) {
             this.parse = function (gcode) {
                 var lines = gcode.split(/\r{0,1}\n/);
                 for (var i = 0; i < lines.length; i++) {
+                  //console.log('[GCODE PARSE]   Line:'+i+' of '+lines.length);
+                  // Good spot to report on progress
                     if (parseLine(lines[i], i) === false) {
                         break;
                     }
@@ -1125,7 +1127,6 @@ function GCodeParser(handlers) {
 			document.getElementById('BBYMIN').value = bbbox2.min.y;
 			document.getElementById('BBXMAX').value = bbbox2.max.x;
 			document.getElementById('BBYMAX').value = bbbox2.max.y;
-
       //camera.position.x = (dX / 2) - (laserxmax /2);
       //camera.position.y = (dY / 2) - (laserxmax /2);
       //controls.target = new THREE.Vector3(((dY / 2) - (laserxmax /2)),((dX / 2) - (laserxmax /2)), 0);

@@ -37,7 +37,7 @@ function createObject(gcode) {
 	object.translateY(laserymax /2 * -1);
 
     scene.add(object);
-
+		//console.log('[VIEWER] - added Object');
  if (cylinder) {
         scene.remove(cylinder);
     }
@@ -52,6 +52,7 @@ function createObject(gcode) {
 			cylinder.position.y = (laserymax /2 * -1)
 			cylinder.position.z = 20;
 			cylinder.needsUpdate = true;
+			//console.log('[VIEWER] - added Cone');
 		scene.add(cylinder)
 
 
@@ -71,7 +72,8 @@ function createObject(gcode) {
             //console.log("helper grid:", helper);
             this.grid = helper;
             //this.sceneAdd(this.grid);
-			scene.add(helper);
+		//console.log('[VIEWER] - added Helpert');
+		scene.add(helper);
 
 
 
@@ -93,7 +95,8 @@ function createObject(gcode) {
             axes.translateX(laserxmax /2 * -1);
 			axes.translateY(laserymax /2 * -1);
 
-            scene.add(axes);
+			//console.log('[VIEWER] - added Axes');
+      scene.add(axes);
 
 			var x = [];
 			var y = [];
@@ -150,12 +153,13 @@ function createObject(gcode) {
 
 			axesgrp.translateX(laserxmax /2 * -1);
 			axesgrp.translateY(laserymax /2 * -1);
+			//console.log('[VIEWER] - added Axesgrp');
 			scene.add(axesgrp);
 
 	}
 
 function openGCodeFromText() {
-	console.time("Process 3D View");
+	//console.log('Starting Gcode Render');
 	var startTime = Date.now();
 	var gcode = $('#gcodepreview').val();
 	//if (document.hasFocus()) {
