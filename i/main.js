@@ -2129,7 +2129,7 @@ osvg.addEventListener('change', function(e) {
 				$('#door_status_btn').hide();
 				$('#chiller_status_btn').hide();
 				$('#limit_status_btn').hide();
-				$('#zeroWork').hide();
+				$('#zeroWork').show();
 				$('#motorsOff').hide();
 				$('#FanGrp').show();
 				$('#xhomelabel').html("");
