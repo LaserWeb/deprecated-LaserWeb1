@@ -2217,8 +2217,9 @@ osvg.addEventListener('change', function(e) {
 
 	var fileImg = document.getElementById('fileImage');
 		fileImg.addEventListener('change', function(e) {
+			$('#rasterProgressShroud').hide();
 			$('#rasterwidget').modal('toggle');
-			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
+						var rasterWidgetTitle = document.getElementById("rasterModalLabel");
 			rasterWidgetTitle.innerText = 'Raster Engraving';
 			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
 			sendToLaserButton.style.display = "none";
