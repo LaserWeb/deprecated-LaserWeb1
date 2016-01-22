@@ -1,3 +1,4 @@
+22 Jan 2016: Fixed bug with Raster preview+gcode for Smoothieboards, added Progress Bars to Raster and 3D Viewer renders
 21 Jan 2016: Closed several support Issues - fixed code for issues #68, #69, updated screenshots
 20 Jan 2016: Added hardwareless debug option for developers who doesn't have hardware
 18 Jan 2016: Added Estimated Job Time calculation
