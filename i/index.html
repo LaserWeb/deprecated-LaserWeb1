@@ -858,69 +858,68 @@
           <h4 class="modal-title" id="rasterModalLabel">Raster Engraving</h4>
         </div>
         <div class="modal-body">
-            <div class="">
-              <label for="laserpwrsliderlbl">Constrain Laser Power: </label>
-              <span id="laserpwr" style="border:0;  font-weight:bold; background: transparent;" ></span>
-              <div id="laserpwrslider"></div>
-            </div>
-            <br/>
-            <input type="checkbox" value="1" id="useRasterBlackWhiteSpeeds" /> Enable Experimental Adaptive Feedrate Grayscale Control
-            <div class="" id="blackwhitespeedsection" style="display: none;">
-              This feature allows you to fine tune the grayscale for linearity based on the material in use. Adjusting both the Adaptive Feedrate, and the Constrained Laser power, to achieve the best, linear gray level from 0% through to 100%
-              (Note:  This overrides your engrave speed)
-              <center>
-                <label for="laservariablespeedlbl">Feedrate for Lightest shade (white) and for darkest shade (black)</label><br>
-                <span id="laservariablespeed" style="border:0;  font-weight:bold; background: transparent;" ></span><span>&nbsp;mm/min</span>
-              </center>
-              <div id="laservariablespeedslider"></div>
-            </div>
-            <div class="well">
-              <label for="spotsizesliderlbl">Zoom/Resolution: </label>
-                 <span id="spotsize" style="border:0;  font-weight:bold; background: transparent;" ></span>
-              <div id="spotsizeslider"></div>
-            </div>
-            <div class="input-group" style="margin-bottom:10px; width: 100%;">
-              <span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Engrave (G1) Feedrate</span>
-              <input type="text" class="form-control" value="2000" id="feedRate">
-              <span class="input-group-addon"  style="width: 60px;">mm/min</span>
-            </div>
-            <br>
-            <div class="input-group" style="margin-bottom:10px; width: 100%;">
-              <span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Rapid (G0) Feedrate</span>
-              <input type="text" class="form-control" value="6000" id="rapidRate">
-              <span class="input-group-addon"  style="width: 60px;">mm/min</span>
-            </div>
-            <br>
-            <center>
-              <a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a>
-              <button type="button" class="btn btn-danger disabled" id="rasterWidgetSendRasterToLaser"><i class="fa fa-fire" style="margin-right: 8px;"></i>Send to Laser</button>
-            </center>
-            </div>
-            <center>
-              Imported Image Dimensions: <span id="dims">0px x 0 px</span><br>
-              Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span><br>
-              <img id="origImage" style="border: 1px solid orange;  max-width:598px;">
-            </center>
-              <hr>
-              <div class="canvas" id="rasterOutput" style="display: none;">
-                <canvas id="canvas-1"></canvas>
-            </div>
-        </div>
+					<div class="" id="rasterparams">
+						<label for="laserpwrsliderlbl">Constrain Laser Power: </label>
+	          <span id="laserpwr" style="border:0;  font-weight:bold; background: transparent;" ></span>
+	          <div id="laserpwrslider"></div>
+	          <br/>
+	          <input type="checkbox" value="1" id="useRasterBlackWhiteSpeeds" /> Enable Experimental Adaptive Feedrate Grayscale Control
+	          <div class="" id="blackwhitespeedsection" style="display: none;">
+	            This feature allows you to fine tune the grayscale for linearity based on the material in use. Adjusting both the Adaptive Feedrate, and the Constrained Laser power, to achieve the best, linear gray level from 0% through to 100%
+	            (Note:  This overrides your engrave speed)
+	            <center>
+	              <label for="laservariablespeedlbl">Feedrate for Lightest shade (white) and for darkest shade (black)</label><br>
+	              <span id="laservariablespeed" style="border:0;  font-weight:bold; background: transparent;" ></span><span>&nbsp;mm/min</span>
+	            </center>
+	          	<div id="laservariablespeedslider"></div>
+	          </div>
+	          <div class="well">
+	            <label for="spotsizesliderlbl">Zoom/Resolution: </label>
+	               <span id="spotsize" style="border:0;  font-weight:bold; background: transparent;" ></span>
+	            <div id="spotsizeslider"></div>
+	          </div>
+	          <div class="input-group" style="margin-bottom:10px; width: 100%;">
+	            <span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Engrave (G1) Feedrate</span>
+	            <input type="text" class="form-control" value="2000" id="feedRate">
+	            <span class="input-group-addon"  style="width: 60px;">mm/min</span>
+	          </div>
+	          <br>
+	          <div class="input-group" style="margin-bottom:10px; width: 100%;">
+	            <span class="input-group-addon"  style="width: 100px;"><i class="fa fa-line-chart fa-lg" style="margin-right: 20px;"></i>Rapid (G0) Feedrate</span>
+	            <input type="text" class="form-control" value="6000" id="rapidRate">
+	            <span class="input-group-addon"  style="width: 60px;">mm/min</span>
+	          </div>
+	          <br>
+	          <center>
+	            <a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a>
+	            <button type="button" class="btn btn-danger disabled" id="rasterWidgetSendRasterToLaser"><i class="fa fa-fire" style="margin-right: 8px;"></i>Send to Laser</button>
+	          </center>
+	          <center>
+	            Imported Image Dimensions: <span id="dims">0px x 0 px</span><br>
+	            Engraved Image Dimensions: <span id="physdims">0mm x 0 mm</span><br>
+	            <img id="origImage" style="border: 1px solid orange;  max-width:598px;">
+	          </center>
+	          <hr>
+	          <div class="canvas" id="rasterOutput" style="display: none;">
+	            <canvas id="canvas-1"></canvas>
+	          </div>
+					</div> <!-- rasterparams -->
+					<div id="rasterProgressShroud">
+						<h1>Rasterizing...</h1>
+						<div class="progress">
+							<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+								<span class="sr-only">60% Complete</span>
+							</div>
+						</div>
+					</div> <!-- rastershroud -->
+        </div> <!-- modal body -->
         <div class="modal-footer">
           <!-- button type="button" class="btn btn-default" id="generate" data-dismiss="modal">Prepare GCODE</button -->
-        </div>
+        </div> <!-- modal footer -->
+    	</div> <!-- modal content -->
+    </div> <!-- modal dialog -->
+	</div> <!-- modal -->
 
-				<div id="rasterProgressShroud">
-					<h1>Rasterizing...</h1>
-					<div class="progress">
-						<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-							<span class="sr-only">60% Complete</span>
-						</div>
-					</div>
-				</div>
-      </div>
-    </div>
-  </div>
   <!-- End of Raster Widget (modal) -->
 
   <!-- Changelog -->

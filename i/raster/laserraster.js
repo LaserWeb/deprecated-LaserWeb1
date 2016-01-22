@@ -287,7 +287,8 @@ Rasterizer.prototype.rasterInterval = function() {
 Rasterizer.prototype.onRasterLoaded = function() {
 	console.log('[Rasterizer] onRasterLoaded');
 
-	$('#rasterProgressShroud').show();
+  $('#rasterparams').hide();
+  $('#rasterProgressShroud').show();
 	$('#rasterProgressShroud .progress-bar').width(0);
 
 	// Iterate through the Pixels asynchronously
