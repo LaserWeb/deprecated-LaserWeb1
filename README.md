@@ -5,6 +5,11 @@ LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Mu
 ## Sponsors
 Have a look at companies and individuals that support us financially or with parts donations, or if you would like to get involved by sponsoring us in any way, please see the Sponsors Page on the wiki: https://github.com/openhardwarecoza/LaserWeb/wiki/SPONSORS
 
+## Developers
+Want to help?  Apart from self found bugfix and enhancement PRs I would really love help with the [Milestones](https://github.com/openhardwarecoza/LaserWeb/milestones)  -  We are always happy for pull requests!  
+
+Coding style:  Keep it such that amateurs can still help with the code.  Less this/that and obscurity, and more easy reading, easy debugging code (look at the existing style to get a feel) -  LaserWeb is a very inclusive project - any firmware, any skill level, any OS really - all welcome.  But lets try to keep this Javascript as far as possible, and try to keep it such that even novice coders can come in and contribute to our code with ease 
+
 ## Community:  
 Looking for a nice community of Laser users who like hacking their machines?
 Join the ***K40 LASER CUTTING ENGRAVING MACHINE*** Community on Google Plus - its their inspiration you have to thank for me creating LaserWeb in the first place. 
