@@ -276,7 +276,7 @@ Rasterizer.prototype.rasterInterval = function() {
 		var progress = Math.round((this.currentPosy / this.raster.height) * 100.0);
     $('#rasterProgressShroud .progress-bar').width(progress + "%");
     $('#rasterProgressShroud .progress-bar').text(progress + "%");
-		console.log('[Rasterizer] ', progress, '% done');
+		//console.log('[Rasterizer] ', progress, '% done');
 		} else {
 		this.onFinish();
 
