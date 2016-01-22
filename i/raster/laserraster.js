@@ -118,7 +118,7 @@ Rasterizer.prototype.figureIntensity = function() {
     //console.log('Mapping Intensity range for Grbl S0-S255');
     intensity = intensity.toFixed(0);
   } else if (this.config.firmware.indexOf('Smooth') == 0) {
-    intensity = intensity;
+    intensity = intensity / 100;
     //console.log('Mapping Intensity range for Smoothieware S0-S1');
     intensity = intensity.toFixed(1);
   } else if (this.config.firmware.indexOf('Lasaur') == 0) {

@@ -372,7 +372,7 @@ function GCodeParser(handlers) {
                     if (firmware.indexOf('Grbl') == 0) {
                       opacity = line.s / 255;
                     } else if (firmware.indexOf('Smooth') == 0) {
-                      opacity = line.s / 100;
+                      opacity = line.s;
                       console.log(opacity+', '+line.x);
                       //console.log(opacity);
                     } else if (firmware.indexOf('Lasaur') == 0) {
