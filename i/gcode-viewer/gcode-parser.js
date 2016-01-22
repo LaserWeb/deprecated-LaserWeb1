@@ -361,7 +361,7 @@ function GCodeParser(handlers) {
                 //console.log("getLineGroup:", line);
                 if (layer == undefined) newLayer(line);
                 var speed = Math.round(line.e / 1000);
-                var opacity = Math.round(line.s);
+                var opacity = line.s;
                 var grouptype = (line.extruding ? 10000 : 0) + speed + opacity;
 
                 var color = new THREE.Color(line.extruding ? 0x990000 : 0x990000);

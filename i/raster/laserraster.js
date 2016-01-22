@@ -115,19 +115,15 @@ Rasterizer.prototype.figureIntensity = function() {
   // Firmware Specific Gcode Output
   if (this.config.firmware.indexOf('Grbl') == 0) {
     intensity = intensity.map(0, 100, 0, 255);
-    //console.log('Mapping Intensity range for Grbl S0-S255');
     intensity = intensity.toFixed(0);
   } else if (this.config.firmware.indexOf('Smooth') == 0) {
     intensity = intensity / 100;
-    //console.log('Mapping Intensity range for Smoothieware S0-S1');
-    intensity = intensity.toFixed(1);
+    //intensity = intensity.toFixed(1);
   } else if (this.config.firmware.indexOf('Lasaur') == 0) {
     intensity = intensity.map(0, 100, 0, 255);
-    //console.log('Mapping Intensity range for Smoothieware S0-S1');
     intensity = intensity.toFixed(0);
   } else {
     intensity = intensity.map(0, 100, 0, 100);
-    //console.log('Mapping Intensity range for S0-S100');
     intensity = intensity.toFixed(0);
   }
 
