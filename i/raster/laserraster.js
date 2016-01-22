@@ -273,11 +273,11 @@ Rasterizer.prototype.rasterInterval = function() {
 		this.rasterRow(this.currentPosy);
 
 		this.currentPosy++;
-		var progress = (this.currentPosy / this.raster.height) * 100.0;
+		var progress = Math.round((this.currentPosy / this.raster.height) * 100.0);
+    $('#rasterProgressShroud .progress-bar').width(progress + "%");
+    $('#rasterProgressShroud .progress-bar').text(progress + "%");
 		console.log('[Rasterizer] ', progress, '% done');
-
-		$('#rasterProgressShroud .progress-bar').width(progress + '%');
-	} else {
+		} else {
 		this.onFinish();
 
 		window.clearInterval(this.rasterIntervalTimer);
@@ -289,6 +289,7 @@ Rasterizer.prototype.onRasterLoaded = function() {
 
   $('#rasterparams').hide();
   $('#rasterProgressShroud').show();
+  $('.progress').removeClass('active');
 	$('#rasterProgressShroud .progress-bar').width(0);
 
 	// Iterate through the Pixels asynchronously

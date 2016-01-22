@@ -201,8 +201,16 @@ textarea {
 	width: 300px;
 	margin: auto;
 	left: 0;
-	right: 0;
+	right: 0
+  -webkit-transition: none !important;
+  transition: none !important;;
 }
+
+#rasterProgressShroud .progress-bar {
+  -webkit-transition: none !important;
+  transition: none !important;;
+}
+
 
 #rasterProgressShroud h1 {
 	text-align: center;
