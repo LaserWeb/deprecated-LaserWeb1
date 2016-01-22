@@ -180,3 +180,31 @@ textarea {
   line-height: 23px;
   height: 28px;
 }
+
+#rasterProgressShroud {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 20px;
+	background-color: white;
+	z-index: 999;
+	height: 100%;
+	display: none;
+}
+
+#rasterProgressShroud .progress {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: 25px;
+	width: 300px;
+	margin: auto;
+	left: 0;
+	right: 0;
+}
+
+#rasterProgressShroud h1 {
+	text-align: center;
+	margin-top: 50%;
+}
