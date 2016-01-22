@@ -170,7 +170,7 @@ Rasterizer.prototype.init = function() {
 
 
 Rasterizer.prototype.rasterRow = function(y) {
-	console.log('[Rasterizer] rasterRow', y);
+	//console.log('[Rasterizer] rasterRow', y);
 
   // Calculate where to move to to start the first and next rows - G0 Yxx move between lines
   var posy = y;
@@ -285,7 +285,7 @@ Rasterizer.prototype.rasterInterval = function() {
 };
 
 Rasterizer.prototype.onRasterLoaded = function() {
-	console.log('[Rasterizer] onRasterLoaded');
+	//console.log('[Rasterizer] onRasterLoaded');
 
   $('#rasterparams').hide();
   $('#rasterProgressShroud').show();
