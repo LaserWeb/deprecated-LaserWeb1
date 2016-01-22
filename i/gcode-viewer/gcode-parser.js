@@ -373,14 +373,14 @@ function GCodeParser(handlers) {
                       opacity = line.s / 255;
                     } else if (firmware.indexOf('Smooth') == 0) {
                       opacity = line.s;
-                      console.log(opacity+', '+line.x);
+                      //console.log(opacity+', '+line.x);
                       //console.log(opacity);
                     } else if (firmware.indexOf('Lasaur') == 0) {
                       opacity = line.s / 255;
-                      console.log(opacity+', '+line.x);
+                      //console.log(opacity+', '+line.x);
                     } else {
                       opacity = line.s / 100;
-                      console.log(opacity+', '+line.x);
+                      //console.log(opacity+', '+line.x);
                     }
                 }
                 //console.log(opacity);
