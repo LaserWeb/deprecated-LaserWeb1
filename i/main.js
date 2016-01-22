@@ -2218,6 +2218,7 @@ osvg.addEventListener('change', function(e) {
 	var fileImg = document.getElementById('fileImage');
 		fileImg.addEventListener('change', function(e) {
 			$('#rasterProgressShroud').hide();
+			$('#rasterparams').show();
 			$('#rasterwidget').modal('toggle');
 						var rasterWidgetTitle = document.getElementById("rasterModalLabel");
 			rasterWidgetTitle.innerText = 'Raster Engraving';
