@@ -2304,6 +2304,7 @@ osvg.addEventListener('change', function(e) {
 			var blackspeed = $( "#laservariablespeedslider" ).slider( "values", 0 ) * laserRapid / 100.0;
 			var whitespeed = $( "#laservariablespeedslider" ).slider( "values", 1 ) * laserRapid / 100.0;
 			var useVariableSpeed = $('#useRasterBlackWhiteSpeeds').prop('checked');
+			$('#rasterProgressShroud').hide();
 
 			window.paper.RasterNow({
 				firmware: firmware,
