@@ -1434,7 +1434,7 @@ $(document).ready(function() {
 				layers = row.unique();
 				//console.log(layers);
 				for (var c=0; c<layers.length; c++) {
-					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td><input class=simplebox name=sp'+c+' id=sp'+c+' value=3200>&nbsp;mm/m</td><td><input class=simplebox name=pwr'+c+' id=pwr'+c+' value=100>&nbsp;%</td></tr>');
+					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td>  <div class="input-group" style="margin-bottom:10px; width: 100%;"><input class="form-control" name=sp'+c+' id=sp'+c+' value=3200><span class="input-group-addon"  style="width: 100px;">mm/m</span></div></td><td><div class="input-group" style="margin-bottom:10px; width: 100%;"><input class="form-control" name=pwr'+c+' id=pwr'+c+' value=100><span class="input-group-addon"  style="width: 100px;">%</span></div></td></tr>');
 				}
 			}
 			document.getElementById('fileInputGcode').value = '';
