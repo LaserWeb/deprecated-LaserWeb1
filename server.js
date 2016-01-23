@@ -40,6 +40,7 @@ var qs = require('querystring');
 var util = require('util');
 var http = require('http');
 var chalk = require('chalk');
+var slBaseOpts = require('./slBaseOpts');
 
 
 // Debug Parameters in command line
@@ -517,6 +518,7 @@ io.sockets.on('connection', function (socket) {
 	socket.emit('ports', allPorts);
 
   socket.on('firstLoad', function(data) {
+    socket.emit('slOpts', slBaseOpts);
 		socket.emit('config', config);
     if (args[0]) {
       if (args[0].indexOf('--debug') == 0) {

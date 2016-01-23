@@ -401,6 +401,59 @@ $(document).ready(function() {
 		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
 
+	var baseSlOpts;
+	// load Machine Profiles from server
+	socket.on('slOpts', function (data) {
+		console.log('load Machine Profiles from server');
+		baseSlOpts = data;
+		console.log(baseSlOpts);
+		loadBaseSlOpts();
+	});
+
+	function loadBaseSlOpts() {
+			$('#slOptsValues').html('');
+			var baseOpts = baseSlOpts['machines'];
+			for (var i in baseOpts) {
+				// add section header
+				$('#slOptsValues').append('<h5>'+baseOpts[i].section+'</h5>');
+				var s = '<table class="table table-hover table-striped table-condensed" style="width: 100%;">';
+				for (var c in baseOpts[i].options) {
+					// add option input
+					//var s = '<table><tr><td>';
+					s += '<tr><td style="width: 500%;"> '+baseOpts[i].options[c].name+'</td><td style="width: 50%;">'
+					if (typeof baseOpts[i].options[c].value == 'object') {
+						// select
+						s += '<select name="slOptsArray-'+baseOpts[i].options[c].opt+'"><option></option>';
+						for (var l in baseOpts[i].options[c].value) {
+							s += '<option>'+baseOpts[i].options[c].value[l]+'</option>';
+						}
+						s += '</select>';
+					} else if (baseOpts[i].options[c].value.length > 10) {
+						// textarea
+						s += '<textarea style="width: 80%; height: 100px;" name="slOptsArray-'+baseOpts[i].options[c].opt+'">'+baseOpts[i].options[c].value+'</textarea><br />';
+					} else {
+						// text
+						s += '<input type="text" name="slOptsArray-'+baseOpts[i].options[c].opt+'" size="5" value="'+baseOpts[i].options[c].value+'" />';
+						s += '</td></tr>'
+					}
+				}
+				s += '</table>'
+				$('#slOptsValues').append(s);
+			}
+
+			// change handler
+			$('[name|="slOptsArray"]').change(function(e) {
+				// an option has been changed
+				//console.log('chg',e.target.name);
+				// change color of that field to indicate change has been made
+				$('[name="'+e.target.name+'"]').css('color','red');
+				if ($('#selectPreset').val() > 0) {
+					// enable Update Preset
+					$('#updatePreset').removeClass('disabled');
+				}
+			});
+		}
+
 	// obtain config options from server
 	socket.on('config', function (data) {
 		//console.log(data);
