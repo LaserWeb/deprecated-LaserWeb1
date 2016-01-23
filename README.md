@@ -46,7 +46,7 @@ Then every day, run ```./update.sh ```
 ## In-app scale, rotate, scaling of existing GCODE
 ![Transformation Widget](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/Scale Widget.png)
 
-### In-app Parametric Gear Generator 
+### In-app Parametric Tabbed Box Generator 
 ![Parametric](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/parametricgenerator.png)
 
 ### 3D viewer supports Raster GCode files 
