@@ -2201,6 +2201,8 @@ osvg.addEventListener('change', function(e) {
 	var rasterCalib = document.getElementById('rastercalibrationButton');
 		$('#rastercalibrationButton').on('click', function() {
 			$('#rasterwidget').modal('show');
+			$('#rasterparams').show();
+			$('#rasterProgressShroud').hide();
 			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
 			rasterWidgetTitle.innerText = 'Raster Engraving Calibration';
 			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
@@ -2221,7 +2223,9 @@ osvg.addEventListener('change', function(e) {
 			$('#rasterProgressShroud').hide();
 			$('#rasterparams').show();
 			$('#rasterwidget').modal('show');
-						var rasterWidgetTitle = document.getElementById("rasterModalLabel");
+			$('#rasterparams').show();
+			$('#rasterProgressShroud').hide();
+			var rasterWidgetTitle = document.getElementById("rasterModalLabel");
 			rasterWidgetTitle.innerText = 'Raster Engraving';
 			var sendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
 			sendToLaserButton.style.display = "none";
@@ -2379,12 +2383,13 @@ function gcodereceived() {
 	var rasterSendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
 	if (rasterSendToLaserButton.style.display == "none") {
 		$('#rasterwidget').modal('hide');
+		$('#rasterparams').show();
+		$('#rasterProgressShroud').hide();
 	} else {
 		$('#rasterWidgetSendRasterToLaser').removeClass('disabled');
 	}
 	console.log('New Gcode');
 	$('#sendToLaser').removeClass('disabled');
-	$('#rasterwidget').modal('hide');
 	openGCodeFromText();
 	gCodeToSend = document.getElementById('gcodepreview').value;
 	$('#mainStatus').html('Status: <b>Gcode</b> loaded ...');
