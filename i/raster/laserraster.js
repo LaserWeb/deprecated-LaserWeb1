@@ -275,18 +275,34 @@ Rasterizer.prototype.rasterInterval = function() {
 		//console.log('[Rasterizer] ', progress, '% done');
 		} else {
 		this.onFinish();
-    $('#rasterwidget').modal('hide');
+    var rasterSendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+    if (rasterSendToLaserButton.style.display == "none") { // Raster Mode
+      $('#rasterparams').hide();
+      $('#rasterwidget').modal('hide');
+    } else {  // Calibration Mode
+      $('#rasterparams').show();
+      $('#rasterProgressShroud').hide();
+      $('.progress').removeClass('active');
+    	$('#rasterProgressShroud .progress-bar').width(0);
+    }
 		window.clearInterval(this.rasterIntervalTimer);
 	}
 };
 
 Rasterizer.prototype.onRasterLoaded = function() {
 	//console.log('[Rasterizer] onRasterLoaded');
-
-  $('#rasterparams').hide();
-  $('#rasterProgressShroud').show();
-  $('.progress').removeClass('active');
-	$('#rasterProgressShroud .progress-bar').width(0);
+  var rasterSendToLaserButton = document.getElementById("rasterWidgetSendRasterToLaser");
+  if (rasterSendToLaserButton.style.display == "none") {  // Raster Mode
+    $('#rasterparams').hide();
+    $('#rasterProgressShroud').show();
+    $('.progress').removeClass('active');
+  	$('#rasterProgressShroud .progress-bar').width(0);
+  } else {  // Calibration Mode
+    $('#rasterparams').hide();
+    $('#rasterProgressShroud').show();
+    $('.progress').removeClass('active');
+  	$('#rasterProgressShroud .progress-bar').width(0);
+  }
 
 	// Iterate through the Pixels asynchronously
   this.currentPosy = 0;
