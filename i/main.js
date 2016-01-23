@@ -428,9 +428,9 @@ $(document).ready(function() {
 							s += '<option>'+baseOpts[i].options[c].value[l]+'</option>';
 						}
 						s += '</select>';
-					} else if (baseOpts[i].options[c].value.length > 10) {
-						// textarea
-						s += '<textarea style="width: 80%; height: 100px;" name="slOptsArray-'+baseOpts[i].options[c].opt+'">'+baseOpts[i].options[c].value+'</textarea><br />';
+					//} else if (baseOpts[i].options[c].value.length > 10) {
+					// textarea
+					//	s += '<textarea style="width: 80%; height: 100px;" name="slOptsArray-'+baseOpts[i].options[c].opt+'">'+baseOpts[i].options[c].value+'</textarea><br />';
 					} else {
 						// text
 						s += '<input type="text" name="slOptsArray-'+baseOpts[i].options[c].opt+'" size="5" value="'+baseOpts[i].options[c].value+'" />';
@@ -1840,9 +1840,16 @@ osvg.addEventListener('change', function(e) {
 		reader.onload = function(event) {
  			var svg = document.getElementById('svgEngrave');
 			svg.innerHTML = reader.result;
+			console.log('Colors in SVG: '+svgcolors)
 			$('#svgwidget').modal('toggle');
 		};
 		reader.readAsText(selectedFile);
+	});
+
+	$('#pullcolors').on('click', function() {
+		var svg2 = $('#svgEngrave').html();
+		var svgrows = pullcolors(svg2, []);
+		console.log(svgrows);
 	});
 
 	// Handle File Save Button

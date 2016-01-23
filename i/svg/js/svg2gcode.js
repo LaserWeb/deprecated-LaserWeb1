@@ -1,7 +1,51 @@
 // Author Jordan Sitkin https://github.com/dustMason/Machine-Art
 
-	var intensity = 100;
-  var svglaserpwr = 0;
+ globalpaths = {};
+ var svgcolors = [];
+ var svgcolorsoptions = [];
+ var intensity = 100;
+ var svglaserpwr = 0;
+
+	Array.prototype.unique = function()
+	{
+		var n = {},r=[];
+		for(var i = 0; i < this.length; i++)
+		{
+			if (!n[this[i]])
+			{
+				n[this[i]] = true;
+				r.push(this[i]);
+			}
+		}
+		return r;
+	}
+
+
+
+	function pullcolors(svg, settings) {
+		svg = svg.replace(/^[\n\r \t]/gm, '');
+		var paths = SVGReader.parse(svg, {}).allcolors,
+	      gcode,
+	      path,
+	      idx = paths.length,
+	      minX = Infinity,
+	      maxX = -Infinity,
+	      minY = Infinity,
+	      maxY = -Infinity;
+
+	 svgcolorsoptions = [];
+
+	 for (i = 0; i < paths.length; i++) {
+	 	//onsole.log('PATH: '+i+', FILL: '+paths[i].node.fill+', STROKE: '+paths[i].node.stroke+', COLOR: '+paths[i].node.color+', OPACTITY: '+paths[i].node.opacity)
+		if (paths[i].node.fill) { svgcolors.push(paths[i].node.fill) };
+		if (paths[i].node.stroke) { svgcolors.push(paths[i].node.stroke) };
+		if (paths[i].node.color) { svgcolors.push(paths[i].node.color) };
+	 }
+	svgcolorsoptions = svgcolors.unique();
+	//console.log(svgcolorsoptions);
+	return svgcolorsoptions
+	};
+
 
 function svg2gcode(svg, settings) {
   // clean off any preceding whitespace
@@ -41,6 +85,13 @@ function svg2gcode(svg, settings) {
       maxX = -Infinity,
       minY = Infinity,
       maxY = -Infinity;
+
+ //console.log(paths);
+ globalpaths = paths;
+
+ //for (i = 0; i < paths.length; i++) {
+ //	 console.log('PATH: '+i+', FILL: '+paths[i].node.fill+', STROKE: '+paths[i].node.stroke+', COLOR: '+paths[i].node.color+', OPACTITY: '+paths[i].node.opacity)
+ //}
 
   while(idx--) {
     var subidx = paths[idx].length;
