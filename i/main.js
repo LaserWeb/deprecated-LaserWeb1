@@ -1754,8 +1754,7 @@ $('#processSVG').on('click', function() {
 	processSVG();
 	$('#svgwidget').modal('toggle');
 	$('#gcC').click();
-	$('#noneg').click();
-	//openGCodeFromText();
+	$.when( openGCodeFromText() ).done($('#noneg').click());
 	gCodeToSend = this.result;
 	$('#sendToLaser').removeClass('disabled');
 	document.getElementById('fileInputGcode').value = '';

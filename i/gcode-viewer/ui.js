@@ -193,6 +193,7 @@ function openGCodeFromText() {
 
 }
 
+
 function makeSprite(scene, rendererType, vals) {
             var canvas = document.createElement('canvas'),
                 context = canvas.getContext('2d'),
