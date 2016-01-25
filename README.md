@@ -17,6 +17,13 @@ Join over on https://plus.google.com/communities/118113483589382049502
 
 Another great community resource is the Google group ***Opensource Laser*** at https://groups.google.com/forum/#!forum/opensource-laser
 
+##Add-ons
+
+####Laser Safety System
+
+A low cost laser cutter/engraver safety monitoring system for K40 and similar laser systems. This opensource project is available at https://github.com/funinthefalls/LaserSafetySystem
+
+
 
 ## NB NOTE: BROWSER SUPPORT:
 
@@ -85,7 +92,8 @@ NB:  MAKE SURE THE BOARD IS PLUGGED IN BEFORE STARTING LASERWEB. LaserWeb connec
 ## Installation Instructions  (NB See Access instructions below the install instructions)
 
 
-## Windows
+## Windows Procedure courtery of @fuininthefalls (Anthony Bolgar)
+
 
 On Windows 7 and above, please use the following instructions. We are assuming from a vanilla Windows installation so your mileage may vary depending on things you already have installed. If you find conflicts, please let us know via a GitHub Issue
 
