@@ -37,7 +37,10 @@ Then every day, run ```./update.sh ```
 
 ## Video Demo
 
-[![Demo of Raster]https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/hackaday.jpg](https://plus.google.com/u/0/+PetervanderWalt/posts/4fWS5omApWu)
+[![Raster Demo](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/hackaday.jpg)](https://plus.google.com/u/0/+PetervanderWalt/posts/4fWS5omApWu)
+
+
+https://plus.google.com/u/0/+PetervanderWalt/posts/4fWS5omApWu
 
 ## Changelog
 
