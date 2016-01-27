@@ -153,7 +153,7 @@ $(document).ready(function() {
 		// incoming presets
 		localSettings = data.machines;
 		loadMachineSettings(data.exists);
-		console.log(localSettings);
+		//console.log(localSettings);
 	});
 
 		// handle preset changes
@@ -279,7 +279,7 @@ $(document).ready(function() {
 			$('#selectPreset').append('<option value="'+(Number(c)+Number(1))+'">'+localSettings['machines'][c].name+'</option>');
 		}
 
-		console.log('exists: '+exists);
+		//console.log('exists: '+exists);
 
 		if (exists == -2) {
 			// select newly created preset (last as it was added)
@@ -404,9 +404,9 @@ $(document).ready(function() {
 	var baseSlOpts;
 	// load Machine Profiles from server
 	socket.on('slOpts', function (data) {
-		console.log('load Machine Profiles from server');
+		//console.log('load Machine Profiles from server');
 		baseSlOpts = data;
-		console.log(baseSlOpts);
+		//console.log(baseSlOpts);
 		loadBaseSlOpts();
 	});
 
@@ -690,6 +690,7 @@ $(document).ready(function() {
 	// Gcode Rotate from http://ideegeniali.altervista.org/progetti/?p=gcoderotator
 	function processRot() {
 	 var gcode=document.getElementById("gcodepreview").value.split('\n');
+	 	$("#gcodelinestbody").empty();
 	  var a,b,x,y,xstart,xend,ystart,yend;
 	  var xy = new Array(2);
 	  var errori = '';
@@ -817,7 +818,7 @@ $(document).ready(function() {
 	function processNoNeg()
 	{
 		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
-
+		$("#gcodelinestbody").empty();
 		theInput=document.getElementById("gcodepreview").value;
 		theOutput=document.getElementById("gcodepreview");
 		//theInput=theInput.replace(/[X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+/g,function(m){return replacechar(m)});
@@ -854,7 +855,7 @@ $(document).ready(function() {
 	function process180()
 	{
 		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
-
+		$("#gcodelinestbody").empty();
 		theInput=document.getElementById("gcodepreview").value;
 		theOutput=document.getElementById("gcodepreview");
 		//theInput=theInput.replace(/[X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+/g,function(m){return replacechar(m)});
@@ -903,7 +904,7 @@ $(document).ready(function() {
 	function processScale()
 	{
 		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
-
+		$("#gcodelinestbody").empty();
 		theInput=document.getElementById("gcodepreview").value;
 		theOutput=document.getElementById("gcodepreview");
 		//theInput=theInput.replace(/[X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+/g,function(m){return replacechar(m)});
@@ -944,7 +945,7 @@ $(document).ready(function() {
 	function processTranslate()
 	{
 		// [X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+
-
+		$("#gcodelinestbody").empty();
 		theInput=document.getElementById("gcodepreview").value;
 		theOutput=document.getElementById("gcodepreview");
 		//theInput=theInput.replace(/[X|x|Y|y|Z|z|I|i|J|j].[0-9|.]+/g,function(m){return replacechar(m)});
@@ -1807,7 +1808,7 @@ $('#processSVG').on('click', function() {
 	processSVG();
 	$('#svgwidget').modal('toggle');
 	$('#gcC').click();
-	$.when( openGCodeFromText() ).done($('#noneg').click());
+	openGCodeFromText();
 	gCodeToSend = this.result;
 	$('#sendToLaser').removeClass('disabled');
 	document.getElementById('fileInputGcode').value = '';
@@ -1847,9 +1848,16 @@ osvg.addEventListener('change', function(e) {
 	});
 
 	$('#pullcolors').on('click', function() {
+  	$("#svglinestbody").empty();
+		$('#svgnewway').show();
+		$('#svgoldway').hide();
 		var svg2 = $('#svgEngrave').html();
-		var svgrows = pullcolors(svg2, []);
+		var svgrows = '';
+		var svgrows = pullcolors(svg2).unique();
 		console.log(svgrows);
+		for (i = 0; i < svgrows.length; i++) {
+			$('#svglinestable > tbody:last-child').append('<tr><td bgcolor="'+svgrows[i]+'"></td><td>  <div class="input-group" style="margin-bottom:10px; width: 100%;"><input style="text-align: right;" class=form-control name=svgf'+i+' id=sp'+i+' value=3200><span class="input-group-addon"  style="width: 100px;">mm/min</span></div></td><td><div class="input-group" style="margin-bottom:10px; width: 100%;"><input style="text-align: right;" class=form-control name=svgpwr'+i+' id=pwr'+i+' value=100><span class="input-group-addon"  style="width: 100px;">%</span></div></td></tr>');
+		};
 	});
 
 	// Handle File Save Button

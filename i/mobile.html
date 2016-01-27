@@ -879,7 +879,18 @@
 							<input type="text" class="form-control" value="6000" id="rapidRate">
 							<span class="input-group-addon"  style="width: 60px;">mm/min</span>
 						</div>
-						<br>
+						<table class="table table-bordered table-hover table-striped" id="layers">
+							<caption>Per-color parameters</caption>
+							<thead>
+									<tr>
+										<th>Color</th>
+										<th>Speed</th>
+										<th>% Power</th>
+									</tr>
+							</thead>
+							<tbody id="svglinesbody">
+							</tbody>
+						</table>
 						<center>
 							<a class="btn btn-danger disabled" id="rasterNow"><i class="fa fa-square-o fa-lg" style="margin-right: 3px;"></i>Prepare Raster</a>
 							<button type="button" class="btn btn-danger disabled" id="rasterWidgetSendRasterToLaser"><i class="fa fa-fire"style="margin-right: 8px;"></i>Send to Laser</button>
