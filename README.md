@@ -37,7 +37,7 @@ Then every day, run ```./update.sh ```
 
 ## Video Demo
 
-[![Demo of Raster](http://img.youtube.com/vi/_tbCIdONdZQ/0.jpg)](https://www.youtube.com/watch?v=_tbCIdONdZQ)
+[![Demo of Raster]https://lh3.googleusercontent.com/dugNh_qrsUjj2apb1UNxYXKoHcvuhmqLkPbO_Z_sOZ0YsYOTSb0cisu5HwzpSKAVmdJQXg=w1920-h1080-no)](https://plus.google.com/u/0/+PetervanderWalt/posts/4fWS5omApWu)
 
 ## Changelog
 
