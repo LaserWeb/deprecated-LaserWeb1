@@ -219,24 +219,25 @@ Rasterizer.prototype.rasterRow = function(y) {
       this.moveCount++;
 
       //console.log('From: ' + this.lastPosx + ', ' + lastPosy + '  - To: ' + posx + ', ' + posy + ' at ' + lastIntensity + '%');
-      if (this.config.useVariableSpeed) {
-           if (this.config.firmware.indexOf('Grbl') == 0) {
+      if (lastIntensity > 0) {
+        if (this.config.useVariableSpeed) {
+          if (this.config.firmware.indexOf('Grbl') == 0) {
             this.result += 'M3\n';
-          }
+          };
           this.result += 'G1 X{0} Y{1} S{2} F{3}\n'.format(posx, gcodey, lastIntensity, speed);
           if (this.config.firmware.indexOf('Grbl') == 0) {
             this.result += 'M5\n';
-          }
+          };
         } else {
           if (this.config.firmware.indexOf('Grbl') == 0) {
-            this.result += 'M3\n';
-          }
+           this.result += 'M3\n';
+         };
           this.result += 'G1 X{0} Y{1} S{2}\n'.format(posx, gcodey, lastIntensity);
           if (this.config.firmware.indexOf('Grbl') == 0) {
-            this.result += 'M5\n';
-          }
+           this.result += 'M5\n';
+         };
         }
-  // This will hopefully get rid of black marks at the end of a line segment
+        // This will hopefully get rid of black marks at the end of a line segment
         // It seems that some controllers dwell at a spot between gcode moves
         // If this does not work, switch to G1 to this.endPosx and then G0 to posx
         //this.result += 'G1 S0\n';
