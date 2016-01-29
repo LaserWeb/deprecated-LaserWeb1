@@ -508,7 +508,7 @@ function sendFirstQ(port) {
 		sp[port].sockets[i].emit('serialRead', {c:3,l:'SEND: '+t});
 	}
 	sp[port].handle.write(t+"\n");
-	sp[port].lastSerialWrite.push(t);
+  sp[port].lastSerialWrite.push(t);
 }
 
 var queuePause = 0;
@@ -682,7 +682,7 @@ io.sockets.on('connection', function (socket) {
 
 	// lines fromweb ui
 	socket.on('gcodeLine', function (data) {
-
+    console.log('Debug  '+data);
 		if (typeof currentSocketPort[socket.id] != 'undefined') {
 			// valid serial port, safe to send
 			// split newlines
@@ -693,7 +693,9 @@ io.sockets.on('connection', function (socket) {
 			sp[currentSocketPort[socket.id]].qCurrentMax += nl.length;
 			if (sp[currentSocketPort[socket.id]].q.length == nl.length) {
 				// there was no previous q so write a line
-				sendFirstQ(currentSocketPort[socket.id]);
+        // Debug for Issue #70 https://github.com/openhardwarecoza/LaserWeb/issues/70
+
+      	sendFirstQ(currentSocketPort[socket.id]);
 
         if (sp[currentSocketPort[socket.id]].firmware.indexOf('Lasaur') === 0) {
           if (nl[0] === '~' && nl.length > 1) {

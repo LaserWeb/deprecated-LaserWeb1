@@ -511,12 +511,25 @@ $(document).ready(function() {
 		socket.emit('usePort', $('#choosePort').val());
 	});
 
+	// Sends single commands to laser (typed into #command)
 	$('#sendCommand').on('click', function() {
-
 		socket.emit('gcodeLine', { line: $('#command').val() });
-		//$('#command').val('');
-
+		$('#command').val('');
 	});
+
+	$('#command').keyup(function(event){
+		if(event.keyCode == 13){
+			$('#sendCommand').click();
+		}
+	});
+
+
+	//$('#sendCommand').on('click', function() {
+	//
+	//		socket.emit('gcodeLine', { line: $('#command').val() });
+	//		console.log( { line: $('#command').val() });
+	//		//$('#command').val('');
+	//});
 
 		// Keyboard interaction to above #sendCommand - press Shift+Enter to send commands
 		$('#command').keydown(function (e) {
@@ -599,19 +612,7 @@ $(document).ready(function() {
 		//$('#gcodepreview').val('');
 	});
 
-	// Sends single commands to laser (typed into #command)
-	$('#sendCommand').on('click', function() {
-		socket.emit('gcodeLine', { line: $('#command').val() });
-		$('#command').val('');
-	});
-
-	$('#command').keyup(function(event){
-		if(event.keyCode == 13){
-			$('#sendCommand').click();
-		}
-	});
-
-/* // Disabling the context menu - not as useful as I thought it would be
+	/* // Disabling the context menu - not as useful as I thought it would be
 	 $.fn.contextMenu = function (settings) {
 		return this.each(function () {
 
