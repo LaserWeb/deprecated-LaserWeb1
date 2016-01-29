@@ -156,6 +156,56 @@ $(document).ready(function() {
 		//console.log(localSettings);
 	});
 
+
+  //  Keep track of websocket server status
+	// Can be used to detect when server.js goes up and down, etc
+	socket.on('error', function(exception) {
+	  console.log('SOCKET ERROR: '+exception);
+		$('#console').append('<p class="pf" style="color: #ff0000;"><b>WS Server Error:</b> '+exception+'</p>Check whether node server.js is running');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		$('#wsDet').removeClass('btn-success');
+		$('#wsDet').addClass('btn-danger');
+		$('#wsDet').html('Server: ERR: '+exception);
+	})
+
+	socket.on('close', function(exception) {
+		console.log('SOCKET CLOSE '+exception);
+		$('#console').append('<p class="pf" style="color: #ff0000;"><b>WS Server Closed:</b> '+exception+'</p>Check whether node server.js is running');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		$('#wsDet').removeClass('btn-success');
+		$('#wsDet').addClass('btn-danger');
+		$('#wsDet').html('Server: CLOSED');
+	})
+
+	socket.on('disconnect', function(exception) {
+		console.log('SOCKET DISCONNECT '+exception);
+		$('#console').append('<p class="pf" style="color: #ff0000;"><b>WS Server Disconnect:</b> '+exception+'</p>Check whether node server.js is running');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		$('#wsDet').removeClass('btn-success');
+		$('#wsDet').addClass('btn-danger');
+		$('#wsDet').html('Server: OFFLINE');
+	})
+
+	socket.on('connect', function() {
+		console.log('SOCKET CONNECT ');
+		$('#console').append('<p class="pf" style="color: #009900;"><b>WS Server Connected</b></p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		$('#wsDet').removeClass('btn-danger');
+		$('#wsDet').addClass('btn-success');
+		$('#wsDet').html('Server: OK');
+	})
+
+	socket.on('connect_failed', function(exception) {
+		console.log('SOCKET FAILED '+exception);
+		$('#console').append('<p class="pf" style="color: #ff0000;"><b>WS Server Exception:</b> '+exception+'</p>Check whether node server.js is running');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		$('#wsDet').removeClass('btn-success');
+		$('#wsDet').addClass('btn-danger');
+		$('#wsDet').html('Server: OFFLINE');
+	})
+
+
+
 		// handle preset changes
 		$('#selectPreset').on('change', function(e) {
 			console.log('Select Preset');
