@@ -84,7 +84,7 @@ function Rasterizer(config) {
       '; Laser Feedrate: {6}mm/min \n',
       'G21',
       'G90',
-      'G1 F{6}'
+      'G1 F{6}\n'
       //'G0 F{7}'
     ].join('\n').format(
     this.config.firmware,
