@@ -10,7 +10,7 @@ LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Mu
 2. You know the potential hazards in using high power lasers and high voltages.
 3. You will wear professional laser-eye-protection when using a laser controlled by LaserWeb.
 4. You will use the LaserWeb software in a legal and safe manner.
-5. You relieve the author and contributors from any liability arising from the use or distribution of LaserWeb.
+5. You relieve the author and contributors from any liability arising from the use or distribution of the LaserWeb software.
 
 
 ## Sponsors
