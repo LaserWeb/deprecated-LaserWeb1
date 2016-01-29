@@ -436,22 +436,36 @@ function serialData(data, port) {
 		emitToPortSockets(port, 'serialRead', {c:1,l:data});
     console.log(chalk.red('ERROR:'), chalk.yellow(' Error from machine:'), chalk.blue(data));
 		// run another line from the q
-		if (sp[port].q.length > 0) {
+
+    // Commenting out the "lets continue" based on discussions with firmware devs Sonny Jeon and Arthur Wolf
+    /*if (sp[port].q.length > 0) {
 			// there are remaining lines in the q
 			// write one
 			sendFirstQ(port);
-		}
+		}*/
+    sp[port].q = [];
+    sp[port].qCurrentMax = 0;
+    console.log(chalk.red('Aborted Job - safety first!'));
+    emitToPortSockets(port, 'serialRead', {c:1,l:"Aborted Job!  Safety First!"});
+
 
   } else if (data.indexOf('Error') == 0) {  //Repetier
     // error is red
     emitToPortSockets(port, 'serialRead', {c:1,l:data});
     console.log(chalk.red('ERROR:'), chalk.yellow(' Error from machine:'), chalk.blue(data));
     // run another line from the q
-    if (sp[port].q.length > 0) {
+
+    // Commenting out the "lets continue" based on discussions with firmware devs Sonny Jeon and Arthur Wolf
+    /*if (sp[port].q.length > 0) {
       // there are remaining lines in the q
       // write one
       sendFirstQ(port);
-    }
+    }*/
+    // and instead, flushing the queue:  Safer to stop a machine after an 'error'
+    sp[port].q = [];
+    sp[port].qCurrentMax = 0;
+    console.log(chalk.red('Aborted Job - safety first!'));
+    emitToPortSockets(port, 'serialRead', {c:1,l:"Aborted Job!  Safety First!"});
 
 		// remove first
 		sp[port].lastSerialWrite.shift();
@@ -661,7 +675,7 @@ io.sockets.on('connection', function (socket) {
 
 	// gcode print
 	socket.on('printGcode', function (data) {
-
+    console.log(chalk.yellow('Job Started'));
 		if (typeof currentSocketPort[socket.id] != 'undefined') {
 			// split newlines
 			var nl = data.line.split("\n");
@@ -682,7 +696,7 @@ io.sockets.on('connection', function (socket) {
 
 	// lines fromweb ui
 	socket.on('gcodeLine', function (data) {
-    console.log('Debug  '+data);
+    console.log(chalk.yellow('Command Sent from Console'));
 		if (typeof currentSocketPort[socket.id] != 'undefined') {
 			// valid serial port, safe to send
 			// split newlines

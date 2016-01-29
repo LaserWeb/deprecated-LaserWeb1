@@ -647,7 +647,7 @@ $(document).ready(function() {
 		$('#sendToLaser').addClass('disabled');
 		$('#pause').removeClass('disabled');
 		$('#mainStatus').html('Status: Lasering');
-		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
+		socket.emit('printGcode', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
 		//$('#gcodepreview').val('');
 	});
 
@@ -658,7 +658,7 @@ $(document).ready(function() {
 		$('#rasterWidgetSendRasterToLaser').addClass('disabled');
 		$('#pause').removeClass('disabled');
 		$('#mainStatus').html('Status: Lasering');
-		socket.emit('gcodeLine', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
+		socket.emit('printGcode', { line: $('#gcodepreview').val() });  //Works with Gcode pasted in #gcodepreview too (:
 		//$('#gcodepreview').val('');
 	});
 
