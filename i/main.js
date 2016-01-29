@@ -204,8 +204,6 @@ $(document).ready(function() {
 		$('#wsDet').html('Server: OFFLINE');
 	})
 
-
-
 		// handle preset changes
 		$('#selectPreset').on('change', function(e) {
 			console.log('Select Preset');
@@ -370,7 +368,9 @@ $(document).ready(function() {
 
 	// Error Handling
 	socket.on('serverError', function (data) {
-		alert(data);
+		//alert(data);
+		$('#console').append('<hr><p class="pf" style="color: #990000 ;"><b>ERROR: </b>'+data+'</p>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
 
 	// List serial Ports
@@ -730,11 +730,9 @@ $(document).ready(function() {
 
 
 	$('#bounding').on('click', function() {
-		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
-		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
-		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMAX').val()+' F2000\nG90' });
-		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMAX').val()+' F2000\nG90' });
-		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
+		$('#console').append('<span class="pf" style="color: #000000;"><b>Drawing Bounding Box...</b></span><br>');
+		$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+		socket.emit('gcodeLine', { line: 'G90\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMIN').val()+' F2000\nG0 X'+$('#BBXMAX').val()+' Y'+$('#BBYMAX').val()+' F2000\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMAX').val()+' F2000\nG0 X'+$('#BBXMIN').val()+' Y'+$('#BBYMIN').val()+' F2000\nG90' });
 	});
 
 

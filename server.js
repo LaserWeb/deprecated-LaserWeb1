@@ -430,7 +430,7 @@ function serialData(data, port) {
 
 		console.log(chalk.red('ERROR:'), chalk.yellow(' !! alarm) from machine'));
 
-	} else if (data.indexOf('error') == 0) { //Marlin
+	} else if (data.indexOf('error') == 0) { //Marlin / Grbl
 
 		// error is red
 		emitToPortSockets(port, 'serialRead', {c:1,l:data});
