@@ -213,11 +213,15 @@ Rasterizer.prototype.rasterRow = function(y) {
 
     // Can't miss the first pixel (;
     //if (px == 0) { this.lastPosx = posx; }
+    
+    //if we are on the last dot, force a chance for the last pixel
+    if ( px == this.raster.width ) {
+      intensity = -1;
+    }
 
     // If we dont match the grayscale, we need to write some gcode...
-    if (intensity != lastIntensity || px == this.raster.width) {
+    if (intensity != lastIntensity) {
       this.moveCount++;
-
       //console.log('From: ' + this.lastPosx + ', ' + lastPosy + '  - To: ' + posx + ', ' + posy + ' at ' + lastIntensity + '%');
       if (lastIntensity > 0) {
         if (this.config.useVariableSpeed) {
@@ -242,7 +246,9 @@ Rasterizer.prototype.rasterRow = function(y) {
         // If this does not work, switch to G1 to this.endPosx and then G0 to posx
         //this.result += 'G1 S0\n';
       } else {
-        this.result += 'G0 X{0} Y{1} S0\n'.format(posx, gcodey);
+        if (intensity > 0) {
+          this.result += 'G0 X{0} Y{1} S0\n'.format(posx, gcodey);
+        }
       }
 
       // Debug:  Can be commented, but DON'T DELETE - I use it all the time when i find bug that I am not sure of
