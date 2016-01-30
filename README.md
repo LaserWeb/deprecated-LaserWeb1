@@ -250,7 +250,7 @@ forever start server.js
 
 After a successful start, the terminal / command promt should display something like this:
 
-![Successful start](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/terminal.png)
+![Successful start](https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/screenshots/terminal.png)
 
 Once you see that, open a web Browser and go to the URL as shown in the terminal (usually 127.0.0.1:8000,  or the IP address of the device running Laserweb for example http://192.168.0.150:8000 - you can also access this IP from any device on the network)
 
