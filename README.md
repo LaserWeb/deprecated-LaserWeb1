@@ -2,6 +2,17 @@
 
 LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
+###It is a condition of use that the customer/user accepts complete responsibility for each and every aspect of safety associated with the use of the LaseWeb laser controller software. 
+
+####You agree that:
+
+1. You will not hold the author or contributors of LaserWeb liable for any damage to equipment or persons from the use of LaserWeb. 
+2. You know the potential hazards in using high power lasers and high voltages.
+3. You will wear professional laser-eye-protection when using a laser controlled by LaserWeb.
+4. You will use the LaserWeb software in a legal and safe manner.
+5. You relieve the author and contributors from any liability arising from the use or distribution of the LaserWeb software.
+
+
 ## Sponsors
 Have a look at companies and individuals that support us financially or with parts donations, or if you would like to get involved by sponsoring us in any way, please see the Sponsors Page on the wiki: https://github.com/openhardwarecoza/LaserWeb/wiki/SPONSORS
 
