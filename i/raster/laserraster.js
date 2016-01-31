@@ -80,7 +80,7 @@ function Rasterizer(config) {
       '; Laser Max: {2}%',
       '; Black Speed: {3}mm/min',
       '; White Speed: {4}mm/min',
-      '; Laser Spot Size: {5}mm/min',
+      '; Laser Spot Size: {5}mm',
       '; Laser Feedrate: {6}mm/min \n',
       'G21',
       'G90',
