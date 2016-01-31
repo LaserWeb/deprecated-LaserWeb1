@@ -1,3 +1,6 @@
+31 Jan 2016: Optimised whitespace in raster (Experimental - please report if issues)
+30 Jan 2016: Made raster gcode output more Grbl compatible
+29 Jan 2016: Fixed issues #94, #85, #70
 28 Jan 2016: Fixed Serial Console Bug, added Websocket Server status indicator
 26 Jan 2016: Project was featured on hackaday.com 
 22 Jan 2016: Fixed bug with Raster preview+gcode for Smoothieboards, added Progress Bars to Raster and 3D Viewer renders
