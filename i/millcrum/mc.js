@@ -759,7 +759,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 		// Firmware specific Sxxx params
 		if (firmware.indexOf('Grbl') == 0) {
 			 laserPwr = laserPwr.map(0, 100, 0, 255);
-			 this.gcode += 'M03 S'+laserPwr+'\n';
+			 this.gcode += 'M3 S'+laserPwr+'\n';
 		} else if (firmware.indexOf('Smooth') == 0) {
 			laserPwr = laserPwr.map(0, 100, 0, 1);
 			laserPwr = laserPwr.toFixed(0);
@@ -770,7 +770,8 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 			this.gcode += 'G1 S'+laserPwr+'\n';
 		} else {
 			laserPwr = laserPwr.map(0, 100, 0, 255);
-			this.gcode += 'M03 S'+laserPwr+'\n';
+			this.gcode += 'M3 S'+laserPwr+'\n';
+			this.gcode += 'G1 S'+laserPwr+'\n';
 		}
 
 		// loop through each point in the path
@@ -861,7 +862,7 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 
 	// now move back to zClearance
 	if (firmware.indexOf('Grbl') == 0) {
-		this.gcode += 'M05\n';
+		this.gcode += 'M5\n';
 	}
 
 	this.gcode += '\n; PATH FINISHED FOR "'+obj.name+'" '+obj.type+' WITH '+cutType+' CUT, MOVING BACK TO this.tool.zClearance\n';
@@ -901,7 +902,9 @@ Millcrum.prototype.get = function() {
 		s += 'M80\n'; // Air Assist off
 	};
 
-	this.gcode += 'M02\n';
+	if (firmware.indexOf('Grbl') == 0) {
+		this.gcode += 'M02\n';
+	};
 
 	this.gcode = s + this.gcode;
 
