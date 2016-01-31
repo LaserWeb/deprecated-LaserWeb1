@@ -2,7 +2,8 @@
 
 LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
 
-###It is a condition of use that the customer/user accepts complete responsibility for each and every aspect of safety associated with the use of the LaseWeb laser controller software. 
+## Disclaimer
+By using this software, the user accepts complete responsibility for each and every aspect of safety associated with the use of the Laser machine, Laser system and LaserWeb Software.
 
 ####You agree that:
 
@@ -11,6 +12,7 @@ LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Mu
 3. You will wear professional laser-eye-protection when using a laser controlled by LaserWeb.
 4. You will use the LaserWeb software in a legal and safe manner.
 5. You relieve the author and contributors from any liability arising from the use or distribution of the LaserWeb software.
+6. You are entirely operating at your own risk. Lasers can be lethally dangerous. 
 
 
 ## Sponsors
