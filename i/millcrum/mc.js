@@ -860,7 +860,10 @@ Millcrum.prototype.cut = function(cutType, obj, depth, laserPower, cutSpeed , st
 	}
 
 	// now move back to zClearance
-	this.gcode += 'M05\n';
+	if (firmware.indexOf('Grbl') == 0) {
+		this.gcode += 'M05\n';
+	}
+
 	this.gcode += '\n; PATH FINISHED FOR "'+obj.name+'" '+obj.type+' WITH '+cutType+' CUT, MOVING BACK TO this.tool.zClearance\n';
 	this.gcode += 'G0 F'+this.tool.rapid+' Z'+this.tool.zClearance+'\n';
 
