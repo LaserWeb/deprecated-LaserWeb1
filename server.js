@@ -232,7 +232,9 @@ function serialData(data, port) {
       chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
-      chalk.blue(firmware)
+      chalk.blue(firmware),
+      chalk.yellow('  Port ID No: '),
+      chalk.blue(port)
       );
 		sp[port].firmware = firmware;
 	}
@@ -248,7 +250,9 @@ function serialData(data, port) {
       chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
-      chalk.blue(firmware)
+      chalk.blue(firmware),
+      chalk.yellow('  Port ID No: '),
+      chalk.blue(port)
       );
 		sp[port].firmware = firmware;
 	}
@@ -263,7 +267,9 @@ function serialData(data, port) {
       chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
-      chalk.blue(firmware)
+      chalk.blue(firmware),
+      chalk.yellow('  Port ID No: '),
+      chalk.blue(port)
       );
 		sp[port].firmware = firmware;
 	}
@@ -284,7 +290,9 @@ function serialData(data, port) {
       chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
-      chalk.blue(firmware)
+      chalk.blue(firmware),
+      chalk.yellow('  Port ID No: '),
+      chalk.blue(port)
       );
 		sp[port].firmware = firmware;
 	}
@@ -301,7 +309,9 @@ function serialData(data, port) {
       chalk.yellow(sp[port].manufacturer),
       chalk.blue(sp[port].port),
       chalk.yellow('Firmware Detected:'),
-      chalk.blue(firmware)
+      chalk.blue(firmware),
+      chalk.yellow('  Port ID No: '),
+      chalk.blue(port)
       );
 		sp[port].firmware = firmware;
 	}
