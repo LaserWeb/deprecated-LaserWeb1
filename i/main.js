@@ -55,6 +55,7 @@ String.prototype.rtrim = function() {
 
 firmware = '';
 var svgscale = 0;
+var svgrows = '';
 
 var gcodePreamble = [];
 var gcodePostamble = [];
@@ -550,10 +551,15 @@ $(document).ready(function() {
 		} else if (data.c == '3') {
 			col = 'black';
 		}
-		if (data.l.indexOf('ok') != 0 && data.l.indexOf('wait') != 0) {  // Seeing OK all the time distracts users from paying attention
+		if (data.l.indexOf('Aborted') == 0 ) {  // Seeing OK all the time distracts users from paying attention
+			$('#console').append('<p class="pf" style="color: '+col+';">'+data.l+'</p>');
+			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+			$('#sendToLaser').removeClass('disabled');
+		} else if (data.l.indexOf('ok') != 0 && data.l.indexOf('wait') != 0) {  // Seeing OK all the time distracts users from paying attention
 			$('#console').append('<p class="pf" style="color: '+col+';">'+data.l+'</p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 		}
+
 	});
 
 	$('#choosePort').on('change', function() {
@@ -1890,24 +1896,79 @@ osvg.addEventListener('change', function(e) {
 		reader.onload = function(event) {
  			var svg = document.getElementById('svgEngrave');
 			svg.innerHTML = reader.result;
-			console.log('Colors in SVG: '+svgcolors)
+			//console.log('Colors in SVG: '+svgcolors)
 			$('#svgwidget').modal('toggle');
 		};
 		reader.readAsText(selectedFile);
 	});
+
+
+	// Helper function
+	RGBToHex = function(r,g,b){
+	var bin = r << 16 | g << 8 | b;
+	return (function(h){
+			return new Array(7-h.length).join("0")+h
+	})(bin.toString(16).toUpperCase())
+	}
+
+	hexToRgb = function(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
 
 	$('#pullcolors').on('click', function() {
   	$("#svglinestbody").empty();
 		$('#svgnewway').show();
 		$('#svgoldway').hide();
 		var svg2 = $('#svgEngrave').html();
-		var svgrows = '';
-		var svgrows = pullcolors(svg2).unique();
-		console.log(svgrows);
-		for (i = 0; i < svgrows.length; i++) {
-			$('#svglinestable > tbody:last-child').append('<tr><td bgcolor="'+svgrows[i]+'"></td><td>  <div class="input-group" style="margin-bottom:10px; width: 100%;"><input style="text-align: right;" class=form-control name=svgf'+i+' id=sp'+i+' value=3200><span class="input-group-addon"  style="width: 100px;">mm/min</span></div></td><td><div class="input-group" style="margin-bottom:10px; width: 100%;"><input style="text-align: right;" class=form-control name=svgpwr'+i+' id=pwr'+i+' value=100><span class="input-group-addon"  style="width: 100px;">%</span></div></td></tr>');
+		svgrows = pullcolors(svg2).unique();
+		for (c = 0; c < svgrows.length; c++) {
+
 		};
+		//console.log(svgrows.length);
+		for (i = 0; i < svgrows.length; i++) {
+			var r = svgrows[i][0];
+			var g = svgrows[i][1];
+			var b = svgrows[i][2];
+			$('#svglinestable > tbody:last-child').append('<tr><td bgcolor="'+RGBToHex(r, g, b)+'"></td><td>  <div class="input-group" style="margin-bottom:10px; width: 100%;"><input style="text-align: right;" class=form-control name=svgf'+i+' id=sp'+i+' value=3200><span class="input-group-addon"  style="width: 100px;">mm/min</span></div></td><td><div class="input-group" style="margin-bottom:10px; width: 100%;"><input style="text-align: right;" class=form-control name=svgpwr'+i+' id=pwr'+i+' value=100><span class="input-group-addon"  style="width: 100px;">%</span></div></td></tr>');
+		};
+		$('#processSVG').removeClass('disabled');
 	});
+
+	// New SVG
+	function processSVG() {
+		var s = '';
+		var svg = $('#svgEngrave').html();
+		//console.log(svg);
+		console.log('Scale: '+svgscale);
+		//console.log(svg);
+		//var svgfile = XMLS.serializeToString(svg);
+		SVGlaserRapid = $('#SVGrapidRate').val();
+		SVGlaserScale = svgscale * ($('#SVGscaleval').val() / 100);
+		//SVGlaserFeed = $('#SVGfeedRate[i]').val();
+		//SVGlaserPwr = $('#SVGlaserPwr[i]').val();
+			for (i = 0; i < svgrows.length; i++) {
+				SVGlaserFeed = $('#sp'+i).val();
+				SVGlaserPwr = $('#pwr'+i).val();
+				parsecolor = svgrows[i];
+				console.log('Color to parse now: '+parsecolor);
+				s += svg2gcode(svg, {
+					feedRate: SVGlaserFeed,
+					seekRate: SVGlaserRapid,
+					bitWidth: 0.1,
+					scale: SVGlaserScale,
+					safeZ: 0.01,
+					laserpwr: SVGlaserPwr,
+					gcodePreamble: gcodePreamble,
+					gcodePostamble: gcodePostamble
+				})
+			};
+			document.getElementById("gcodepreview").value = s;
+	};
 
 	// Handle File Save Button
 	$('#saveGcode').on('click', function() {
@@ -2512,29 +2573,4 @@ function gcodereceived() {
 	$('#openMachineControl').removeClass('disabled');
 	$('#sendCommand').removeClass('disabled');
 	$('#sendToLaser').removeClass('disabled');
-};
-
-
-// New SVG
-function processSVG() {
-	var svg = $('#svgEngrave').html();
-	//console.log(svg);
-	console.log('Scale: '+svgscale);
-	//console.log(svg);
-	//var svgfile = XMLS.serializeToString(svg);
-	SVGlaserFeed = $('#SVGfeedRate').val();
-	SVGlaserRapid = $('#SVGrapidRate').val();
-	SVGlaserPwr = $('#SVGlaserPwr').val();
-	SVGlaserScale = svgscale * ($('#SVGscaleval').val() / 100);
-	document.getElementById("gcodepreview").value = svg2gcode(svg, {
-		feedRate: SVGlaserFeed,
-		seekRate: SVGlaserRapid,
-		bitWidth: 0.1,
-		scale: SVGlaserScale,
-		safeZ: 0.01,
-		laserpwr: SVGlaserPwr,
-		gcodePreamble: gcodePreamble,
-		gcodePostamble: gcodePostamble
-	});
-	gCodeToSend = document.getElementById('gcodepreview').value;
 };

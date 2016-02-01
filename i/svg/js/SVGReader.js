@@ -46,6 +46,109 @@ SVGReader = {
     // max tollerance when tesselating curvy shapes
 
 
+  preview : function(svgstring, config) {
+    this.tolerance_squared = Math.pow(this.tolerance, 2);
+
+    // parse xml
+    var svgRootElement;
+    if (window.DOMParser) {
+      var parser = new DOMParser();
+      svgRootElement = parser.parseFromString(svgstring, 'text/xml').documentElement;
+    }
+    else {
+      xml = xml.replace(/<!DOCTYPE svg[^>]*>/, '');
+      var xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+      xmlDoc.async = 'false';
+      xmlDoc.loadXML(svgstring);
+      svgRootElement = xmlDoc.documentElement;
+    }
+
+    // let the fun begin
+    var node = {}
+    this.boundarys.allcolors = []  // TODO: sort by color
+    node.stroke = [255,0,0];
+    node.xformToWorld = [1,0,0,1,0,0]
+    this.previewChildren(svgRootElement, node)
+    return this.boundarys
+  },
+
+
+  previewChildren : function(domNode, parentNode) {
+    var childNodes = []
+    for (var i=0; i<domNode.childNodes.length; i++) {
+      var tag = domNode.childNodes[i]
+      if (tag.childNodes) {
+        if (tag.tagName) {
+          // we are looping here through
+          // all nodes with child nodes
+          // others are irrelevant
+
+          // 1.) setup a new node
+          // and inherit from parent
+          var node = {}
+          node.path = [];
+          node.xform = [1,0,0,1,0,0];
+          node.opacity = parentNode.opacity;
+          node.display = parentNode.display;
+          node.visibility = parentNode.visibility;
+          node.fill = parentNode.fill;
+          node.stroke = parentNode.stroke;
+          node.color = parentNode.color;
+          node.fillOpacity = parentNode.fillOpacity;
+          node.strokeOpacity = parentNode.strokeOpacity;
+
+          // 2.) parse own attributes and overwrite
+          if (tag.attributes) {
+            for (var j=0; j<tag.attributes.length; j++) {
+              var attr = tag.attributes[j]
+              if (attr.nodeName && attr.nodeValue && this.SVGAttributeMapping[attr.nodeName]) {
+                this.SVGAttributeMapping[attr.nodeName](this, node, attr.nodeValue)
+              }
+            }
+          }
+
+          // 3.) accumulate transformations
+          node.xformToWorld = this.matrixMult(parentNode.xformToWorld, node.xform)
+
+          // 4.) parse tag
+          // with current attributes and transformation
+          if (this.SVGTagMapping[tag.tagName]) {
+            //if (node.stroke[0] == 255 && node.stroke[1] == 0 && node.stroke[2] == 0) {
+              this.SVGTagMapping[tag.tagName](this, tag, node)
+            //}
+          }
+
+          // 5.) compile boundarys
+          // before adding all path data convert to world coordinates
+          for (var k=0; k<node.path.length; k++) {
+            var subpath = node.path[k];
+            for (var l=0; l<node.path[k].length; l++) {
+              var tmp =  this.matrixApply(node.xformToWorld, subpath[l]);
+              subpath[l] = new Vec2(tmp[0], tmp[1]);
+            }
+            subpath.node = node;
+
+            //console.log('Stroke: '+node.stroke);
+            //console.log('Stroke: '+parsecolor);
+            //  if (node.stroke == parsecolor) {
+            //    this.boundarys.allcolors.push(subpath);
+            //    console.log('matched');
+            //  }
+            //} else {
+              this.boundarys.allcolors.push(subpath);
+            //};
+              //this.boundarys.allcolors.push(subpath);
+              //console.log(this.boundarys);
+
+          }
+        }
+
+        // recursive call
+        this.previewChildren(tag, node)
+      }
+    }
+  },
+
   parse : function(svgstring, config) {
     this.tolerance_squared = Math.pow(this.tolerance, 2);
 
@@ -128,7 +231,15 @@ SVGReader = {
             }
             subpath.node = node;
 
-            this.boundarys.allcolors.push(subpath);
+            //console.log('Stroke: '+node.stroke+ ' of type '+ typeof(node.stroke));
+            //console.log('Stroke: '+parsecolor+ ' of type '+ typeof(parsecolor));
+            // Compare object values - as per http://stackoverflow.com/questions/1068834/object-comparison-in-javascript
+            if (JSON.stringify(node.stroke) === JSON.stringify(parsecolor) ) {
+                this.boundarys.allcolors.push(subpath);
+                //console.log('matched');
+            }
+              //this.boundarys.allcolors.push(subpath);
+              //console.log(this.boundarys);
           }
         }
 
@@ -137,7 +248,6 @@ SVGReader = {
       }
     }
   },
-
 
 
 

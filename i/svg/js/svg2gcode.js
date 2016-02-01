@@ -35,7 +35,7 @@
     var svgcolors = [];
     var svgcolorsoptions = [];
 		svg = svg.replace(/^[\n\r \t]/gm, '');
-		var paths = SVGReader.parse(svg, {}).allcolors,
+		var paths = SVGReader.preview(svg, {}).allcolors,
 	      gcode,
 	      path,
 	      idx = paths.length,
@@ -44,7 +44,7 @@
 	      minY = Infinity,
 	      maxY = -Infinity;
 
-	 var svgcolorsoptions = [];
+	 //var svgcolorsoptions = [];
 
 	 for (i = 0; i < paths.length; i++) {
 	 	//onsole.log('PATH: '+i+', FILL: '+paths[i].node.fill+', STROKE: '+paths[i].node.stroke+', COLOR: '+paths[i].node.color+', OPACTITY: '+paths[i].node.opacity)
@@ -52,15 +52,15 @@
 		if (paths[i].node.stroke) { svgcolors.push(paths[i].node.stroke) };
 		//if (paths[i].node.color) { svgcolors.push(paths[i].node.color) };
 	 }
-	svgcolorsoptions = svgcolors.unique();
-  for (c = 0; c < svgcolorsoptions.length; c++) {
-    var r = svgcolorsoptions[c][0];
-    var g = svgcolorsoptions[c][1];
-    var b = svgcolorsoptions[c][2];
-    hexvalue.push('#'+RGBToHex(r, g, b));
-  };
-	//console.log(svgcolorsoptions);
-  return hexvalue;
+	//svgcolorsoptions = svgcolors.unique();
+  //for (c = 0; c < svgcolorsoptions.length; c++) {
+  //  var r = svgcolorsoptions[c][0];
+  //  var g = svgcolorsoptions[c][1];
+  //  var b = svgcolorsoptions[c][2];
+  //  hexvalue.push('#'+RGBToHex(r, g, b));
+  //};
+	//console.log(svgcolors);
+  return svgcolors;
 	};
 
 
