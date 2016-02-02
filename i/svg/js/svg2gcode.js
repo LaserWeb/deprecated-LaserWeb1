@@ -81,7 +81,7 @@ function svg2gcode(svg, settings) {
   settings.laserpwr = settings.laserpwr || 100;
   settings.gcodePreamble = settings.gcodePreamble || [
     'G90',
-    'G21'
+    'G21',
     'G0 Z' + settings.safeZ
 
   ];
@@ -233,7 +233,9 @@ function svg2gcode(svg, settings) {
 			if (firmware.indexOf('Grbl') == 0) {
 				gcode.push('M3');
 			};
+
       gcode.push(localSegment);
+
 			if (firmware.indexOf('Grbl') == 0) {
 				gcode.push('M5');
 			};
