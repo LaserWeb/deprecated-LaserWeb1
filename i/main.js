@@ -1859,7 +1859,6 @@ $('#72dpi').on('click', function() {
 
 
 $('#processSVG').on('click', function() {
-
 	processSVG();
 	$('#svgwidget').modal('toggle');
 	$('#gcC').click();

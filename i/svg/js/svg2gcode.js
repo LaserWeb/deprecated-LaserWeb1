@@ -81,9 +81,9 @@ function svg2gcode(svg, settings) {
   settings.laserpwr = settings.laserpwr || 100;
   settings.gcodePreamble = settings.gcodePreamble || [
     'G90',
-    'G0 Z' + settings.safeZ,
-    'G82',
-    'M4'
+    'G21'
+    'G0 Z' + settings.safeZ
+
   ];
   settings.gcodePostamble = settings.gcodePostamble || [];
 
@@ -176,7 +176,7 @@ function svg2gcode(svg, settings) {
   gcode = settings.gcodePreamble.slice(0);
 
   if (firmware.indexOf('Lasaur') == 0) {
-		  gcode.push('M81'); // Air Assist on
+		  gcode.push('M80'); // Air Assist on
 	};
 
   // Firmware Specific Gcode Output
@@ -265,7 +265,7 @@ function svg2gcode(svg, settings) {
   // turn off the spindle
   // gcode.push('M5');
   if (firmware.indexOf('Lasaur') == 0) {
-		  gcode.push('M81'); // Air Assist on
+		  gcode.push('M81'); // Air Assist off
 	};
 
   // go home
