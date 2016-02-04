@@ -197,7 +197,7 @@ serialport.list(function (err, ports) {
 				//);
       } else {
         console.error(
-          chalk.red('ERROR:'), chalk/yellow(' SerialPort Failure:'),
+          chalk.red('ERROR:'), chalk.yellow(' SerialPort Failure:'),
           chalk.blue(sp[i].port));
         throw error
 			}
