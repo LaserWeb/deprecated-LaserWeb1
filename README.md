@@ -180,6 +180,36 @@ For a clean testing environment use [Vagrant](http://www.vagrantup.com). For det
 
   `$ nodejs server.js`
 
+## Docker
+Another way to setup a clean test environment but with out building a full VM.
+
+Build a Docker image with:
+
+```
+mkdir LaserWeb
+wget https://raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/Dockerfile
+docker build -t laserweb .
+```
+
+Then run it either in the foreground like this:
+
+```
+docker run -p 8000:8000 --rm -it --name laserweb laserweb
+```
+
+Or in the background like this:
+
+```
+docker run -p 8000:8000 -d --name laserweb laserweb
+```
+
+Connect to port 8000 on your local machine.
+
+You can shut it down like this:
+
+```
+docker stop laserweb
+```
 
 ## Ubuntu
 
