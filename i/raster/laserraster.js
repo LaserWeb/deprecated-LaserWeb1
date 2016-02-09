@@ -99,6 +99,8 @@ function Rasterizer(config) {
   if (this.config.firmware.indexOf('Lasaur') == 0) {
     this.result += 'M80\n'; // Air Assist on
   }
+
+  console.log('Variable Speed?:  '+useVariableSpeed);
 }
 
 Rasterizer.prototype.figureIntensity = function() {
@@ -156,7 +158,7 @@ Rasterizer.prototype.init = function() {
   console.log('Spot Size: {0}mm'.format(this.config.spotSize1));
   console.log('Raster Width: {0} Height: {1}'.format(this.raster.width, this.raster.height));
   console.log('G0: {0}mm/min, G1: {1}mm/min'.format(this.config.rapidRate, this.config.feedRate));
-  if (this.config.useVariableSpeed) {
+  if (this.config.useVariableSpeed == "true") {
     console.log('Black speed: {0} Whitespeed: {1}'.format(this.config.blackRate, this.config.whiteRate));
   }
 
@@ -225,7 +227,7 @@ Rasterizer.prototype.rasterRow = function(y) {
 
       //console.log('From: ' + this.lastPosx + ', ' + lastPosy + '  - To: ' + posx + ', ' + posy + ' at ' + lastIntensity + '%');
       if (lastIntensity > 0) {
-        if (this.config.useVariableSpeed) {
+        if (this.config.useVariableSpeed == "true") {
           if (this.config.firmware.indexOf('Grbl') == 0) {
             this.result += 'M3 S{2}\nG1 X{0} Y{1} F{3} S{2}\nM5\n'.format(posx, gcodey, lastIntensity, speed);
           } else {
