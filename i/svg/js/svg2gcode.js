@@ -214,7 +214,7 @@ function svg2gcode(svg, settings) {
     // begin the cut by dropping the tool to the work
     gcode.push(['G0',
       'Z' + (settings.cutZ),
-      'F' + '200'
+      'F' + settings.feedRate
     ].join(' '));
 
     // keep track of the current path being cut, as we may need to reverse it
@@ -257,7 +257,7 @@ function svg2gcode(svg, settings) {
     // go safe
     gcode.push(['G0',
       'Z' + settings.safeZ,
-      'F' + '300'
+      'F' + settings.feedRate
     ].join(' '));
   }
 
