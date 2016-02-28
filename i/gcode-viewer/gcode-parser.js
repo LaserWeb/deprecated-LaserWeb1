@@ -200,6 +200,8 @@ function GCodeParser(handlers) {
                   return new Date().getTime();
               }
 
+
+              var tbody = '';
               function doChunk() {
                 //console.log('Render line: '+index)
                   var startTime = now();
@@ -213,7 +215,7 @@ function GCodeParser(handlers) {
 						          if (parseLine(lines[index], index) === false) {
                         //break;
                       }
-                      $('#gcodelinestable > tbody:last-child').append('<tr id="tr'+[index]+'"><td>'+[index]+'</td><td>'+lines[index]+'</td></tr>');//code here using lines[i] which will give you each line
+                      tbody += '<tr id="tr'+[index]+'"><td>'+[index]+'</td><td>'+lines[index]+'</td></tr>';//code here using lines[i] which will give you each line
                       ++index;
                   }
                   if (index < count) {
@@ -226,7 +228,9 @@ function GCodeParser(handlers) {
                     object.translateX(laserxmax /2 * -1);
                     object.translateY(laserymax /2 * -1);
                     scene.add(object);
+                    $('#gcodelinestable > tbody:last-child').append(tbody);//code here using lines[i] which will give you each line
                   }
+
               }
               doChunk();
           }
