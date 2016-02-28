@@ -1,4 +1,6 @@
-1 Feb 2016:  SVG: Added per-color (Stroke) power/speed setting
+28 Feb 2016: Fixed SVG Feedrate + Massive speed increase on 3D Renderer 
+17 Feb 2016: Fix for incorrectly evaluated boolean to enable/disable variable Raster Speed
+01 Feb 2016: SVG: Added per-color (Stroke) power/speed setting
 31 Jan 2016: Optimised whitespace in raster (Experimental - please report if issues)
 30 Jan 2016: Made raster gcode output more Grbl compatible
 29 Jan 2016: Fixed issues #94, #85, #70
