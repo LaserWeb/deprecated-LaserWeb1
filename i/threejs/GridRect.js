@@ -55,6 +55,6 @@ THREE.GridHelperRect.prototype.setColors = function( colorCenterLine, colorGrid 
     this.color1.set( colorCenterLine );
     this.color2.set( colorGrid );
 
-    this.geometry.colorsNeedUpdate = true;
+    //this.geometry.colorsNeedUpdate = true;
 
 }

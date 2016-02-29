@@ -1408,72 +1408,23 @@ $(document).ready(function() {
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
 			fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
-			dxf = new Dxf();
-			pwr = {};
-			cutSpeed = {};
 			row = [];
+			pwr = [];
+			cutSpeed = [];
 			$('#console').append('<p class="pf" style="color: #000000;"><b>Parsing DXF:...</b></p>');
 			$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 			//NEW Dxf  -- experimental
-			var parser2 = new window.DxfParser();
-			var dxf2 = parser2.parseSync(r.result);
+			parser2 = new window.DxfParser();
+			dxf2 = parser2.parseSync(r.result);
+			console.log('DXF Data', dxf2);
 			cadCanvas = new processDXF(dxf2);
-			//END NEW DXF
-			dxf.parseDxf(r.result);
-			var errStr = '';
-			if (dxf.invalidEntities.length > 0) {
-				for (var c=0; c<dxf.invalidEntities.length; c++) {
-					errStr += 'Invalid Entity: '+dxf.invalidEntities[c] + '\n';
-					}
-				errStr += '\n';
-			}
-			if (dxf.alerts.length > 0) {
-				for (var c=0; c<dxf.alerts.length; c++) {
-					errStr += dxf.alerts[c] + '\n\n';
-				}
-			}
-			if (errStr != '') {
-				console.log('DXF Errors:'+errStr);
-				$('#console').append('<br><p class="pf" style="color: #c95500;"><b><u>DXF Errors!:</u></b><br>'+errStr+'NB! There were errors while parsing the DXF. Usually this is normal, unsupported elements are not processed. Check render before cutting...</p>');
-				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-			}
 
-				s = '// setup a new Millcrum object with that tool';  // tool defined in 	generate.addEventListener("click", function() {
-				s += '// setup a new Millcrum object with that tool\nvar mc = new Millcrum(tool);\n\n';
-				s += '// set the surface dimensions for the viewer\nmc.surface('+(dxf.width*1.1)+','+(dxf.height*1.1)+');\n\n\n';
-				// convert polylines to millcrum
-				for (var c=0; c<dxf.polylines.length; c++) {
-					if (dxf.polylines[c].layer == '') {
-						// name it polyline+c
-						dxf.polylines[c].layer = 'polyline'+c;
-					}
-					s += '//LAYER '+dxf.polylines[c].layer+'\n';
-					s += 'var polyline'+c+' = {type:\'polygon\',name:\''+dxf.polylines[c].layer+'\',points:[';
-					for (var p=0; p<dxf.polylines[c].points.length; p++) {
-						s += '['+dxf.polylines[c].points[p][0]+','+dxf.polylines[c].points[p][1]+'],';
-					}
-					//s += ']};\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
-					s += ']};\n';
-				}
+			for (i = 0; i < dxf2.entities.length; i++ ) {
+				console.log('Layer: ', dxf2.entities[i].layer);
+				row[i] = dxf2.entities[i].layer
+			};
 
-				// convert lines to millcrum
-				for (var c=0; c<dxf.lines.length; c++) {
-					s += 'var line'+c+' = {type:\'polygon\',name:\'line'+c+'\',points:[';
-					s += '['+dxf.lines[c][0]+','+dxf.lines[c][1]+'],';
-					s += '['+dxf.lines[c][3]+','+dxf.lines[c][4]+'],';
-					//s += ']};\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+', [0,0]);\n\n';
-					s += ']};\n';
-				}
-				//console.log(dxf);
-				// for each line/polyline, do:
-				for (var c=0; c<dxf.polylines.length; c++) {
-					row[c] = dxf.polylines[c].layer
-				}
-				for (var c=0; c<dxf.lines.length; c++) {
-					row[c] = dxf.polylines[c].layer
-				}
-
-				Array.prototype.unique = function()
+			Array.prototype.unique = function()
 				{
 					var n = {},r=[];
 					for(var i = 0; i < this.length; i++)
@@ -1485,14 +1436,14 @@ $(document).ready(function() {
 						}
 					}
 					return r;
-				}
-				layers = [];
-				layers = row.unique();
-				//console.log(layers);
-				for (var c=0; c<layers.length; c++) {
-					$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td>  <div class="input-group" style="margin-bottom:10px; width: 100%;"><input class="form-control" name=sp'+c+' id=sp'+c+' value=3200><span class="input-group-addon"  style="width: 100px;">mm/m</span></div></td><td><div class="input-group" style="margin-bottom:10px; width: 100%;"><input class="form-control" name=pwr'+c+' id=pwr'+c+' value=100><span class="input-group-addon"  style="width: 100px;">%</span></div></td></tr>');
-				}
 			}
+		  layers = [];
+		  layers = row.unique();
+		  console.log(layers);
+  		for (var c=0; c<layers.length; c++) {
+				 	$('#layers > tbody:last-child').append('<tr><td>'+layers[c]+'</td><td>  <div class="input-group" style="margin-bottom:10px; width: 100%;"><input class="form-control" name=sp'+c+' id=sp'+c+' value=3200><span class="input-group-addon"  style="width: 100px;">mm/m</span></div></td><td><div class="input-group" style="margin-bottom:10px; width: 100%;"><input class="form-control" name=pwr'+c+' id=pwr'+c+' value=100><span class="input-group-addon"  style="width: 100px;">%</span></div></td></tr>');
+		  }
+
 			document.getElementById('fileInputGcode').value = '';
 			document.getElementById('fileInputDXF').value = '';
 			$('#generate').hide();
@@ -1500,39 +1451,47 @@ $(document).ready(function() {
 			$('#svgparamstomc').hide();
 			$('#cutParams').modal('toggle');
 			document.getElementById('fileName').value = fileName;
+		};
 	});
 
 			//});
 	$('#dxfparamstomc').on('click', function() {  // DXF job Params to MC
-				//console.log(layers);
-				// for each line/polyline, do:
-				for (var c=0; c<dxf.polylines.length; c++) {
-					var lay = layers.indexOf(dxf.polylines[c].layer);
-					//console.log(lay);
-					pwr[c] = $('#pwr'+lay).val();
-					cutSpeed[c] = $('#sp'+lay).val();
-					s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', '+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
-				}
-				for (var c=0; c<dxf.lines.length; c++) {
-					s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+','+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
-				}
-				s += '\nmc.get();\n';
-				// load the new millcrum code
-				document.getElementById('millcrumCode').value = s;
-				document.getElementById('gcodepreview').value = '';
-				$('#mcC').click();
+				console.log('Layers: ', layers);
+				//for each line/polyline, do:
+				//dxf2.entities[i].layer
+				for (var c=0; c<dxf2.entities.length; c++) {
+					var lay = layers.indexOf(dxf2.entities[c].layer);
+					console.log(lay);
+					 	pwr[c] = $('#pwr'+lay).val();
+					 	cutSpeed[c] = $('#sp'+lay).val();
+					 	//s += '\nmc.cut(\'centerOnPath\', polyline'+c+', '+$('#thickness').val()+', '+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
+						//function drawEntity(entity, data, index) {
+						//drawEntity(c, dxf2.entities[c], c);
+					}
+				// for (var c=0; c<dxf.lines.length; c++) {
+				// 	s += '\nmc.cut(\'centerOnPath\', line'+c+', '+$('#thickness').val()+','+pwr[c]+', '+cutSpeed[c]+', [0,0]);\n\n';
+				// }
+				// s += '\nmc.get();\n';
+				// // load the new millcrum code
+				//document.getElementById('millcrumCode').value = s;
+				//document.getElementById('gcodepreview').value = '';
+				//$('#mcC').click();
+
 				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
-				$('#sendToLaser').removeClass('disabled');
 				if (boundingBox) {
 					scene.remove( boundingBox );
 				}
-				generate.click();
+				var g = generateGcodeCallback();
+				var gCodeToSend = g;
+				document.getElementById("gcodepreview").value = g;
+				openGCodeFromText();
+				$('#sendToLaser').removeClass('disabled');
 				document.getElementById('fileInputGcode').value = '';
 				document.getElementById('fileInputDXF').value = '';
 				document.getElementById('fileInputSVG').value = '';
 				//document.getElementById('fileInputMILL').value = '';
-				$('#console').append('<p class="pf" style="color: #000000;"><b>DXF File Upload Complete...</b></p>');
+				$('#console').append('<p class="pf" style="color: #000000;"><b>NewDXFLib Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
 	});
 

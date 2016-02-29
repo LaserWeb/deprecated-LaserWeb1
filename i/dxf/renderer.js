@@ -91,34 +91,34 @@ function processDXF(data) {
       if(entity.block) {
         var block = data.blocks[entity.block];
         for(j = 0; j < block.entities.length; j++) {
-          drawEntity(block.entities[j], data);
+          drawEntity(block.entities[j], data, j);
         }
       } else {
         console.log('WARNING: No block for DIMENSION entity');
       }
     } else {
-      drawEntity(entity, data);
+      drawEntity(entity, data, 0);
     }
 
 		scene.add(dxfObject);
   }
 
 
-function drawEntity(entity, data) {
+function drawEntity(entity, data, index) {
   if(entity.type === 'CIRCLE' || entity.type === 'ARC') {
-    drawCircle(entity, data);
+    drawCircle(entity, data, entity);
 	} else if(entity.type === 'LWPOLYLINE' || entity.type === 'LINE' || entity.type === 'POLYLINE') {
-    drawLine(entity, data);
+    drawLine(entity, data, entity);
   } else if(entity.type === 'TEXT') {
-    drawText(entity, data);
+    drawText(entity, data, entity);
   } else if(entity.type === 'SOLID') {
-    drawSolid(entity, data);
+    drawSolid(entity, data, entity);
   } else if(entity.type === 'POINT') {
-    drawPoint(entity, data);
+    drawPoint(entity, data, entity);
   }
 }
 
-function drawLine(entity, data) {
+function drawLine(entity, data, entity) {
   var geometry = new THREE.Geometry(),
     color = getColor(entity, data),
     material, lineType, vertex, startPoint, endPoint, bulgeGeometry,
@@ -178,7 +178,7 @@ function drawLine(entity, data) {
   dxfObject.add(line);
 }
 
-function drawCircle(entity, data) {
+function drawCircle(entity, data, entity) {
 
 // Laserweb - calc and draw gcode
 var radius = entity.radius;
@@ -195,21 +195,29 @@ console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngle
 // Draw it since its cool to see (note this is a straigh three.js view of it, not via gcode.  Can be used in the Cutting Params view by coloring object/layers to change params)
   var geometry, material, circle;
 
-  geometry = new THREE.CircleGeometry(entity.radius, 32, entity.startAngle, entity.angleLength);
+  geometry = new THREE.CircleGeometry(entity.radius, 128, entity.startAngle, entity.angleLength);
   geometry.vertices.shift();
+
+	//geometry.translate( entity.center ); // three.js r.72
 
   material = new THREE.LineBasicMaterial({ color: getColor(entity, data) });
 
   circle = new THREE.Line(geometry, material);
-  circle.position.x = entity.center.x;
-  circle.position.y = entity.center.y;
-  circle.position.z = entity.center.z;
-  circle.translateX(laserxmax /2 * -1);
+	// circle.position.x = entity.center.x;
+  // circle.position.y = entity.center.y;
+  // circle.position.z = entity.center.z;
+
+	circle.translateX(entity.center.x);
+	circle.translateY(entity.center.y);
+	circle.translateZ(entity.center.z);
+
+	circle.translateX(laserxmax /2 * -1);
   circle.translateY(laserymax /2 * -1);
-  dxfObject.add(circle);
+
+	dxfObject.add(circle);
 }
 
-function drawSolid(entity, data) {
+function drawSolid(entity, data, entity) {
   var material, mesh, solid, verts;
   geometry = new THREE.Geometry();
 
@@ -246,7 +254,7 @@ function drawSolid(entity, data) {
   dxfObject.add(mesh);
 }
 
-function drawText(entity, data) {
+function drawText(entity, data, entity) {
   var geometry, material, text;
 
   geometry = new THREE.TextGeometry(entity.text, { height: 0, size: entity.textHeight || 12 });

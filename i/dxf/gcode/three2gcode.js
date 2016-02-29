@@ -3,7 +3,7 @@ var isGcodeInRegeneratingState = false;
 var options = {};
 
 
-function generateGcode() {
+function three2Gcode() {
    // this may be an odd place to trigger gcode change, but this method
    // is called on all scaling changes, so do it here for now
    if (generateGcodeTimeoutPtr) {
@@ -91,7 +91,7 @@ function generateGcodeCallback() {
        if (child.type == "Line") {
            // let's create gcode for all points in line
            for (i = 0; i < child.geometry.vertices.length; i++) {
-               console.log(child.geometry.vertices[i]);
+               console.log('Vertices:  ', child.geometry.vertices[i]);
                var localPt = child.geometry.vertices[i];
                var worldPt = grp.localToWorld(localPt.clone());
                if (i == 0) {
@@ -183,7 +183,7 @@ function generateGcodeCallback() {
    });
 
    console.log("generated gcode. length:", g.length);
-   console.log("gcode:", g);
+   //console.log("gcode:", g);
   //  $('#' + this.id + " .gcode").val(g).prop('disabled', false);
   //  $('#' + this.id + " .btn-sendgcodetows").prop('disabled', false);
   //  $('#' + this.id + " .regenerate").addClass('hidden');
@@ -198,15 +198,7 @@ function generateGcodeCallback() {
   };
 
   // Send to LaserWeb
-  document.getElementById("gcodepreview").value = g;
-  openGCodeFromText();
-	gCodeToSend = g
-	$('#sendToLaser').removeClass('disabled');
-	document.getElementById('fileInputGcode').value = '';
-	document.getElementById('fileInputDXF').value = '';
-	document.getElementById('fileInputSVG').value = '';
-	//document.getElementById('fileInputMILL').value = '';
-	$('#console').append('<p class="pf" style="color: #000000;"><b>NewDXFLib Complete...</b></p>');
-	$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
+  //document.getElementById("gcodepreview").value = g;
+  return g;
 
 };
