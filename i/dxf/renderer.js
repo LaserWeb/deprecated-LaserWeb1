@@ -76,7 +76,13 @@ THREE.BulgeGeometry.prototype = Object.create( THREE.Geometry.prototype );
  */
 function processDXF(data) {
   console.log(data);
-  var i, entity;
+
+	if (typeof(dxfObject) !== 'undefined') {
+		scene.remove(dxfObject);
+	};
+  dxfObject = new THREE.Group();
+
+	var i, entity;
 
   for(i = 0; i < data.entities.length; i++) {
     entity = data.entities[i];
@@ -93,13 +99,15 @@ function processDXF(data) {
     } else {
       drawEntity(entity, data);
     }
+
+		scene.add(dxfObject);
   }
 
 
 function drawEntity(entity, data) {
   if(entity.type === 'CIRCLE' || entity.type === 'ARC') {
     drawCircle(entity, data);
-  } else if(entity.type === 'LWPOLYLINE' || entity.type === 'LINE') {
+	} else if(entity.type === 'LWPOLYLINE' || entity.type === 'LINE' || entity.type === 'POLYLINE') {
     drawLine(entity, data);
   } else if(entity.type === 'TEXT') {
     drawText(entity, data);
@@ -167,7 +175,7 @@ function drawLine(entity, data) {
   line = new THREE.Line(geometry, material);
   line.translateX(laserxmax /2 * -1);
   line.translateY(laserymax /2 * -1);
-  scene.add(line);
+  dxfObject.add(line);
 }
 
 function drawCircle(entity, data) {
@@ -198,7 +206,7 @@ console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngle
   circle.position.z = entity.center.z;
   circle.translateX(laserxmax /2 * -1);
   circle.translateY(laserymax /2 * -1);
-  scene.add(circle);
+  dxfObject.add(circle);
 }
 
 function drawSolid(entity, data) {
@@ -235,7 +243,7 @@ function drawSolid(entity, data) {
   mesh.translateX(laserxmax /2 * -1);
   mesh.translateY(laserymax /2 * -1);
 
-  scene.add(mesh);
+  dxfObject.add(mesh);
 }
 
 function drawText(entity, data) {
@@ -253,7 +261,7 @@ function drawText(entity, data) {
   text.translateX(laserxmax /2 * -1);
   text.translateY(laserymax /2 * -1);
 
-  scene.add(text);
+  dxfObject.add(text);
 }
 
 function drawPoint(entity, data) {
@@ -282,7 +290,7 @@ function drawPoint(entity, data) {
   point.translateX(laserxmax /2 * -1);
   point.translateY(laserymax /2 * -1);
 
-  scene.add(point);
+  dxfObject.add(point);
 }
 
 //function getColor(entity, data) {

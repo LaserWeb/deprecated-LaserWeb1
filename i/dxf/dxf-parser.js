@@ -303,7 +303,7 @@ DxfArrayScanner.prototype.next = function() {
 	this._pointer++;
 
 	group.value = parseGroupValue(group.code, this._data[this._pointer].trim());
-	
+
 	this._pointer++;
 
 	if(group.code === 0 && group.value === 'EOF') this._eof = true;
@@ -320,7 +320,7 @@ DxfArrayScanner.prototype.hasNext = function() {
 	if(this._eof) {
 		return false;
 	}
-	
+
 	// We need to be sure there are two lines available
 	if(this._pointer > this._data.length - 2) {
 		return false;
@@ -539,9 +539,9 @@ DxfParser.prototype._parse = function(dxfString) {
 	 */
 	var parseBlocks = function() {
 		var blocks = {}, block;
-		
+
         curr = scanner.next();
-		
+
 		while(curr.value !== 'EOF') {
 			if(groupIs(0, 'ENDSEC')) {
 				break;
@@ -627,7 +627,7 @@ DxfParser.prototype._parse = function(dxfString) {
 					logUnhandledGroup(curr);
 					curr = scanner.next();
 			}
-			
+
 			if(groupIs(0, 'ENDBLK')) {
 				curr = scanner.next();
 				break;
@@ -986,7 +986,7 @@ DxfParser.prototype._parse = function(dxfString) {
 				if(curr.value === endingOnValue) {
 					break;
 				}
-				
+
 				var entity;
 				// Supported entities here
 				if(curr.value === 'LWPOLYLINE') {
@@ -1222,7 +1222,7 @@ DxfParser.prototype._parse = function(dxfString) {
 			var vertex = {};
 			while(curr !== 'EOF') {
 				if(curr.code === 0 || vertexIsFinished) break;
-	
+
 				switch(curr.code) {
 					case 10: // X
 						if(vertexIsStarted) {
@@ -1756,11 +1756,11 @@ DxfParser.prototype._parse = function(dxfString) {
 
 		return entity;
 	};
-	
+
 	var ensureHandle = function(entity) {
 		if(!entity) throw new TypeError('entity cannot be undefined or null');
-		
-		if(!entity.handle) entity.handle = lastHandle++; 
+
+		if(!entity.handle) entity.handle = lastHandle++;
 	};
 
 	parseAll();
@@ -1900,7 +1900,7 @@ module.exports = DxfParser;
                 storedLevel = /loglevel=([^;]+)/.exec(window.document.cookie)[1];
             } catch (ignore) {}
         }
-        
+
         if (self.levels[storedLevel] === undefined) {
             storedLevel = "WARN";
         }
