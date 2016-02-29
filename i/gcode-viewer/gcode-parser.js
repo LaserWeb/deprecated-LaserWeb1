@@ -394,7 +394,7 @@ function GCodeParser(handlers) {
                 // LaserWeb 3D Viewer Colors
                 if(typeof line.extruding === 'undefined' && typeof line.s === 'undefined'){
                     //console.log('G1 without extrude', line);
-                    //grouptype =  "g0";
+                    grouptype =  "g0";
                     opacity = 0.3;
                     color = new THREE.Color(0x00ff00);
                 } else {
