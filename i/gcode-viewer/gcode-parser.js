@@ -366,9 +366,11 @@ function GCodeParser(handlers) {
                 if (layer == undefined) newLayer(line);
                 var speed = Math.round(line.e / 1000);
                 var opacity = line.s;
-                var grouptype = (line.extruding ? 10000 : 0) + speed + opacity;
-
-                var color = new THREE.Color(line.extruding ? 0x990000 : 0x990000);
+                var tool = parseInt(line.t, 10);
+                // /console.log('Speed: ' , speed , '  opacity: ', opacity);
+                var grouptype = speed + opacity;
+                var color = null;
+                //var color = new THREE.Color(0x990000);
 
                 if(typeof line.s === 'undefined'){
                     opacity = 0.3;
@@ -389,18 +391,39 @@ function GCodeParser(handlers) {
                 }
                 //console.log(opacity);
                 // LaserWeb 3D Viewer Colors
-                if (line.g0) {
-                    grouptype =  "g0";
-                    //color = new THREE.Color(0x00ff00);
+                // LaserWeb 3D Viewer Colors
+                if(typeof line.extruding === 'undefined' && typeof line.s === 'undefined'){
+                    //console.log('G1 without extrude', line);
+                    //grouptype =  "g0";
+                    opacity = 0.3;
                     color = new THREE.Color(0x00ff00);
-                } else if (line.g2) {
-                    grouptype = "g2";
-                    //color = new THREE.Color(0x999900);
-                    color = new THREE.Color(0x990000);
-                } else if (line.arc) {
-                    grouptype = "arc";
-                    color = new THREE.Color(0x990000);
+                } else {
+                    //console.log('G1 with extrude', line);
+                    if (line.g0) {
+                        grouptype =  "g0";
+                        //color = new THREE.Color(0x00ff00);
+                        opacity = 0.3;
+                        color = new THREE.Color(0x00ff00);
+                    } else if (line.g2) {
+                        grouptype = "g2";
+                        //color = new THREE.Color(0x999900);
+                        color = new THREE.Color(0x990000);
+                    } else if (line.t == 0) {
+                        grouptype = "t0";
+                        //color = new THREE.Color(0x999900);
+                        color = new THREE.Color(0x0000ff);
+                    } else if (line.t == 1) {
+                        grouptype = "t1";
+                        //color = new THREE.Color(0x999900);
+                        color = new THREE.Color(0xff00ff);
+                    } else if (line.arc) {
+                        grouptype = "arc";
+                        color = new THREE.Color(0x990000);
+                    } else {
+                        color = new THREE.Color(0x990000);
+                    }
                 }
+
                 // see if we have reached indxMax, if so draw, but
                 // make it ghosted
                 //if (args.indx > indxMax) {
@@ -860,6 +883,7 @@ function GCodeParser(handlers) {
             totalTime = 0;
 
             var relative = false;
+            var tool = null;
 
             delta = function (v1, v2) {
                 return relative ? v2 : v2 - v1;
@@ -923,7 +947,7 @@ function GCodeParser(handlers) {
                         e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
                         f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
                         s: args.s !== undefined ? cofg.absolute(lastLine.s, args.s) : lastLine.s,
-
+                        t: args.t !== undefined ? cofg.absolute(lastLine.t, args.t) : lastLine.t,
                     };
                     /* layer change detection is or made by watching Z, it's made by
          watching when we extrude at a new Z position */
@@ -932,6 +956,7 @@ function GCodeParser(handlers) {
                         if (layer == undefined || newLine.z != layer.z) cofg.newLayer(newLine);
                     }
                     cofg.addSegment(lastLine, newLine, args);
+                    newLine.g1 = true;
                     //console.log("G1", lastLine, newLine, args, cofg.offsetG92);
                     lastLine = newLine;
                 },
@@ -948,6 +973,7 @@ function GCodeParser(handlers) {
                              z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
                              e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
                              f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
+                             t: args.t !== undefined ? cofg.absolute(lastLine.t, args.t) : lastLine.t,
                              arci: args.i ? args.i : null,
                              arcj: args.j ? args.j : null,
                              arck: args.k ? args.k : null,
@@ -980,6 +1006,7 @@ function GCodeParser(handlers) {
                              z: args.z !== undefined ? cofg.absolute(lastLine.z, args.z) + cofg.offsetG92.z : lastLine.z,
                              e: args.e !== undefined ? cofg.absolute(lastLine.e, args.e) + cofg.offsetG92.e : lastLine.e,
                              f: args.f !== undefined ? cofg.absolute(lastLine.f, args.f) : lastLine.f,
+                             t: args.t !== undefined ? cofg.absolute(lastLine.t, args.t) : lastLine.t,
                              arci: args.i ? args.i : null,
                              arcj: args.j ? args.j : null,
                              arck: args.k ? args.k : null,
@@ -1109,6 +1136,19 @@ function GCodeParser(handlers) {
 
                     // No-op
                     cofg.addFakeSegment(args);
+                },
+
+                // Dual Head 3D Printing Support
+                T0: function (args) {
+                  //console.log('Found Tool: ', args);
+                  lastLine.t = 0;
+                  cofg.addFakeSegment(args);
+                },
+
+                T1: function (args) {
+                  //console.log('Found Tool: ', args);
+                  lastLine.t = 1;
+                  cofg.addFakeSegment(args);
                 },
 
                 'default': function (args, info) {
