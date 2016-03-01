@@ -99,6 +99,7 @@ console.log('RapidSpeed', rapidSpeed);
                    if (options.mode == "laser") {
 
                        // if the laser is not on, we need to turn it on
+                    if (firmware.indexOf('Grbl') == 0) {
                        if (!isLaserOn) {
                            if (options.laseron == "M3") {
                                g += "M3 S" + options.lasersvalue;
@@ -108,6 +109,7 @@ console.log('RapidSpeed', rapidSpeed);
                            g += " ;laser on\n";
                            isLaserOn = true;
                        }
+                     }
                    } else {
                        // this is milling. if we are not at depth cut
                        // we need to get there
@@ -141,10 +143,12 @@ console.log('RapidSpeed', rapidSpeed);
            if (options.mode == "laser") {
                // turn off laser at end of line
                isLaserOn = false;
-               if (options.laseron == "M3")
-                   g += "M5 ;laser off;\n";
-               else
-                   g += "M9 ;laser off;\n";
+               if (firmware.indexOf('Grbl') == 0) {
+                 if (options.laseron == "M3")
+                     g += "M5 ;laser off;\n";
+                 else
+                     g += "M9 ;laser off;\n";
+              }
            } else {
                // milling. move back to clearance height
                g += "G0 Z" + options.millclearanceheight + "\n";
