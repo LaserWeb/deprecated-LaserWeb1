@@ -58,7 +58,8 @@ console.log('RapidSpeed', rapidSpeed);
    var isLaserOn = false;
    var isAtClearanceHeight = false;
    var isFeedrateSpecifiedAlready = false;
-   path = [ [] ];
+   subj_paths = [];
+   subj_path2 = [];
    console.log(txtGrp);
    txtGrp.traverse( function(child) {
        if (child.type == "Line") {
@@ -138,11 +139,8 @@ console.log('RapidSpeed', rapidSpeed);
                    //subj_paths.push(worldPt.x.toFixed(3) +',' + worldPt.y.toFixed(3));
                    var xpos = parseFloat(worldPt.x.toFixed(3));
                    var ypos = parseFloat(worldPt.y.toFixed(3));
-                   sub_path = [
-                     ({X:xpos,Y:ypos})
-                   ];
+                   subj_paths.push({X:xpos,Y:ypos});
 
-                   path[i] = sub_path;
 
                }
            }
@@ -166,17 +164,19 @@ console.log('RapidSpeed', rapidSpeed);
                g += "G0 Z" + options.millclearanceheight + "\n";
                isAtClearanceHeight = true;
            }
+           console.log('Input Path', subj_paths);
+           subj_path2 = getInflatedPath(subj_paths, 2);
+           console.log('Output Path', subj_path2);
 
-           console.log('Input Path', path);
-           subj_path2 = getInflatedPath(path, 3);
-           console.log('Inflated Path', subj_path2);
+          //var mesh = createClipperPathsAsMesh(subj_path2, 0xff0000, 0.2, subj_path2);
+          var millpath = createClipperPathsAsLines(subj_path2);
+          millpath.translateX(laserxmax /2 * -1);
+          millpath.translateY(laserymax /2 * -1);
+          scene.add(millpath);
+
+
        }
    });
-
-   // Lets try inflating path
-  //  subj_path2 = getInflatedPath(subj_paths, 3);
-  //  console.log('Subj Path', subj_path2);
-
 
    console.log("generated gcode. length:", g.length);
   //  subj_paths = ClipperLib.Clipper.SimplifyPolygons(subj_paths, ClipperLib.PolyFillType.pftEvenOdd);﻿
@@ -205,24 +205,142 @@ console.log('RapidSpeed', rapidSpeed);
 function getInflatedPath(paths, delta, joinType) {
 var scale = 10000;
   console.log('Inside getInflatedPath');
-     ClipperLib.JS.ScaleUpPaths(paths, scale);
+     ClipperLib.JS.ScaleUpPath(paths, scale);
+     console.log('Scaled Path: ', paths);
      var miterLimit = 2;
      var arcTolerance = 10;
      joinType = joinType ? joinType : ClipperLib.JoinType.jtRound
      var co = new ClipperLib.ClipperOffset(miterLimit, arcTolerance);
-     co.AddPaths(paths, joinType, ClipperLib.EndType.etClosedPolygon);
+     co.AddPath(paths, joinType, ClipperLib.EndType.etClosedPolygon);
      //var delta = 0.0625; // 1/16 inch endmill
-     var offsetted_paths = new ClipperLib.Paths();
+     var offsetted_paths = new ClipperLib.Path();
      co.Execute(offsetted_paths, delta * scale);
 
-     // scale back down
-     for (var i = 0; i < offsetted_paths.length; i++) {
-         for (var j = 0; j < offsetted_paths[i].length; j++) {
-             offsetted_paths[i][j].X = offsetted_paths[i][j].X / scale;
-             offsetted_paths[i][j].Y = offsetted_paths[i][j].Y / scale;
-         }
-     }
-     ClipperLib.JS.ScaleDownPaths(paths, scale);
+     console.log('Offset Path: ', offsetted_paths);
+       // scale back down
+       for (var i = 0; i < offsetted_paths.length; i++) {
+           for (var j = 0; j < offsetted_paths[i].length; j++) {
+               offsetted_paths[i][j].X = offsetted_paths[i][j].X / scale;
+               offsetted_paths[i][j].Y = offsetted_paths[i][j].Y / scale;
+           }
+       }
+       ClipperLib.JS.ScaleDownPaths(paths, scale);
      return offsetted_paths;
 
  };
+
+ function createClipperPathsAsLines(paths) {
+
+   var geometry = new THREE.Geometry(),
+     color = 0xff0000,
+     material, lineType, vertex, startPoint, endPoint, i, line;
+
+
+   if (paths.length == 1) {
+       var shape = new THREE.Shape();
+       var i = 0;
+       for (var j = 0; j < paths[i].length; j++) {
+           var pt = paths[i][j];
+           //if (j == 0) shape.moveTo(pt.X, pt.Y);
+           //else shape.lineTo(pt.X, pt.Y);
+           geometry.vertices.push(new THREE.Vector3(pt.X, pt.Y, 0));
+       }
+    };
+
+    material = new THREE.LineBasicMaterial({ linewidth: 1, color: color, transparent: true });
+
+    millpath = new THREE.Line(geometry, material);
+    return millpath;
+
+ };
+
+ function createClipperPathsAsMesh(paths, color, opacity, holePath) {
+             //console.log("createClipperPathsAsMesh. paths:", paths, "holePath:", holePath);
+             if(color === undefined)
+                color = 0xff0000;
+             var mat = new THREE.MeshBasicMaterial({
+                 color: color,
+                 transparent: true,
+                 opacity: opacity,
+                 side: THREE.DoubleSide,
+                 depthWrite: false
+             });
+
+
+             if (paths.length == 1) {
+                 var shape = new THREE.Shape();
+                 var i = 0;
+                 for (var j = 0; j < paths[i].length; j++) {
+                     var pt = paths[i][j];
+                     if (j == 0) shape.moveTo(pt.X, pt.Y);
+                     else shape.lineTo(pt.X, pt.Y);
+                 }
+
+                 // see if asked to create hole
+                 // multiple holes supported now
+                 if (holePath !== undefined && holePath != null) {
+                     if (!(Array.isArray(holePath))) {
+                         holePath = [holePath];
+                     }
+
+                     for (var hi = 0; hi < holePath.length; hi++) {
+                         var hp = holePath[hi];
+                         console.log("adding hole:", hp);
+                         var hole = new THREE.Path();
+                         //var i = 0;
+                         for (var j = 0; j < hp.length; j++) {
+                             var pt = hp[j];
+                             if (j == 0) hole.moveTo(pt.X, pt.Y);
+                             else hole.lineTo(pt.X, pt.Y);
+                         }
+                         shape.holes.push(hole);
+                     }
+                 }
+
+                 var geometry = new THREE.ShapeGeometry( shape );
+                 var shapeMesh = new THREE.Mesh(geometry, mat);
+
+                 //group.add(shapeMesh);
+                 return shapeMesh;
+             } else {
+                 var group = new THREE.Object3D();
+
+                 for (var i = 0; i < paths.length; i++) {
+                     var shape = new THREE.Shape();
+                     for (var j = 0; j < paths[i].length; j++) {
+                         var pt = paths[i][j];
+                         if (j == 0) shape.moveTo(pt.X, pt.Y);
+                         else shape.lineTo(pt.X, pt.Y);
+                     }
+
+                     // see if asked to create hole
+                     // multiple holes supported now
+                     if (holePath !== undefined && holePath != null) {
+                         if (!(Array.isArray(holePath))) {
+                             holePath = [holePath];
+                         }
+
+                         for (var hi = 0; hi < holePath.length; hi++) {
+                             var hp = holePath[hi];
+                             console.log("adding hole:", hp);
+                             var hole = new THREE.Path();
+                             //var i = 0;
+                             for (var j = 0; j < hp.length; j++) {
+                                 var pt = hp[j];
+                                 if (j == 0) hole.moveTo(pt.X, pt.Y);
+                                 else hole.lineTo(pt.X, pt.Y);
+                             }
+                             shape.holes.push(hole);
+                         }
+                     }
+
+                     var geometry = new THREE.ShapeGeometry( shape );
+                     var shapeMesh = new THREE.Mesh(geometry, mat);
+
+                     group.add(shapeMesh);
+                 }
+                 return group;
+             }
+             //this.sceneAdd(group);
+
+         };
