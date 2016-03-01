@@ -173,6 +173,13 @@ console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngle
   geometry = new THREE.CircleGeometry(entity.radius, 128, entity.startAngle, entity.angleLength);
   geometry.vertices.shift();
 
+	console.log('Passing in:', geometry.vertices);
+	offsetGeometry = getInflatedPath(geometry.vertices, 3);
+	console.log('Got Out: ', offsetGeometry);
+	//offsetMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+	//offsetCircle = new THREE.Line(offsetGeometry, offsetMaterial);
+	//scene.add(offsetCircle);
+
   material = new THREE.LineBasicMaterial({ color: getDXFColor(entity) });
 
   //circle = new THREE.Line(geometry, material);

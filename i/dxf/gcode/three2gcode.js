@@ -177,3 +177,28 @@ console.log('RapidSpeed', rapidSpeed);
   return g;
 
 };
+
+
+function getInflatedPath(paths, delta, joinType) {
+var scale = 10000;
+     ClipperLib.JS.ScaleUpPaths(paths, scale);
+     var miterLimit = 2;
+     var arcTolerance = 10;
+     joinType = joinType ? joinType : ClipperLib.JoinType.jtRound
+     var co = new ClipperLib.ClipperOffset(miterLimit, arcTolerance);
+     co.AddPaths(paths, joinType, ClipperLib.EndType.etClosedPolygon);
+     //var delta = 0.0625; // 1/16 inch endmill
+     var offsetted_paths = new ClipperLib.Paths();
+     co.Execute(offsetted_paths, delta * scale);
+
+     // scale back down
+     for (var i = 0; i < offsetted_paths.length; i++) {
+         for (var j = 0; j < offsetted_paths[i].length; j++) {
+             offsetted_paths[i][j].X = offsetted_paths[i][j].X / scale;
+             offsetted_paths[i][j].Y = offsetted_paths[i][j].Y / scale;
+         }
+     }
+     ClipperLib.JS.ScaleDownPaths(paths, scale);
+     return offsetted_paths;
+
+ };
