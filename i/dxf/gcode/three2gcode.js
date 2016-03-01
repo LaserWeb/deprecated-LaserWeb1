@@ -105,7 +105,7 @@ console.log('RapidSpeed', rapidSpeed);
                            } else {
                                g += options.laseron;
                            }
-                           g += " (laser on)\n";
+                           g += " ;laser on\n";
                            isLaserOn = true;
                        }
                    } else {
@@ -142,9 +142,9 @@ console.log('RapidSpeed', rapidSpeed);
                // turn off laser at end of line
                isLaserOn = false;
                if (options.laseron == "M3")
-                   g += "M5 (laser off)\n";
+                   g += "M5 ;laser off;\n";
                else
-                   g += "M9 (laser off)\n";
+                   g += "M9 ;laser off;\n";
            } else {
                // milling. move back to clearance height
                g += "G0 Z" + options.millclearanceheight + "\n";
