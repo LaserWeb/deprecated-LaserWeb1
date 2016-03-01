@@ -1414,6 +1414,10 @@ $(document).ready(function() {
 			if (typeof(dxfObject) !== 'undefined') {
 				scene.remove(dxfObject);
 			};
+
+			if (typeof(showDxf) !== 'undefined') {
+				scene.remove(showDxf);
+			};
 			dxfObject = new THREE.Group();
 
 			row = [];
@@ -1434,10 +1438,23 @@ $(document).ready(function() {
 				drawEntity(i, dxf2.entities[i]);
 			};
 
-			//dxfObject.translateX(laserxmax /2 * -1);
-			//dxfObject.translateY(laserymax /2 * -1);
-			//scene.add(dxfObject);
+			// Make a copy to show, because we need the original copy, untranslated, for the gcodewriter parsing
+			showDxf = dxfObject.clone();
+
+			// Make the 'geometry' object disappear
+			for (i=0; i<dxfObject.children.length; i++) {
+					dxfObject.children[i].material.color.setHex(0x00ff00);
+					dxfObject.children[i].material.opacity = 0;
+			}
+
+			// Sadly removing it from the scene makes gcode circles end up at 0,0 since localToWorld needs it in the scene
 			scene.add(dxfObject);
+
+			// And display the showpiece, translated to virtual 0,0
+			showDxf = dxfObject.clone();
+			showDxf.translateX(laserxmax /2 * -1);
+			showDxf.translateY(laserymax /2 * -1);
+			scene.add(showDxf);
 
 			Array.prototype.unique = function()
 				{

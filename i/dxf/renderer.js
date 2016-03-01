@@ -150,7 +150,7 @@ function drawLine(entity, index) {
   if(lineType && lineType.pattern && lineType.pattern.length !== 0) {
     material = new THREE.LineDashedMaterial({ color: color, gapSize: 4, dashSize: 4});
   } else {
-    material = new THREE.LineBasicMaterial({ linewidth: 1, color: color });
+    material = new THREE.LineBasicMaterial({ linewidth: 1, color: color, transparent: true });
   }
 
 	window["dxfEntity" + index] = new THREE.Line(geometry, material);
@@ -173,7 +173,7 @@ var arcTotalDeg = entity.startAngleDeg - entity.endAngleDeg;
   geometry = new THREE.CircleGeometry(entity.radius, 128, entity.startAngle, entity.angleLength);
   geometry.vertices.shift();
 
-  material = new THREE.LineBasicMaterial({ color: getDXFColor(entity) });
+  material = new THREE.LineBasicMaterial({ color: getDXFColor(entity), transparent: true });
 
   //circle = new THREE.Line(geometry, material);
 
@@ -213,7 +213,7 @@ function drawSolid(entity, index) {
   }
 
 
-  material = new THREE.MeshBasicMaterial({ color: getDXFColor(entity) });
+  material = new THREE.MeshBasicMaterial({ color: getDXFColor(entity), transparent: true });
 
   window["dxfEntity" + index] = new THREE.Mesh(geometry, material);
 	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
@@ -258,7 +258,7 @@ function drawPoint(entity, index) {
   geometry.colors = colors;
   geometry.computeBoundingBox();
 
-  material = new THREE.PointCloudMaterial( { size: 0.05, vertexColors: THREE.VertexColors } );
+  material = new THREE.PointCloudMaterial( { size: 0.05, vertexColors: THREE.VertexColors, transparent: true} );
 
 	window["dxfEntity" + index] = new THREE.PointCloud(geometry, material);
 	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
