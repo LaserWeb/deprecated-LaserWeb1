@@ -58,7 +58,7 @@ console.log('RapidSpeed', rapidSpeed);
    var isLaserOn = false;
    var isAtClearanceHeight = false;
    var isFeedrateSpecifiedAlready = false;
-   subj_paths = [];
+   path = [ [] ];
    console.log(txtGrp);
    txtGrp.traverse( function(child) {
        if (child.type == "Line") {
@@ -135,8 +135,14 @@ console.log('RapidSpeed', rapidSpeed);
                    g += " X" + worldPt.x.toFixed(3);
                    g += " Y" + worldPt.y.toFixed(3);
                    g += " S" + options.lasersvalue + "\n";
-                   subj_paths.push(worldPt.x.toFixed(3) +',' + worldPt.y.toFixed(3));
+                   //subj_paths.push(worldPt.x.toFixed(3) +',' + worldPt.y.toFixed(3));
+                   var xpos = parseFloat(worldPt.x.toFixed(3));
+                   var ypos = parseFloat(worldPt.y.toFixed(3));
+                   sub_path = [
+                     ({X:xpos,Y:ypos})
+                   ];
 
+                   path[i] = sub_path;
 
                }
            }
@@ -160,16 +166,22 @@ console.log('RapidSpeed', rapidSpeed);
                g += "G0 Z" + options.millclearanceheight + "\n";
                isAtClearanceHeight = true;
            }
-           //subj_path2 = getInflatedPath(subj_paths, 3, 3);
-           console.log('Subj Path', subj_path2);
 
+           console.log('Input Path', path);
+           subj_path2 = getInflatedPath(path, 3);
+           console.log('Inflated Path', subj_path2);
        }
    });
 
+   // Lets try inflating path
+  //  subj_path2 = getInflatedPath(subj_paths, 3);
+  //  console.log('Subj Path', subj_path2);
+
+
    console.log("generated gcode. length:", g.length);
-   //subj_paths = ClipperLib.Clipper.SimplifyPolygons(subj_paths, ClipperLib.PolyFillType.pftEvenOdd);﻿
-   console.log('Subj Path', subj_paths);
-   //console.log("gcode:", g);
+  //  subj_paths = ClipperLib.Clipper.SimplifyPolygons(subj_paths, ClipperLib.PolyFillType.pftEvenOdd);﻿
+  //  console.log('Subj Path', subj_paths);
+  //  //console.log("gcode:", g);
   //  $('#' + this.id + " .gcode").val(g).prop('disabled', false);
   //  $('#' + this.id + " .btn-sendgcodetows").prop('disabled', false);
   //  $('#' + this.id + " .regenerate").addClass('hidden');
@@ -192,6 +204,7 @@ console.log('RapidSpeed', rapidSpeed);
 
 function getInflatedPath(paths, delta, joinType) {
 var scale = 10000;
+  console.log('Inside getInflatedPath');
      ClipperLib.JS.ScaleUpPaths(paths, scale);
      var miterLimit = 2;
      var arcTolerance = 10;
