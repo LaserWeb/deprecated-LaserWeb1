@@ -102,25 +102,29 @@ function processDXF(data) {
 
 		scene.add(dxfObject);
   }
+}
 
 
-function drawEntity(entity, data, index) {
+
+function drawEntity(index, entity) {
+	console.log('inside drawEntity:  Entity ', entity, '  Index: ', index)
   if(entity.type === 'CIRCLE' || entity.type === 'ARC') {
-    drawCircle(entity, data, entity);
+    drawCircle(entity, index);
 	} else if(entity.type === 'LWPOLYLINE' || entity.type === 'LINE' || entity.type === 'POLYLINE') {
-    drawLine(entity, data, entity);
+    drawLine(entity, index);
   } else if(entity.type === 'TEXT') {
-    drawText(entity, data, entity);
+    drawText(entity, index);
   } else if(entity.type === 'SOLID') {
-    drawSolid(entity, data, entity);
+    drawSolid(entity, index);
   } else if(entity.type === 'POINT') {
-    drawPoint(entity, data, entity);
+    drawPoint(entity, index);
   }
 }
 
-function drawLine(entity, data, entity) {
+function drawLine(entity, index) {
+	console.log('inside drawLine ', entity, ' Index: ', index  )
   var geometry = new THREE.Geometry(),
-    color = getColor(entity, data),
+    color = getDXFColor(entity),
     material, lineType, vertex, startPoint, endPoint, bulgeGeometry,
     bulge, i, line;
 
@@ -143,42 +147,19 @@ function drawLine(entity, data, entity) {
   }
   if(entity.shape) geometry.vertices.push(geometry.vertices[0]);
 
-
-  // set material
-  //if(entity.lineType) {
-  //  lineType = data.tables.lineTypes[entity.lineType];
-  //}
-
   if(lineType && lineType.pattern && lineType.pattern.length !== 0) {
     material = new THREE.LineDashedMaterial({ color: color, gapSize: 4, dashSize: 4});
   } else {
     material = new THREE.LineBasicMaterial({ linewidth: 1, color: color });
   }
 
-  // if(lineType && lineType.pattern && lineType.pattern.length !== 0) {
-
-  //           geometry.computeLineDistances();
-
-  //           // Ugly hack to add diffuse to this. Maybe copy the uniforms object so we
-  //           // don't add diffuse to a material.
-  //           lineType.material.uniforms.diffuse = { type: 'c', value: new THREE.Color(color) };
-
-  // 	material = new THREE.ShaderMaterial({
-  // 		uniforms: lineType.material.uniforms,
-  // 		vertexShader: lineType.material.vertexShader,
-  // 		fragmentShader: lineType.material.fragmentShader
-  // 	});
-  // }else {
-  // 	material = new THREE.LineBasicMaterial({ linewidth: 1, color: color });
-  // }
-
-  line = new THREE.Line(geometry, material);
-  line.translateX(laserxmax /2 * -1);
-  line.translateY(laserymax /2 * -1);
-  dxfObject.add(line);
+	window["dxfEntity" + index] = new THREE.Line(geometry, material);
+	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
+	//window["dxfEntity" + index].translateY(laserymax /2 * -1);
+	dxfObject.add(window["dxfEntity" + index]);
 }
 
-function drawCircle(entity, data, entity) {
+function drawCircle(entity, index) {
 
 // Laserweb - calc and draw gcode
 var radius = entity.radius;
@@ -186,38 +167,26 @@ console.log('Radius:'+radius+' and Center '+entity.center.x+','+entity.center.y+
 var arcTotalDeg = entity.startAngleDeg - entity.endAngleDeg;
 console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngleDeg+', thus spanning '+arcTotalDeg+'deg' );
 
-// Do some math here, to determine starting point (using center, Radius and start angle?)
-// Do some math here, to determine starting point (using  center, Radius and End angle?)
-// Do some math here, to draw line segments (sections spaced radius away from center, from start point to end point (lengh of segment is number of segments divide by arcTotalDeg)?)
-// Write that to GCODE
-// end Laserweb
-
 // Draw it since its cool to see (note this is a straigh three.js view of it, not via gcode.  Can be used in the Cutting Params view by coloring object/layers to change params)
   var geometry, material, circle;
 
   geometry = new THREE.CircleGeometry(entity.radius, 128, entity.startAngle, entity.angleLength);
   geometry.vertices.shift();
 
-	//geometry.translate( entity.center ); // three.js r.72
+  material = new THREE.LineBasicMaterial({ color: getDXFColor(entity) });
 
-  material = new THREE.LineBasicMaterial({ color: getColor(entity, data) });
+  //circle = new THREE.Line(geometry, material);
 
-  circle = new THREE.Line(geometry, material);
-	// circle.position.x = entity.center.x;
-  // circle.position.y = entity.center.y;
-  // circle.position.z = entity.center.z;
-
-	circle.translateX(entity.center.x);
-	circle.translateY(entity.center.y);
-	circle.translateZ(entity.center.z);
-
-	circle.translateX(laserxmax /2 * -1);
-  circle.translateY(laserymax /2 * -1);
-
-	dxfObject.add(circle);
+	window["dxfEntity" + index] = new THREE.Line(geometry, material);
+	window["dxfEntity" + index].translateX(entity.center.x);
+	window["dxfEntity" + index].translateY(entity.center.y);
+	window["dxfEntity" + index].translateZ(entity.center.z);
+	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
+	//window["dxfEntity" + index].translateY(laserymax /2 * -1);
+	dxfObject.add(window["dxfEntity" + index]);
 }
 
-function drawSolid(entity, data, entity) {
+function drawSolid(entity, index) {
   var material, mesh, solid, verts;
   geometry = new THREE.Geometry();
 
@@ -244,35 +213,32 @@ function drawSolid(entity, data, entity) {
   }
 
 
-  material = new THREE.MeshBasicMaterial({ color: getColor(entity, data) });
+  material = new THREE.MeshBasicMaterial({ color: getDXFColor(entity) });
 
-  mesh = new THREE.Mesh(geometry, material);
+  window["dxfEntity" + index] = new THREE.Mesh(geometry, material);
+	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
+	//window["dxfEntity" + index].translateY(laserymax /2 * -1);
+	dxfObject.add(window["dxfEntity" + index]);
 
-  mesh.translateX(laserxmax /2 * -1);
-  mesh.translateY(laserymax /2 * -1);
-
-  dxfObject.add(mesh);
 }
 
-function drawText(entity, data, entity) {
+function drawText(entity, index) {
   var geometry, material, text;
 
   geometry = new THREE.TextGeometry(entity.text, { height: 0, size: entity.textHeight || 12 });
 
-  material = new THREE.MeshBasicMaterial({ color: getColor(entity, data) });
+  material = new THREE.MeshBasicMaterial({ color: getDXFColor(entity) });
 
-  text = new THREE.Mesh(geometry, material);
-  text.position.x = entity.startPoint.x;
-  text.position.y = entity.startPoint.y;
-  text.position.z = entity.startPoint.z;
-
-  text.translateX(laserxmax /2 * -1);
-  text.translateY(laserymax /2 * -1);
-
-  dxfObject.add(text);
+	window["dxfEntity" + index] = new THREE.Mesh(geometry, material);
+	window["dxfEntity" + index].translateX(entity.startPoint.x);
+	window["dxfEntity" + index].translateY(entity.startPoint.y);
+	window["dxfEntity" + index].translateZ(entity.startPoint.z);
+	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
+	//window["dxfEntity" + index].translateY(laserymax /2 * -1);
+	dxfObject.add(window["dxfEntity" + index]);
 }
 
-function drawPoint(entity, data) {
+function drawPoint(entity, index) {
   var geometry, material, point;
 
   geometry = new THREE.Geometry();
@@ -283,7 +249,7 @@ function drawPoint(entity, data) {
 
   var numPoints = 1;
 
-  var color = getColor(entity, data);
+  var color = getDXFColor(entity);
   var colors = new Float32Array( numPoints*3 );
   colors[0] = color.r;
   colors[1] = color.g;
@@ -293,23 +259,14 @@ function drawPoint(entity, data) {
   geometry.computeBoundingBox();
 
   material = new THREE.PointCloudMaterial( { size: 0.05, vertexColors: THREE.VertexColors } );
-  point = new THREE.PointCloud(geometry, material);
 
-  point.translateX(laserxmax /2 * -1);
-  point.translateY(laserymax /2 * -1);
-
-  dxfObject.add(point);
+	window["dxfEntity" + index] = new THREE.PointCloud(geometry, material);
+	//window["dxfEntity" + index].translateX(laserxmax /2 * -1);
+	//window["dxfEntity" + index].translateY(laserymax /2 * -1);
+	dxfObject.add(window["dxfEntity" + index]);
 }
 
-//function getColor(entity, data) {
-//  var color = entity.color || data.tables.layers[entity.layer].color;
-//  if(color === 0xffffff) {
-//    color = 0x000000;
-//  }
-//  return color;
-//}
-
-function getColor(entity, data) {
+function getDXFColor(entity) {
 //  var color = entity.color || data.tables.layers[entity.layer].color;
 //  if(color === 0xffffff) {
 //    color = 0x000000;
@@ -403,6 +360,4 @@ function createDashedLineShader(pattern) {
   ].join('\n');
 
   return dashedLineShader;
-}
-
 }
