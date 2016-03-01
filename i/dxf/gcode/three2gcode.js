@@ -58,11 +58,13 @@ console.log('RapidSpeed', rapidSpeed);
    var isLaserOn = false;
    var isAtClearanceHeight = false;
    var isFeedrateSpecifiedAlready = false;
+   subj_paths = [];
    console.log(txtGrp);
    txtGrp.traverse( function(child) {
        if (child.type == "Line") {
            // let's create gcode for all points in line
            for (i = 0; i < child.geometry.vertices.length; i++) {
+
                var localPt = child.geometry.vertices[i];
                var worldPt = grp.localToWorld(localPt.clone());
                if (i == 0) {
@@ -80,6 +82,8 @@ console.log('RapidSpeed', rapidSpeed);
                    g += "G0 X" + worldPt.x.toFixed(3) +
                        " Y" + worldPt.y.toFixed(3) + " F" + rapidSpeed + "\n";
 
+
+                  //subj_paths.push(worldPt.x.toFixed(3) +',' + worldPt.y.toFixed(3));
                    // if milling move back to depth cut
                    if (options.mode == "mill") {
                        var halfDistance = (options.millclearanceheight - options.milldepthcut) / 2;
@@ -131,6 +135,7 @@ console.log('RapidSpeed', rapidSpeed);
                    g += " X" + worldPt.x.toFixed(3);
                    g += " Y" + worldPt.y.toFixed(3);
                    g += " S" + options.lasersvalue + "\n";
+                   subj_paths.push(worldPt.x.toFixed(3) +',' + worldPt.y.toFixed(3));
 
 
                }
@@ -155,10 +160,15 @@ console.log('RapidSpeed', rapidSpeed);
                g += "G0 Z" + options.millclearanceheight + "\n";
                isAtClearanceHeight = true;
            }
+           //subj_path2 = getInflatedPath(subj_paths, 3, 3);
+           console.log('Subj Path', subj_path2);
+
        }
    });
 
    console.log("generated gcode. length:", g.length);
+   //subj_paths = ClipperLib.Clipper.SimplifyPolygons(subj_paths, ClipperLib.PolyFillType.pftEvenOdd);﻿
+   console.log('Subj Path', subj_paths);
    //console.log("gcode:", g);
   //  $('#' + this.id + " .gcode").val(g).prop('disabled', false);
   //  $('#' + this.id + " .btn-sendgcodetows").prop('disabled', false);
