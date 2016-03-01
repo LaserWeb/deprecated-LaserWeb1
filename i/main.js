@@ -1414,6 +1414,9 @@ $(document).ready(function() {
 			if (typeof(dxfObject) !== 'undefined') {
 				scene.remove(dxfObject);
 			};
+			if (typeof(showDxf) !== 'undefined') {
+				scene.remove(showDxf);
+			};
 			dxfObject = new THREE.Group();
 
 			row = [];
