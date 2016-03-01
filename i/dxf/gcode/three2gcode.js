@@ -132,6 +132,7 @@ console.log('RapidSpeed', rapidSpeed);
                    g += " Y" + worldPt.y.toFixed(3);
                    g += " S" + options.lasersvalue + "\n";
 
+
                }
            }
 

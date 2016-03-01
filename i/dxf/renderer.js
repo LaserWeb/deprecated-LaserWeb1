@@ -75,7 +75,7 @@ THREE.BulgeGeometry.prototype = Object.create( THREE.Geometry.prototype );
  * @constructor
  */
 function processDXF(data) {
-  console.log(data);
+  //console.log(data);
 
 	if (typeof(dxfObject) !== 'undefined') {
 		scene.remove(dxfObject);
@@ -107,7 +107,7 @@ function processDXF(data) {
 
 
 function drawEntity(index, entity) {
-	console.log('inside drawEntity:  Entity ', entity, '  Index: ', index)
+	//console.log('inside drawEntity:  Entity ', entity, '  Index: ', index)
   if(entity.type === 'CIRCLE' || entity.type === 'ARC') {
     drawCircle(entity, index);
 	} else if(entity.type === 'LWPOLYLINE' || entity.type === 'LINE' || entity.type === 'POLYLINE') {
@@ -122,7 +122,7 @@ function drawEntity(index, entity) {
 }
 
 function drawLine(entity, index) {
-	console.log('inside drawLine ', entity, ' Index: ', index  )
+	//console.log('inside drawLine ', entity, ' Index: ', index  )
   var geometry = new THREE.Geometry(),
     color = getDXFColor(entity),
     material, lineType, vertex, startPoint, endPoint, bulgeGeometry,
@@ -163,22 +163,15 @@ function drawCircle(entity, index) {
 
 // Laserweb - calc and draw gcode
 var radius = entity.radius;
-console.log('Radius:'+radius+' and Center '+entity.center.x+','+entity.center.y+','+entity.center.z+',\n'); // Radius:220 and Center 0,0,0,
+//console.log('Radius:'+radius+' and Center '+entity.center.x+','+entity.center.y+','+entity.center.z+',\n'); // Radius:220 and Center 0,0,0,
 var arcTotalDeg = entity.startAngleDeg - entity.endAngleDeg;
-console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngleDeg+', thus spanning '+arcTotalDeg+'deg' );
+//console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngleDeg+', thus spanning '+arcTotalDeg+'deg' );
 
 // Draw it since its cool to see (note this is a straigh three.js view of it, not via gcode.  Can be used in the Cutting Params view by coloring object/layers to change params)
   var geometry, material, circle;
 
   geometry = new THREE.CircleGeometry(entity.radius, 128, entity.startAngle, entity.angleLength);
   geometry.vertices.shift();
-
-	console.log('Passing in:', geometry.vertices);
-	offsetGeometry = getInflatedPath(geometry.vertices, 3);
-	console.log('Got Out: ', offsetGeometry);
-	//offsetMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-	//offsetCircle = new THREE.Line(offsetGeometry, offsetMaterial);
-	//scene.add(offsetCircle);
 
   material = new THREE.LineBasicMaterial({ color: getDXFColor(entity) });
 

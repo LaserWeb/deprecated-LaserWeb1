@@ -1425,18 +1425,21 @@ $(document).ready(function() {
 			//NEW Dxf  -- experimental
 			parser2 = new window.DxfParser();
 			dxf2 = parser2.parseSync(r.result);
-			console.log('DXF Data', dxf2);
+			//console.log('DXF Data', dxf2);
 			//cadCanvas = new processDXF(dxf2);
 
 			for (i = 0; i < dxf2.entities.length; i++ ) {
-				console.log('Layer: ', dxf2.entities[i].layer);
+				//console.log('Layer: ', dxf2.entities[i].layer);
 				row[i] = dxf2.entities[i].layer
 				drawEntity(i, dxf2.entities[i]);
 			};
 
-			dxfObject.translateX(laserxmax /2 * -1);
-			dxfObject.translateY(laserymax /2 * -1);
-			scene.add(dxfObject);
+			//dxfObject.translateX(laserxmax /2 * -1);
+			//dxfObject.translateY(laserymax /2 * -1);
+			var showDxf = dxfObject.clone();
+			showDxf.translateX(laserxmax /2 * -1);
+			showDxf.translateY(laserymax /2 * -1);
+			scene.add(showDxf);
 
 			Array.prototype.unique = function()
 				{
@@ -1516,7 +1519,7 @@ $(document).ready(function() {
 				//document.getElementById('fileInputMILL').value = '';
 				$('#console').append('<p class="pf" style="color: #000000;"><b>NewDXFLib Complete...</b></p>');
 				$('#console').scrollTop($("#console")[0].scrollHeight - $("#console").height());
-				$('#noneg').click();
+				//$('#noneg').click();
 
 	});
 
