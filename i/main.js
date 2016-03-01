@@ -1436,6 +1436,7 @@ $(document).ready(function() {
 
 			//dxfObject.translateX(laserxmax /2 * -1);
 			//dxfObject.translateY(laserymax /2 * -1);
+			//scene.add(dxfObject);
 			scene.add(dxfObject);
 
 			Array.prototype.unique = function()
