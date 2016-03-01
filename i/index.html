@@ -181,14 +181,14 @@
       <div class="btn-group input-group  btn-group-justified">
         <span class="input-group-addon"><i class="fa fa-folder-open"></i>&nbsp;File</span>
         <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Open GCODE file from other CAM software or from a previous LaserWeb 'Save GCode' file">GCODE<input type="file" accept=".gcode,.g"  id="fileInputGcode" /></button></div>
-        <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="NB:  Polyline DXF only. No ARC/SPLINE support. Please convert your ARCS/SPLINES to Polylines first!">DXF<input type="file" accept=".dxf" id="fileInputDXF" /></button></div>
+        <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="As of March 2016 we now support Arcs and Circles too!">DXF<input type="file" accept=".dxf" id="fileInputDXF" /></button></div>
         <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Open SVG file for Vector Cutting or Vector Engraving">SVG<input type="file" accept=".svg" id="fileInputSVG" /></button></div>
       </div>
       <div class="btn-group input-group  btn-group-justified">
         <span class="input-group-addon"><i class="fa fa-rocket"></i>&nbsp;Apps</span>
         <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Open BMP/JPEG/PNG and convert to Raster. Note: Use low resolution grayscale for best performance">RASTER<input type="file" accept=".png,.jpg,.jpeg,.bmp" id="fileImage" /></button></div>  <!-- Raster -->
         <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" id="rastercalibrationButton" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Calibrate your grayscale values for actual materials">CALIBRATE</button></div>  <!-- Raster -->
-        <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="btn-group" role="group"><button type="button" class="btn btn-primary btn-file btn-sm disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Disabled as of 1 March 2016 - busy switching to new DXF lib - should be back and working by mid March 2016">
 
             <span>JSCAD</span>
             <span class="caret"></span>
