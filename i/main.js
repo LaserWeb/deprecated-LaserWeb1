@@ -1414,9 +1414,6 @@ $(document).ready(function() {
 			if (typeof(dxfObject) !== 'undefined') {
 				scene.remove(dxfObject);
 			};
-			if (typeof(showDxf) !== 'undefined') {
-				scene.remove(showDxf);
-			};
 			dxfObject = new THREE.Group();
 
 			row = [];
@@ -1439,10 +1436,7 @@ $(document).ready(function() {
 
 			//dxfObject.translateX(laserxmax /2 * -1);
 			//dxfObject.translateY(laserymax /2 * -1);
-			var showDxf = dxfObject.clone();
-			showDxf.translateX(laserxmax /2 * -1);
-			showDxf.translateY(laserymax /2 * -1);
-			scene.add(showDxf);
+			scene.add(dxfObject);
 
 			Array.prototype.unique = function()
 				{
