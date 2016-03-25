@@ -165,29 +165,23 @@ console.log('RapidSpeed', rapidSpeed);
                isAtClearanceHeight = true;
            }
            console.log('Input Path', subj_paths);
-           subj_path2 = getInflatedPath(subj_paths, 2);
+           subj_path2 = getInflatedPath(subj_paths, 5);
            console.log('Output Path', subj_path2);
 
-          //var mesh = createClipperPathsAsMesh(subj_path2, 0xff0000, 0.2, subj_path2);
-          var millpath = createClipperPathsAsLines(subj_path2);
-          millpath.translateX(laserxmax /2 * -1);
-          millpath.translateY(laserymax /2 * -1);
-          scene.add(millpath);
+          // var mesh = createClipperPathsAsMesh(subj_path2, 0xff0000, 0.2, subj_path2);
+          // tool_offset = createClipperPathsAsLines(subj_path2);
+          // tool_offset.translateX(laserxmax /2 * -1);
+          // tool_offset.translateY(laserymax /2 * -1);
+          // tool_offset.name = 'Mill Path';
+          //scene.add(tool_offset);  // Plasma Mode! W.I.P
+
 
 
        }
    });
 
    console.log("generated gcode. length:", g.length);
-  //  subj_paths = ClipperLib.Clipper.SimplifyPolygons(subj_paths, ClipperLib.PolyFillType.pftEvenOdd);﻿
-  //  console.log('Subj Path', subj_paths);
-  //  //console.log("gcode:", g);
-  //  $('#' + this.id + " .gcode").val(g).prop('disabled', false);
-  //  $('#' + this.id + " .btn-sendgcodetows").prop('disabled', false);
-  //  $('#' + this.id + " .regenerate").addClass('hidden');
-  //  $('#' + this.id + " .gcode-size-span").removeClass('hidden');
-  //  $('#' + this.id + " .gcode-size").text(parseInt(g.length / 1024) + "KB");
-   //
+
   isGcodeInRegeneratingState = false;
 
   // Remove DXF Preview
@@ -249,8 +243,8 @@ var scale = 10000;
 
     material = new THREE.LineBasicMaterial({ linewidth: 1, color: color, transparent: true });
 
-    millpath = new THREE.Line(geometry, material);
-    return millpath;
+    millgeom = new THREE.Line(geometry, material);
+    return millgeom;
 
  };
 

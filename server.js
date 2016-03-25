@@ -85,7 +85,7 @@ http.get('http://127.0.0.1:8080', function(res) {
 	// 2 second timeout on this socket
 	socket.setTimeout(2000);
 	socket.on('timeout', function() {
-		this.abort();
+		//this.abort();
 	});
 }).on('error', function(e) {
 	console.error(
@@ -174,6 +174,7 @@ serialport.list(function (err, ports) {
 			sp[i].handle.write("?\n"); // Lets check if its LasaurGrbl?
 			sp[i].handle.write("M115\n"); // Lets check if its Marlin?
 			sp[i].handle.write("version\n"); // Lets check if its Smoothieware?
+      sp[i].handle.write("$fb\n"); // Lets check if its TinyG
 
 			// line from serial port
 			sp[i].handle.on("data", function (data) {
@@ -217,6 +218,22 @@ function emitToPortSockets(port, evt, obj) {
 function serialData(data, port) {
 	// new line of data terminated with \n
 	//console.log('Port '+port+' got newline from serial: '+data);
+  if (data.match(/^\{/)) {
+
+     jsondata = JSON.parse(data);
+     //console.log('Got JSON response: ' + jsondata);
+
+      if (jsondata.r) {
+           sendFirstQ(port);
+
+           // ok is green
+           emitToPortSockets(port, 'serialRead', {c:0,l:data});
+
+           // remove first
+           sp[port].lastSerialWrite.shift();
+         };
+      };
+
 
 
 	// Try to determine Firmware in use and set up queryloop
@@ -316,6 +333,32 @@ function serialData(data, port) {
 		sp[port].firmware = firmware;
 	}
 
+  if (data.indexOf('firmware build') != -1 ) { //  found a TinyG
+		// setInterval(function() {
+		// 	sp[port].handle.write("M114\n"); //for Smoothieware
+		// }, 1000);
+		//data = data.replace(/:/g,',');
+    //data = data.replace(/ /g,',');
+    data = data.replace( /(?!\s+$)\s+/g, "," );
+    //console.log('Data' + data);
+		var firmwareVersion = data.split(',');
+		var tinyGVersion = 'TinyG '+firmwareVersion[3];
+		var firmware = tinyGVersion;
+    console.log(chalk.green('INFO:'), chalk.yellow(' Found device: '),
+      chalk.yellow(sp[port].manufacturer),
+      chalk.blue(sp[port].port),
+      chalk.yellow('Firmware Detected:'),
+      chalk.blue(firmware),
+      chalk.yellow('  Port ID No: '),
+      chalk.blue(port)
+      );
+		sp[port].firmware = firmware;
+    // INIT  COMMANDS
+    sp[port].handle.write("{sv:2}\n"); //for Smoothieware
+
+
+	}
+
 	// End of Queryloop
 
 	// handle M105
@@ -345,6 +388,13 @@ function serialData(data, port) {
 		sp[port].lastSerialReadLine = data;
 		return;
 	}
+
+  // handle Always On Feedback (TinyG)
+  if (data.indexOf('pos') != -1 || data.indexOf('ok pos') != -1) {
+    emitToPortSockets(port, 'posStatusT', data);
+    sp[port].lastSerialReadLine = data;
+    return;
+  }
 
 	if (sp[port].firmware) {
 		if (sp[port].firmware.indexOf('Lasaur') == 0) {
@@ -398,10 +448,8 @@ function serialData(data, port) {
 
 	data = ConvChar(data);
 
-
-
-	if (data.indexOf('ok') == 0 || data == "")  { // data == "" relates to supporting LaserSaur - monitor if it causes bugs on other firmwares.  Refer to https://groups.google.com/forum/#!topic/lasersaur/_6wTYNJgGyI
-
+	if (data.indexOf('ok') == 0 || data.indexOf('{"qr":32}') == 0 || data == "" )  { // data == "" relates to supporting LaserSaur - monitor if it causes bugs on other firmwares.  Refer to https://groups.google.com/forum/#!topic/lasersaur/_6wTYNJgGyI
+  console.log('Got OK');
 		// run another line from the q
 		sendFirstQ(port);
 
@@ -488,12 +536,12 @@ function serialData(data, port) {
   else {
    // other is grey
    emitToPortSockets(port, 'serialRead', {c:2,l:data});
-   console.log(chalk.yellow('WARN:'),
-   chalk.gray('Ignored:'), chalk.yellow(' Port'),
-
-   chalk.blue(sp[port].port),
-   chalk.yellow('said: '),
-   chalk.blue(data));
+  //  console.log(chalk.yellow('WARN:'),
+  //  chalk.gray('Ignored:'), chalk.yellow(' Port'),
+   //
+  //  chalk.blue(sp[port].port),
+  //  chalk.yellow('said: '),
+  //  chalk.blue(data));
  }
 
 	if (sp[port].q.length == 0) {
@@ -509,6 +557,7 @@ function serialData(data, port) {
 var currentSocketPort = {};
 
 function sendFirstQ(port) {
+  console.log('Queue Length: ' + sp[port].q.length);
 	if (sp[port].q.length < 1) {
 		// nothing to send
 		return;
@@ -532,6 +581,7 @@ function sendFirstQ(port) {
 		sp[port].sockets[i].emit('serialRead', {c:3,l:'SEND: '+t});
 	}
 	sp[port].handle.write(t+"\n");
+  console.log('Sent' + t);
   sp[port].lastSerialWrite.push(t);
 }
 
@@ -706,11 +756,12 @@ io.sockets.on('connection', function (socket) {
 
 	// lines fromweb ui
 	socket.on('gcodeLine', function (data) {
-    console.log(chalk.yellow('Command Sent from Console'));
+    console.log(chalk.yellow('Command Sent from Console: '));
 		if (typeof currentSocketPort[socket.id] != 'undefined') {
 			// valid serial port, safe to send
 			// split newlines
 			var nl = data.line.split("\n");
+      console.log('Line: '+ nl);
 			// add to queue
 			sp[currentSocketPort[socket.id]].q = sp[currentSocketPort[socket.id]].q.concat(nl);
 			// add to qCurrentMax
@@ -720,10 +771,12 @@ io.sockets.on('connection', function (socket) {
         // Debug for Issue #70 https://github.com/openhardwarecoza/LaserWeb/issues/70
 
       	sendFirstQ(currentSocketPort[socket.id]);
+        console.log(chalk.yellow('first command'));
 
         if (sp[currentSocketPort[socket.id]].firmware.indexOf('Lasaur') === 0) {
           if (nl[0] === '~' && nl.length > 1) {
             sendFirstQ(currentSocketPort[socket.id]);
+
           }
         }
 			}

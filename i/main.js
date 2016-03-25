@@ -376,7 +376,7 @@ $(document).ready(function() {
 
 	// List serial Ports
 	socket.on('ports', function (data) {
-		//console.log('ports event',data);
+		console.log('ports event',data);
 		$('#choosePort').html('<option val="no">Select a serial port</option>');
 		for (var i=0; i<data.length; i++) {
 			$('#choosePort').append('<option value="'+i+'">'+data[i].comName+':  '+data[i].manufacturer+'</option>');
@@ -1407,10 +1407,12 @@ $(document).ready(function() {
 		document.getElementById('gcodepreview').value = '';
 		openGCodeFromText();
 		var r = new FileReader();
+		console.log('Reader', r)
 		r.readAsText(odxf.files[0]);
 		r.onload = function(e) {
 			fileName = fileInputDXF.value.replace("C:\\fakepath\\", "");
 
+			// Remove the UI elements from last run
 			if (typeof(dxfObject) !== 'undefined') {
 				scene.remove(dxfObject);
 			};
@@ -1418,6 +1420,13 @@ $(document).ready(function() {
 			if (typeof(showDxf) !== 'undefined') {
 				scene.remove(showDxf);
 			};
+
+			if (typeof(tool_offset) !== 'undefined') {
+				scene.remove(tool_offset);
+				toolPath = null;
+			};
+
+
 			dxfObject = new THREE.Group();
 
 			row = [];
@@ -1510,8 +1519,8 @@ $(document).ready(function() {
 						dxfThickness = $('#thickness').val()
 
 						g += generateGcodeCallback(window["dxfEntity" + c], cutSpeed[c], pwr[c], rapidSpeed)
-					}
 
+					}
 				document.getElementById('fileName').value = fileName;
 				$('#mainStatus').html('Status: <b>'+fileName+' </b> loaded ...');
 				if (boundingBox) {
@@ -2024,6 +2033,17 @@ osvg.addEventListener('change', function(e) {
 			cylinder.position.x = (parseInt(posArray[2],10) - (laserxmax /2));
 			cylinder.position.y = (parseInt(posArray[4],10) - (laserymax /2));
 			cylinder.position.z = (parseInt(posArray[6],10) + 20);
+	});
+
+	socket.on('posStatusT', function(data) {
+		var data2 = JSON.parse(data);
+		console.log('TinyG Status: ' + data);
+		$('#mX').html('X: '+data2.sr.posx);
+		$('#mY').html('Y: '+data2.sr.posy);
+		$('#mZ').html('Z: '+data2.sr.posz);
+		cylinder.position.x = (parseInt(data2.sr.posx) - (laserxmax /2));
+		cylinder.position.y = (parseInt(data2.sr.posy) - (laserymax /2));
+		cylinder.position.z = (parseInt(data2.sr.posz) + 20);
 	});
 
 	// Handle position feedback data from the machine:  Smoothie
