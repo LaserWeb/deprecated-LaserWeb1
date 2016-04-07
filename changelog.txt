@@ -1,3 +1,4 @@
+7 April 2016:  Please consider helping us test the beta of LaserWeb 2.0 at https://github.com/openhardwarecoza/LaserWeb2
 1 Mar 2016: Completed switch to new DXF Library co-authored by @johnlauer @bzuillsmith and @openhardwarecoza  ! Let the testing begin.  Now supports Arcs and Circles too
 28 Feb 2016: Fixed SVG Feedrate + Massive speed increase on 3D Renderer 
 17 Feb 2016: Fix for incorrectly evaluated boolean to enable/disable variable Raster Speed
