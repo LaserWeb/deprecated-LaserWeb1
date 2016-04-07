@@ -1,3 +1,12 @@
+## Update!  
+
+A very very early public Beta of LASERWEB2 is available!  See [https://github.com/openhardwarecoza/LaserWeb2](https://github.com/openhardwarecoza/LaserWeb2) for details!
+
+Please help test LaserWeb2 as well, open issues on https://github.com/openhardwarecoza/LaserWeb2/issues
+
+LaserWeb2 comes with lots of new features, new serial bridge, tool offset (working on a full CNC cam soon) etc
+
+
 ## About
 
 LaserWeb is a fully functional Laser Cutter Controller which runs over http.  Multiple serial devices can be connected to control multiple machines.
