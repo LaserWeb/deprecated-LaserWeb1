@@ -1,3 +1,3 @@
 ## DEPRECATED!
 
- LASERWEB2 is available!  See [https://github.com/openhardwarecoza/LaserWeb2](https://github.com/openhardwarecoza/LaserWeb2) for details!
+ LASERWEB3 is available!  See [https://github.com/openhardwarecoza/LaserWeb3](https://github.com/openhardwarecoza/LaserWeb3) for details!
